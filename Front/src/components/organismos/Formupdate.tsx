@@ -8,11 +8,11 @@ import UpdateData from "@/hooks/Usuarios/Update";
 
 
 type Props = {
-    users: User[] | undefined;
+    users: User[] ;
     userId: number;
     id: string
     onclose: () => void;
-    
+
 }
 
 const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
@@ -35,7 +35,7 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
         idKey: "id_usuario",
     });
 
-    useEffect(() => {
+    useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
         const foundUser = getUserById(users, userId);
 
         if (foundUser) {
@@ -44,7 +44,7 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
 
     }, [users, userId]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { //se ejecuta cuando el usuario cambia algo en un campo
         const { name, value, type, checked } = e.target;
 
         setFormData((prev) => ({
@@ -55,10 +55,12 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
 
 
     const handleSubmit = async () => {// lo mismo del e
-       //y el e.preventdefault
+        //y el e.preventdefault
 
-        if (!formData.id_usuario) return;
-
+        if (!formData.id_usuario) {
+            return <p className="text-center text-gray-500">Usuario no encontrado</p>;
+        }
+        
         try {
             await updateData(formData.id_usuario, formData);
             onclose();
@@ -67,9 +69,7 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
         }
     }
 
-    if (!formData.id_usuario) {
-        return <p className="text-center text-gray-500">Usuario no encontrado</p>;
-    }
+
 
 
     return (
@@ -80,7 +80,7 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
             <Inpu label="Telefono" placeholder="Telefono" type="number" name="telefono" value={String(formData.telefono) ?? ''} onChange={handleChange} />
             <Inpu label="Correo" placeholder="Correo" type="email" name="correo" value={formData.correo ?? ''} />
             <Inpu label="Cargo" placeholder="Cargo" type="text" name="cargo" value={formData.cargo ?? ''} onChange={handleChange} />
-            
+
             <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
                 Guardar Cambios
             </button>

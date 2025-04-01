@@ -9,6 +9,8 @@ import { useState } from "react";
 import Formupdate from "@/components/organismos/Formupdate";
 import { useCambioEstado } from "@/hooks/Usuarios/CambioEstado";
 import {Chip} from "@heroui/chip"
+import Tap from "@/components/molecules/Tabs";
+import Home from "./Home";
 
 export type User = {
     id_usuario: number;
@@ -39,11 +41,11 @@ const UsersTable = () => {
 
 
 
-
+    //Modal agregar
     const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => setIsOpen(false);
 
-
+    //Modal actualizar
     const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
@@ -60,7 +62,7 @@ const UsersTable = () => {
     const handleAddUser = async (user: User) => {
         try {
             await addData(user);
-            handleClose(); // Cerrar el modal después de agregar el usuario
+            handleClose(); // Cerrar el modal después de darle agregar usuario
         } catch (error) {
             console.error("Error al agregar el usuario:", error);
         }
@@ -72,6 +74,18 @@ const UsersTable = () => {
         setIsOpenUpdate(true);
     };
 
+    const tabs = [
+        {
+            key : "1",
+            title : "Uusuarios",
+            content : <Home/>
+        },
+        {
+            key : "2",
+            title : "Bodega",
+            content : <p>Esto es bodega</p>
+        }
+    ]
 
 
 
@@ -117,6 +131,9 @@ const UsersTable = () => {
 
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Tabla de Usuarios</h1>
+            
+            <Tap tabs={tabs}></Tap>
+
             <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} type="button" color="primary" variant="solid" />
 
             <Modall ModalTitle="Agregar Usuario" isOpen={isOpen} onOpenChange={handleClose}>
@@ -129,7 +146,7 @@ const UsersTable = () => {
 
             <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
-                    <Formupdate users={usersWithKey} userId={selectedUser.id_usuario} id="FormUpdate" onclose={handleCloseUpdate} />
+                    <Formupdate users={usersWithKey ?? []} userId={selectedUser.id_usuario} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
 
             </Modall>

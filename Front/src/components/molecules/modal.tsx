@@ -20,15 +20,15 @@ export default function Modall({ ModalTitle, children, isOpen, onOpenChange }: P
 
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside" isDismissable={false} >
                         <ModalContent>
-                                
-                                        <>
-                                                <ModalHeader className="flex flex-col gap-1">{ModalTitle}</ModalHeader>
-                                                <ModalBody>{children}</ModalBody>
 
-                                        </>
-                               
+                                <>
+                                        <ModalHeader className="flex flex-col gap-1">{ModalTitle}</ModalHeader>
+                                        <ModalBody>{children}</ModalBody>
+
+                                </>
+
                         </ModalContent>
-                     
+
                 </Modal>
 
 
