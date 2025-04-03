@@ -1,20 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import {User} from "@/pages/usuarios"
+import { User } from "@/types/Usuario"
+import { axiosAPI } from "@/axios/axiosAPI";
 
 export function useCambioEstado() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (id_usuario: number) => {
-      return axios.put(`http://localhost:3000/usuarios/estado/${id_usuario}`);
+      await axiosAPI.put<User>(`usuarios/estado/${id_usuario}`);
+      return id_usuario 
     },
 
-    onSuccess: (_, id_usuario) => {
-      queryClient.setQueryData<User []>(["users"], (oldData) =>
+    onSuccess: ( id_usuario : number ) => {
+
+      queryClient.setQueryData<User[]>(["users"], (oldData) =>
         oldData
           ? oldData.map((user: User) =>
-              user.id_usuario === id_usuario
+              user.id_usuario == id_usuario
                 ? { ...user, estado: !user.estado }
                 : user
             )
@@ -29,6 +31,6 @@ export function useCambioEstado() {
 
   return {
     cambiarEstado: mutation.mutateAsync,
-    isLoadin: mutation.isPending,
+    isLoading: mutation.isPending,
   };
 }

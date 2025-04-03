@@ -4,7 +4,7 @@ import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 const menuItems = [
   { name: "Inicio", icon: HomeIcon, href: "/Home" },
 
-  { name: "Admin", icon: UserIcon, href: "/usuarios" },
+  { name: "Admin", icon: UserIcon, href: "/admin" },
 
   { name: "Configuración", icon: Cog6ToothIcon, href: "#" },
 ];

@@ -1,38 +1,36 @@
+import { axiosAPI } from "@/axios/axiosAPI";
+import { User } from "@/types/Usuario";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
-type UpdateProps<T> = {
-  url: string;
-  idKey: keyof T; // Define la clave primaria de la tabla
-};
 
-function UpdateData<T>({ url, idKey }: UpdateProps<T>) {
-  const queryClient = useQueryClient();
+export default function UpdateData () {
+    
+    const queryClient = useQueryClient();
+    
+    const actualizar = useMutation({
+            mutationFn: async({ id, update } : { id: number; update: Partial<User> }) => {
+                await axiosAPI.put<User>(`usuarios/${id}`, update);
+                return {id, update}
+            },
+            onSuccess: ({ id, update }) => {
+                console.log("dato 1: ",id," dato 2: ",update);
+                queryClient.setQueryData<User[]>(["users"], (oldData) =>
+                    oldData
+                        ? oldData.map((user) =>
+                            user.id_usuario === id ? { ...user, ...update } : user
+                        )
+                        : []
+                );
+            },
+    
+            onError: (error) => {
+                console.error("Error al actualizar:", error);
+            }
+        });
+    
+    const updateData = async (id: number, update: Partial<User>): Promise<void> => {
+      await actualizar.mutateAsync({ id, update });
+    };
 
-  const actualizar = useMutation({
-    mutationFn: ({ id, update }: { id: T[typeof idKey]; update: Partial<T> }) =>
-      axios.put<T>(`${url}/${id}`, update),
-
-    onSuccess: (res, { id }) => {
-      queryClient.setQueryData<T[]>([url], (oldData) =>
-        oldData
-          ? oldData.map((item) =>
-              item[idKey] === id ? { ...item, ...res.data } : item
-            )
-          : []
-      );
-    },
-
-    onError: (error) => {
-      console.error("Error al actualizar:", error);
-    }
-  });
-
-  const updateData = async (id: T[typeof idKey], update: Partial<T>): Promise<void> => {
-    await actualizar.mutateAsync({ id, update });
-  };
-
-  return { updateData };
+    return { updateData }
 }
-
-export default UpdateData;

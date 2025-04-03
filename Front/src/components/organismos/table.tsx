@@ -1,5 +1,6 @@
 
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon,CheckIcon } from "@heroicons/react/24/outline";
+
 import {
   Table,
   TableHeader,
@@ -51,11 +52,18 @@ const Globaltable = <T extends { key: string; estado: boolean }>({ data, columns
                 </button>
 
                 <button onClick={() => onDelete(item)}>
-                  <TrashIcon
-                    className={`h-5 w-5 ${
-                      item.estado ? "text-red-500" : "text-green-500"
-                    }`}
+                  {
+                    item.estado ? 
+                    <TrashIcon
+                    className={`h-5 w-5 text-red-500 `}
                   />
+                  :
+                  <CheckIcon
+                  className={`h-5 w-5 text-green-500 `}/>
+
+                  }
+                  
+                  
                 </button>
               </div>
             )}

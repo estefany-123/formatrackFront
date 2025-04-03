@@ -9,7 +9,7 @@ type InputProps = {
     isRequired?: boolean
     labelPlacement?: "outside" | "outside-left" | "inside",
     name?: string
-    value: string | (readonly string[] & string) | undefined
+    value?: string | (readonly string[] & string) | undefined
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 export default function Inpu({label, placeholder, type, name, isRequired, labelPlacement, value, onChange}: InputProps) {  

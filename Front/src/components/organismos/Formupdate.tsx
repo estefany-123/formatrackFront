@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import getUserById from "@/hooks/Usuarios/getUsuario";
-import { User } from "@/pages/usuarios";
+import { User } from "@/types/Usuario";
 import { Form } from "@heroui/form"
 import Inpu from "../molecules/input";
 import UpdateData from "@/hooks/Usuarios/Update";
@@ -30,10 +30,7 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
         fk_rol: 0,
     });
 
-    const { updateData } = UpdateData<User>({
-        url: "http://localhost:3000/usuarios",
-        idKey: "id_usuario",
-    });
+    const {updateData} = UpdateData()
 
     useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
         const foundUser = getUserById(users, userId);
@@ -47,16 +44,16 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { //se ejecuta cuando el usuario cambia algo en un campo
         const { name, value, type, checked } = e.target;
 
-        setFormData((prev) => ({
+        setFormData((prev : Partial<User>) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
     };
 
 
-    const handleSubmit = async () => {// lo mismo del e
-        //y el e.preventdefault
+    const handleSubmit = async (e : React.FormEvent) => {
 
+        e.preventDefault();
         if (!formData.id_usuario) {
             return <p className="text-center text-gray-500">Usuario no encontrado</p>;
         }

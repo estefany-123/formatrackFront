@@ -1,22 +1,20 @@
 import { Route, Routes } from "react-router-dom";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Layout from "./layouts/layout";
 import UsersTable from "./pages/usuarios";
 import Home from "./pages/Home";
+import Admin from "./pages/admin";
 
 function App() {
-  const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Routes>
-        {/* Envolver todas las rutas dentro de Layout */}
-        <Route path="/" element={<Layout />}>
-          <Route path="usuarios" element={<UsersTable />} />
-          <Route path="Home" element={<Home />} />
-        </Route>
-      </Routes>
-    </QueryClientProvider>
+    <Routes>
+      {/* Envolver todas las rutas dentro de Layout */}
+      <Route path="/" element={<Layout />}>
+        <Route path="usuarios" element={<UsersTable />} />
+        <Route path="admin" element={<Admin/>}/>
+        <Route path="Home" element={<Home />} />
+      </Route>
+    </Routes>
   );
 }
 

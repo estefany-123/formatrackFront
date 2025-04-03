@@ -8,36 +8,22 @@ import Formulario from "@/components/organismos/FormRegister";
 import { useState } from "react";
 import Formupdate from "@/components/organismos/Formupdate";
 import { useCambioEstado } from "@/hooks/Usuarios/CambioEstado";
-import {Chip} from "@heroui/chip"
-import Tap from "@/components/molecules/Tabs";
-import Home from "./Home";
+import { Chip } from "@heroui/chip"
+import { User } from "@/types/Usuario";
 
-export type User = {
-    id_usuario: number;
-    documento: number;
-    nombre: string;
-    apellido: string;
-    edad: number;
-    telefono: string;
-    correo: string;
-    estado: boolean;
-    cargo: string;
-    password: string;
-    fk_rol: number;
-}
+
 
 const UsersTable = () => {
-
 
     const { data: users, isLoading, isError, error, addData } = useHttp<User>({
         key: "users",
         url: "http://localhost:3000/usuarios/",
 
     });
-    console.log(users)
+    // console.log(users)
 
 
-    const { cambiarEstado, isLoadin } = useCambioEstado();
+    const { cambiarEstado } = useCambioEstado();
 
 
 
@@ -74,18 +60,7 @@ const UsersTable = () => {
         setIsOpenUpdate(true);
     };
 
-    const tabs = [
-        {
-            key : "1",
-            title : "Uusuarios",
-            content : <Home/>
-        },
-        {
-            key : "2",
-            title : "Bodega",
-            content : <p>Esto es bodega</p>
-        }
-    ]
+
 
 
 
@@ -102,8 +77,11 @@ const UsersTable = () => {
             label: "estado",
             render: (user: User) => (
                 <Chip
-                    className={`px-2 py-1 rounded ${user.estado ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                    className={`px-2 py-1 rounded ${user.estado ? "text-green-500" : " text-red-500" //color texto
                         }`}
+                    
+                        color={`${user.estado ? "success" : "danger" }`} //color de fondo
+                        variant="flat"
                 >
                     {user.estado ? "Activo" : "Inactivo"}
                 </Chip>
@@ -130,11 +108,10 @@ const UsersTable = () => {
     return (
 
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Tabla de Usuarios</h1>
-            
-            <Tap tabs={tabs}></Tap>
+            <h1 className="text-2xl font-bold mb-4 text-center">Tabla de Usuarios</h1>
 
-            <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} type="button" color="primary" variant="solid" />
+
+            <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} type="button" color="primary" variant="solid" className="mb-8" />
 
             <Modall ModalTitle="Agregar Usuario" isOpen={isOpen} onOpenChange={handleClose}>
 

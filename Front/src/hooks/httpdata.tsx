@@ -10,7 +10,6 @@ function useHttp<T>({ key, url }: Propshttp) {
 
     const queryClient = useQueryClient();
 
-
     const { data, isLoading, isError, error } = useQuery<T[]>({
         queryKey: [key],
 

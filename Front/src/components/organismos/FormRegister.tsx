@@ -1,19 +1,20 @@
 import React from "react";
 import { Form } from "@heroui/form"
 import Inpu from "../molecules/input";
-import { User } from "@/pages/usuarios";
+import { User } from "@/types/Usuario";
+import { Select, SelectItem } from "@heroui/react";
 
 type FormularioProps = {
 
     addData: (user: User) => Promise<void>;
     onClose: () => void;
-    id:string
+    id: string
 }
 
 export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
 
-    const [formData, setFormData] = React.useState({
+    const [formData, setFormData] = React.useState<User>({
         id_usuario: 0,
         documento: 0,
         nombre: "",
@@ -43,7 +44,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 correo: "",
                 estado: true,
                 cargo: "",
-                password:"",
+                password: "",
                 fk_rol: 0,
             });
             onClose();
@@ -54,18 +55,30 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
     return (
         <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
-            <Inpu label="Documento" placeholder="Documento" type="number" name="documento" value={formData.documento.toString()} onChange={(e) => setFormData({ ...formData, documento: Number(e.target.value) })} />
+            <Inpu label="Documento" placeholder="Documento" type="text" name="documento" onChange={(e) => setFormData({ ...formData, documento: Number(e.target.value) })} />
             <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre} onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} />
             <Inpu label="Apellido" placeholder="Apellido" type="text" name="apellido" value={formData.apellido} onChange={(e) => setFormData({ ...formData, apellido: e.target.value })} />
-            <Inpu label="Edad" placeholder="Edad" type="number" name="edad" value={formData.edad.toString()} onChange={(e) => setFormData({ ...formData, edad: Number(e.target.value) })} />
-            <Inpu label="Telefono" placeholder="Telefono" type="number" name="telefono" value={formData.telefono.toString()} onChange={(e) => setFormData({ ...formData, telefono: e.target.value })} />
+            <Inpu label="Edad" placeholder="Edad" type="number" name="edad" onChange={(e) => setFormData({ ...formData, edad: Number(e.target.value) })} />
+            <Inpu label="Telefono" placeholder="Telefono" type="number" name="telefono" value={formData.telefono} onChange={(e) => setFormData({ ...formData, telefono: e.target.value })} />
             <Inpu label="Correo" placeholder="Correo" type="email" name="correo" value={formData.correo} onChange={(e) => setFormData({ ...formData, correo: e.target.value })} />
-            <Inpu label="Estado" placeholder="Estado" type="checkbox" name="estado" value={formData.estado.toString()} onChange={(e) => setFormData({ ...formData, estado: e.target.checked })} />
+
+            <Select
+                labelPlacement="outside"
+                name="estado"
+                placeholder="Estado"
+                onChange={(e) => setFormData({ ...formData, estado: e.target.value === "true" })} // Convierte a booleano
+            >
+                <SelectItem key="true">Activo</SelectItem>
+                <SelectItem key="false" >Inactivo</SelectItem>
+            </Select>
+
+            {/* <Inpu label="Estado" placeholder="Estado" type="checkbox" name="estado" value={formData.estado.toString()} onChange={(e) => setFormData({ ...formData, estado: e.target.checked })} /> */}
+
             <Inpu label="Cargo" placeholder="Cargo" type="text" name="cargo" value={formData.cargo} onChange={(e) => setFormData({ ...formData, cargo: e.target.value })} />
             <Inpu label="Paasword" placeholder="Password" type="password" name="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
 
             <Inpu label="Rol" placeholder="Rol" type="number" name="fk_rol" value={formData.fk_rol.toString()} onChange={(e) => setFormData({ ...formData, fk_rol: Number(e.target.value) })} />
-            
+
         </Form>
     )
 }
