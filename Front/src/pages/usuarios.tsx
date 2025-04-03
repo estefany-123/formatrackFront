@@ -1,5 +1,3 @@
-
-import useHttp from "@/hooks/httpdata"; // Importar el hook reutilizable
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
@@ -7,25 +5,15 @@ import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/FormRegister";
 import { useState } from "react";
 import Formupdate from "@/components/organismos/Formupdate";
-import { useCambioEstado } from "@/hooks/Usuarios/CambioEstado";
 import { Chip } from "@heroui/chip"
 import { User } from "@/types/Usuario";
+import { useUsuario } from "@/hooks/useUsuario";
 
 
 
 const UsersTable = () => {
 
-    const { data: users, isLoading, isError, error, addData } = useHttp<User>({
-        key: "users",
-        url: "http://localhost:3000/usuarios/",
-
-    });
-    // console.log(users)
-
-
-    const { cambiarEstado } = useCambioEstado();
-
-
+    const { users, isLoading, isError, error, addUser, changeState } = useUsuario();
 
     //Modal agregar
     const [isOpen, setIsOpen] = useState(false);
@@ -42,12 +30,12 @@ const UsersTable = () => {
     };
 
     const handleState = async (user: User) => {
-        await cambiarEstado(user.id_usuario);
+        await changeState(user.id_usuario);
     }
 
     const handleAddUser = async (user: User) => {
         try {
-            await addData(user);
+            await addUser(user);
             handleClose(); // Cerrar el modal después de darle agregar usuario
         } catch (error) {
             console.error("Error al agregar el usuario:", error);

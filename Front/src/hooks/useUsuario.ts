@@ -16,9 +16,10 @@ export function useUsuario() {
         }
     });
 
-    const addUser = async (usuario: User) => useMutation({
+    const addUserMutation = useMutation({
         mutationFn: (newUser: User) => axiosAPI.post<User>(url, newUser),
         onSuccess: (res) => {
+            console.log(res.data);
             queryClient.setQueryData<User[]>(["users"], (oldData) =>
                 oldData ? [...oldData, res.data] : [res.data]
             );
@@ -26,9 +27,13 @@ export function useUsuario() {
         onError: (error) => {
             console.log("Error al cargar el usuario", error);
         }
-    }).mutateAsync(usuario);
+    });
 
-    const updateUser = async (id : number, update : Partial<User>) => useMutation({
+    const getUserById = (id: number, users : User[] | undefined = data ): User | null => {
+        return users?.find((user) => user.id_usuario === id) || null;
+    }
+
+    const updateUserMutation = useMutation({
         mutationFn: async({ id, update } : { id: number; update: Partial<User> }) => {
             await axiosAPI.put<User>(`${url}/${id}`, update);
             return {id, update}
@@ -47,9 +52,9 @@ export function useUsuario() {
         onError: (error) => {
             console.error("Error al actualizar:", error);
         }
-    }).mutateAsync({ id, update });
+    });
 
-    const changeState = async (id_usuario: number) => useMutation({
+    const changeStateMutation = useMutation({
         mutationFn: async (id_usuario: number) => {
             await axiosAPI.put<User>(`usuarios/estado/${id_usuario}`);
             return id_usuario
@@ -70,7 +75,19 @@ export function useUsuario() {
         onError: (error) => {
             console.error("Error al actualizar estado:", error);
         },
-    }).mutateAsync(id_usuario);
+    });
+
+    const addUser = async (usuario: User) => {
+        return addUserMutation.mutateAsync(usuario);
+    };
+
+    const updateUser = async (id: number, update: Partial<User>) => {
+        return updateUserMutation.mutateAsync({ id, update });
+    };
+
+    const changeState = async (id_usuario: number) => {
+        return changeStateMutation.mutateAsync(id_usuario);
+    };
 
     return {
         users: data,
@@ -79,6 +96,7 @@ export function useUsuario() {
         error,
         addUser,
         changeState,
+        getUserById,
         updateUser
     }
 }

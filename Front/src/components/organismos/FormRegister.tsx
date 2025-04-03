@@ -30,6 +30,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
     const onSubmit = async () => { //preguntar si esta bien no usar el e: React.FormEvent
         //y aqui el preventdefault
+        //e.preventDefault();
         try {
             console.log("Enviando formulario con datos:", formData);
             await addData(formData);

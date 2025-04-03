@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import getUserById from "@/hooks/Usuarios/getUsuario";
 import { User } from "@/types/Usuario";
 import { Form } from "@heroui/form"
 import Inpu from "../molecules/input";
-import UpdateData from "@/hooks/Usuarios/Update";
+import {useUsuario} from "@/hooks/useUsuario";
 
 
 
@@ -30,10 +29,10 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
         fk_rol: 0,
     });
 
-    const {updateData} = UpdateData()
+    const {updateUser, getUserById} = useUsuario()
 
     useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
-        const foundUser = getUserById(users, userId);
+        const foundUser = getUserById(userId);
 
         if (foundUser) {
             setFormData(foundUser);
@@ -59,7 +58,7 @@ const FormuUpdate = ({ users, userId, id, onclose }: Props) => {
         }
         
         try {
-            await updateData(formData.id_usuario, formData);
+            await updateUser(formData.id_usuario, formData);
             onclose();
         } catch (error) {
             console.log("Error al actualizar el usuario", error);
