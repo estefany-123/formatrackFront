@@ -15,7 +15,7 @@ type InputProps = {
 export default function Inpu({label, placeholder, type, name, isRequired, labelPlacement, value, onChange}: InputProps) {  
   return (
     
-      <Input isRequired={isRequired} label={label} labelPlacement={labelPlacement} name={name} placeholder={placeholder} type={type} value={value} onChange={onChange}   />
+      <Input aria-label={label} isRequired={isRequired} label={label} labelPlacement={labelPlacement} name={name} placeholder={placeholder} type={type} value={value} onChange={onChange}   />
     
   );
 }

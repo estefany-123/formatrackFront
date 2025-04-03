@@ -17,11 +17,14 @@ export function useUsuario() {
     });
 
     const addUserMutation = useMutation({
-        mutationFn: (newUser: User) => axiosAPI.post<User>(url, newUser),
-        onSuccess: (res) => {
-            console.log(res.data);
+        mutationFn: async(newUser: User) => {
+            await axiosAPI.post<User>(url, newUser)
+            return newUser
+        },
+        onSuccess: (user) => {
+            console.log(user);
             queryClient.setQueryData<User[]>(["users"], (oldData) =>
-                oldData ? [...oldData, res.data] : [res.data]
+                oldData ? [...oldData,user] : [user]
             );
         },
         onError: (error) => {

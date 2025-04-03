@@ -28,9 +28,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         fk_rol: 0,
     });
 
-    const onSubmit = async () => { //preguntar si esta bien no usar el e: React.FormEvent
+    const onSubmit = async (e : React.FormEvent) => { //preguntar si esta bien no usar el e: React.FormEvent
         //y aqui el preventdefault
-        //e.preventDefault();
+        e.preventDefault();
         try {
             console.log("Enviando formulario con datos:", formData);
             await addData(formData);
@@ -64,6 +64,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             <Inpu label="Correo" placeholder="Correo" type="email" name="correo" value={formData.correo} onChange={(e) => setFormData({ ...formData, correo: e.target.value })} />
 
             <Select
+                aria-labelledby="estado"
                 labelPlacement="outside"
                 name="estado"
                 placeholder="Estado"
