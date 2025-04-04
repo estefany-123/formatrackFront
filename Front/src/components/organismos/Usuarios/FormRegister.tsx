@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "@heroui/form"
-import Inpu from "../molecules/input";
+import Inpu from "@/components/molecules/input";
 import { User } from "@/types/Usuario";
 import { Select, SelectItem } from "@heroui/react";
 

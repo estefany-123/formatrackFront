@@ -2,7 +2,7 @@ import { useState } from "react";
 import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 const menuItems = [
-  { name: "Inicio", icon: HomeIcon, href: "/Home" },
+  { name: "Inicio", icon: HomeIcon, href: "Home" },
 
   { name: "Admin", icon: UserIcon, href: "/admin" },
 

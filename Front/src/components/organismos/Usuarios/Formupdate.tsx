@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/types/Usuario";
 import { Form } from "@heroui/form"
-import Inpu from "../molecules/input";
-import {useUsuario} from "@/hooks/useUsuario";
+import Inpu from "@/components/molecules/input";
+import {useUsuario} from "@/hooks/Usuarios/useUsuario";
 
 
 

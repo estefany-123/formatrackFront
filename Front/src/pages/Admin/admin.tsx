@@ -1,8 +1,6 @@
-import React from 'react'
 import Tap from "@/components/molecules/Tabs";
 import UsersTable from './usuarios';
-import Bodega from './Bodega';
-import Home from './Home';
+import Home from '../Home/Home';
 
 const Admin =() => {
 
@@ -15,7 +13,7 @@ const Admin =() => {
             {
                 key : "2",
                 title : "Centros",
-                content : "centros aquis"
+                content : <></>
             },
             {
                 key : "3",

@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./layouts/layout";
-import UsersTable from "./pages/usuarios";
-import Home from "./pages/Home";
-import Admin from "./pages/admin";
+import UsersTable from "./pages/Admin/admin";
+import Home from "./pages/Home/Home";
+import Admin from "./pages/Admin/admin";
 
 function App() {
 

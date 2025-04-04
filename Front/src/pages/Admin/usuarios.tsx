@@ -2,12 +2,12 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
-import Formulario from "@/components/organismos/FormRegister";
+import Formulario from "@/components/organismos/Usuarios/FormRegister";
 import { useState } from "react";
-import Formupdate from "@/components/organismos/Formupdate";
+import Formupdate from "@/components/organismos/Usuarios/Formupdate";
 import { Chip } from "@heroui/chip"
 import { User } from "@/types/Usuario";
-import { useUsuario } from "@/hooks/useUsuario";
+import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 
 
 
