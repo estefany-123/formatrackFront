@@ -22,7 +22,7 @@ export default function Modall({ ModalTitle, children, isOpen, onOpenChange }: P
                         <ModalContent>
 
                                 <>
-                                        <ModalHeader className="flex flex-col gap-1">{ModalTitle}</ModalHeader>
+                                        <ModalHeader className="flex flex-col gap-1 text-center">{ModalTitle}</ModalHeader>
                                         <ModalBody>{children}</ModalBody>
 
                                 </>
