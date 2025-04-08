@@ -26,7 +26,6 @@ export function ReportTemplate<T>({
     <Document>
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.header}>
-          {/* Logo placeholders */}
         </View>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>

@@ -7,7 +7,7 @@ import { Chip } from "@heroui/chip";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { Unidad } from "@/types/Unidad";
 import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
-import { FormUpdate } from "@/components/organismos/UnidadesMedida/Formupdate";
+import { FormUpdate } from "@/components/organismos/UnidadesMedida/FormUpdate";
 
 export const UnidadTable = () => {
   const { unidades, isLoading, isError, error, addUnidad, changeState } =

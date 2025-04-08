@@ -7,7 +7,7 @@ import { Chip } from "@heroui/chip";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { TipoMovimiento } from "@/types/TipoMovimiento";
 import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
-import { FormUpdate } from "@/components/organismos/TiposMovimiento/Formupdate";
+import { FormUpdate } from "@/components/organismos/TiposMovimiento/FormUpdate";
 
 export const TipoMovimientoTable = () => {
   const { tipos, isLoading, isError, error, addTipoMovimiento, changeState } =

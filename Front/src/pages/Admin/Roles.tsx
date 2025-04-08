@@ -7,7 +7,7 @@ import { Chip } from "@heroui/chip";
 import { useRol } from "@/hooks/Roles/useRol";
 import { Rol } from "@/types/Rol";
 import Formulario from "@/components/organismos/Roles/FormRegister";
-import { FormUpdate } from "@/components/organismos/Roles/Formupdate";
+import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } =
