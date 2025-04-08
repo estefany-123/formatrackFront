@@ -1,5 +1,6 @@
 
-import { PencilIcon, TrashIcon,CheckIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { Chip } from "@heroui/chip";
 
 import {
   Table,
@@ -36,43 +37,56 @@ const Globaltable = <T extends { key: string; estado: boolean }>({ data, columns
 
       </TableHeader>
       <TableBody items={data}>
-  {(item) => (
-    <TableRow key={item.key}>
-      {(columnKey) => {
-        // Encuentra la configuración de la columna
-        const column = columns.find((col) => col.key === columnKey);
+        {(item) => (
+          <TableRow key={item.key}>
+            {(columnKey) => {
+              // Encuentra la configuración de la columna
+              const column = columns.find((col) => col.key === columnKey);
 
-        return (
-          <TableCell>
-            {column?.render ? column.render(item) : getKeyValue(item, columnKey)}
-            {columnKey === "actions" && (
-              <div>
-                <button onClick={() => onEdit(item)} color="primary">
-                  <PencilIcon className="h-5 w-5 text-blue-500" />
-                </button>
+              return (
+                <TableCell>
+                  {column?.render ? column.render(item) : getKeyValue(item, columnKey)}
 
-                <button onClick={() => onDelete(item)}>
-                  {
-                    item.estado ? 
-                    <TrashIcon
-                    className={`h-5 w-5 text-red-500 `}
-                  />
-                  :
-                  <CheckIcon
-                  className={`h-5 w-5 text-green-500 `}/>
+                  {columnKey === "estado" && (
+                    <Chip
+                      className={`px-2 py-1 rounded ${item.estado ? "text-green-500" : " text-red-500" //color texto
+                        }`}
 
-                  }
+                      color={`${item.estado ? "success" : "danger"}`} //color de fondo
+                      variant="flat"
+                    >
+                      {item.estado ? "Activo" : "Inactivo"}
+                    </Chip>
+                  )}
                   
-                  
-                </button>
-              </div>
-            )}
-          </TableCell>
-        );
-      }}
-    </TableRow>
-  )}
-</TableBody>
+                  {columnKey === "actions" && (
+                    <div>
+                      <button onClick={() => onEdit(item)} color="primary">
+                        <PencilIcon className="h-5 w-5 text-blue-500" />
+                      </button>
+
+                      <button onClick={() => onDelete(item)}>
+                        {
+                          item.estado ?
+                            <TrashIcon
+                              className={`h-5 w-5 text-red-500 `}
+                            />
+                            :
+                            <CheckIcon
+                              className={`h-5 w-5 text-green-500 `} />
+
+                        }
+
+
+                      </button>
+                    </div>
+                  )}
+                </TableCell>
+              );
+            }}
+          </TableRow>
+        )}
+      </TableBody>
     </Table>
   );
 };
