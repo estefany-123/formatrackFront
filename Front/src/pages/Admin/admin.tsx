@@ -6,6 +6,7 @@ import ProgramasTable from './programas';
 import RolModuloTable from './rolModulo';
 import SedeTable from './sedes';
 import SitiosTable from './sitios';
+import PermisoTable from './permisos';
 import Home from '../Home/Home';
 
 const Admin =() => {
@@ -60,6 +61,11 @@ const Admin =() => {
                 key : "10",
                 title : "sitios",
                 content : <SitiosTable/>
+            },
+            {
+                key : "11",
+                title : "permisos",
+                content : <PermisoTable/>
             }
         ]
 

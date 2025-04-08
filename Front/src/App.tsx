@@ -7,6 +7,7 @@ import ProgramasTable from "./pages/Admin/admin"
 import RolModuloTable from "./pages/Admin/admin"
 import SedeTable from "./pages/Admin/admin"
 import SitiosTable from "./pages/Admin/admin"
+import PermisoTable from "./pages/Admin/admin"
 import Home from "./pages/Home/Home"
 import Admin from "./pages/Admin/admin"
 import DashboardEstadisticas from "./pages/Admin/DashboardEstadisticas" // 👈 NUEVO
@@ -22,6 +23,7 @@ function App() {
         <Route path="rol modulo" element={<RolModuloTable />} />
         <Route path="sedes" element={<SedeTable />} />
         <Route path="sitios" element={<SitiosTable />} />
+        <Route path="permisos" element={<PermisoTable />} />
         <Route path="admin" element={<Admin />} />
         <Route path="Home" element={<Home />} />
         <Route path="admin/DashboardEstadisticas" element={<DashboardEstadisticas />} /> {/* 👈 NUEVO */}
