@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HomeIcon, UserIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, UserIcon, Cog6ToothIcon, ChartBarIcon } from "@heroicons/react/24/outline";
 
 const menuItems = [
   { name: "Inicio", icon: HomeIcon, href: "Home" },
@@ -7,6 +7,8 @@ const menuItems = [
   { name: "Admin", icon: UserIcon, href: "/admin" },
 
   { name: "Configuración", icon: Cog6ToothIcon, href: "#" },
+
+  { name: "Estadisticas", icon: ChartBarIcon, href: "/admin/DashboardEstadisticas" },
 ];
 
 export default function Sidebar() {
