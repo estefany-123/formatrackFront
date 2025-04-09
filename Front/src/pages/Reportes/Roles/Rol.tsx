@@ -4,7 +4,6 @@ import { ReportTemplate } from "@/components/templates/Report";
 import { ReportCard } from "@/components/molecules/ReportCard";
 import { useRol } from "@/hooks/Roles/useRol";
 import { Rol } from "@/types/Rol";
-import { title } from "process";
 
 export default function RolReportSelector() {
   const { roles } = useRol();
