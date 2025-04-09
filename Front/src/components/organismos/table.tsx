@@ -19,20 +19,20 @@ export interface TableColumn<T> {
   render?: (item: T) => JSX.Element;
 }
 
-interface TableProps<T extends { key: string; estado: boolean }> {
+interface TableProps<T extends { key: string; estado?: boolean }> {
   data: T[];
   columns: TableColumn<T>[];
   onEdit: (item: T) => void;
-  onDelete: (item: T) => void;
+  onDelete: (item: T) => void | undefined | Promise<void>;
 }
 
-const Globaltable = <T extends { key: string; estado: boolean }>({ data, columns, onEdit, onDelete }: TableProps<T>) => {
+const Globaltable = <T extends { key: string; estado?: boolean }>({ data, columns, onEdit, onDelete }: TableProps<T>) => {
   return (
     <Table aria-label="Example table with dynamic content">
       <TableHeader columns={[...columns, { key: 'actions', label: 'Acciones' }]}>
 
         {(column) => (
-          <TableColumn key={column.key.toString()}>{column.label}</TableColumn>
+          <TableColumn  className="text-center" key={column.key.toString()}>{column.label}</TableColumn>
         )}
 
       </TableHeader>
