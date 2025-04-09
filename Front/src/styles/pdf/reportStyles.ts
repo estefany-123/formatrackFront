@@ -17,14 +17,14 @@ export const reportStyles = StyleSheet.create({
     height: 60,
   },
   title: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold',
     marginBottom: 10,
     textTransform: 'uppercase',
   },
   description: {
-    fontSize: 10,
+    fontSize: 18,
     marginBottom: 20,
     textAlign: 'justify',
   },

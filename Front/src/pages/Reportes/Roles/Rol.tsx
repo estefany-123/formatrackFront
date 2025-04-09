@@ -1,83 +1,66 @@
 import { useState } from "react";
-import { useElemento } from "@/hooks/Elementos/useElemento";
 import { VisualizadorPDF } from "@/components/organismos/PDFVisualizer";
 import { ReportTemplate } from "@/components/templates/Report";
 import { ReportCard } from "@/components/molecules/ReportCard";
-import { Elemento } from "@/types/Elemento";
+import { useRol } from "@/hooks/Roles/useRol";
+import { Rol } from "@/types/Rol";
+import { title } from "process";
 
-export default function ElementoReportSelector() {
-  const { elementos } = useElemento();
+export default function RolReportSelector() {
+  const { roles } = useRol();
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
 
-  if (!elementos) return <p>Cargando...</p>;
+  if (!roles) return <p>Cargando...</p>;
 
   const reports = [
     {
       id: "todos",
-      title: "Todos los Elementos",
-      description: (data: Elemento[]) => {
+      title: "Roles Registrados",
+      description: (data: Rol[]) => {
         const total = data.length;
         const activos = data.filter((e) => e.estado).length;
         return `
-Se han registrado un total de ${total} elementos.
+Los roles son muy importantes puesto que gacias ellos el usario va apoder tener el acceso a ciertos modulos de nuestro sistema, es decir que de aqui pparte sobre a que opciones puede acceder en nusetro software.
+
+Si bien es cierto algunos de nuestro roles deben darsel ciertos permisos, ya que gracias a ello es que pueden acceder alos modulos correspondeintes.
+
+Se han registrado un total de ${total} roles.
 De ellos, ${activos} están activos actualmente.
 
-Este reporte brinda una visión general del total de elementos registrados en el sistema.`;
+Este reporte brinda una visión general del total de roles registrados en el sistema.`;
       },
-      accessors: ["nombre", "valor", "created_at", "estado"],
-      headers: ["Nombre", "Valor", "Fecha de creación", "Estado"],
+      accessors: ["nombre", "created_at"],
+      headers: ["Nombre", "Fecha de creación"],
       withTable: true,
-      filterFn: (data: Elemento[]) => data,
+      filterFn: (data: Rol[]) => data,
     },
     {
-      id: "activos",
-      title: "Elementos Activos",
-      description: (data: Elemento[]) => {
+      id: "activos e inactivos",
+      title: "Roles Activos e Inactivos",
+      description: (data: Rol[]) => {
         const activos = data.filter((e) => e.estado);
+        const inactivos = data.filter((e) => !e.estado).length;
         const total = activos.length;
         return `
-Actualmente hay ${total} elementos con estado activo.
+Tenemos entre la garn variedad de roles no siempre todos van a estar activos hay algunas ocasiones en las que por motivos de no implementar mas un rol que se deciden llevar acabo el proceso de desactivacion bien sea que por el momento ya no hay usuarios con ese rol o que posiblemente no se vilvera a usar mas
 
-Estos elementos representan los recursos disponibles y operativos dentro del sistema.`;
+Actualmente hay ${total} roles con estado activo y ${inactivos} de ellos esta inactivado.
+
+Estos roles representan los recursos disponibles y operativos dentro del sistema.`;
       },
-      accessors: ["nombre", "valor", "created_at", "estado"],
-      headers: ["Nombre", "Valor", "Fecha de creación", "Estado"],
+      accessors: ["nombre", "valor", "created_at"],
+      headers: ["Nombre", "Valor", "Fecha de creación"],
       withTable: true,
-      filterFn: (data: Elemento[]) => data.filter((e) => e.estado),
+      filterFn: (data: Rol[]) => data.filter((e) => e.estado),
     },
     {
-      id: "sin_estado",
-      title: "Elementos Inactivos",
-      description: (data: Elemento[]) => {
-        const inactivos = data.filter((e) => !e.estado).length;
-        return `
-Se han encontrado ${inactivos} elementos con estado inactivo.
-
-Es importante revisar estos registros para determinar si deben ser reactivados o dados de baja definitivamente.`;
+      id: "",
+      title: "",
+      description: (data: Rol[]) => {
+        return `hola`;
       },
       withTable: false,
-      filterFn: (data: Elemento[]) => data.filter((e) => !e.estado),
-    },
-    {
-      id: "nuevos",
-      title: "Elementos Nuevos del Mes",
-      description: (data: Elemento[]) => {
-        const now = new Date();
-        const delMes = data.filter((e) => {
-          const created = new Date(e.created_at);
-          return (
-            created.getMonth() === now.getMonth() &&
-            created.getFullYear() === now.getFullYear()
-          );
-        }).length;
-
-        return `
-Este mes se han registrado ${delMes} nuevos elementos.
-
-El seguimiento de los elementos recientemente añadidos permite evaluar el crecimiento del inventario y la actualización de recursos.`;
-      },
-      withTable: false,
-      filterFn: (data: Elemento[]) => data, // no es necesaria una tabla
+      filterFn: (data: Rol[]) => data,
     },
   ];
 
@@ -85,7 +68,7 @@ El seguimiento de los elementos recientemente añadidos permite evaluar el creci
   const handleBack = () => setSelectedReport(null);
 
   if (selectedReport && selected) {
-    const dataFiltrada = selected.filterFn(elementos);
+    const dataFiltrada = selected.filterFn(roles);
 
     return (
       <VisualizadorPDF
@@ -114,7 +97,7 @@ El seguimiento de los elementos recientemente añadidos permite evaluar el creci
           key={r.id}
           title={r.title}
           description={
-            typeof r.description === "function" ? r.description(elementos) : ""
+            typeof r.description === "function" ? r.description(roles) : ""
           }
           onClick={() => setSelectedReport(r.id)}
         />

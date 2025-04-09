@@ -1,5 +1,12 @@
 import Tap from "@/components/molecules/Tabs";
-import ElementoReportPage from "@/pages/Reportes/Elementos/Elements";
+import ElementoReportPage from "@/pages/Reportes/Elementos/Elemento";
+import InventarioReportSelector from "@/pages/Reportes/Inventarios/Inventario";
+import MovimientoReportSelector from "@/pages/Reportes/Movimientos/Movimiento";
+import RolReportSelector from "@/pages/Reportes/Roles/Rol";
+import SolicitudReportSelector from "@/pages/Reportes/Solicitudes/Solicitud";
+import TipoReportSelector from "@/pages/Reportes/TiposMovimiento/TipoMovimiento";
+import UnidadReportSelector from "@/pages/Reportes/UnidadesMedida/UnidadMedida";
+import VerificacionReportSelector from "@/pages/Reportes/Verificaciones/Verificacion";
 
 export const Reportes =() => {
 
@@ -12,7 +19,7 @@ export const Reportes =() => {
             {
                 key : "2",
                 title : "Roles",
-                content : ""
+                content : <RolReportSelector/>
             },
             {
                 key : "3",
@@ -62,12 +69,12 @@ export const Reportes =() => {
             {
                 key : "12",
                 title : "Inventario",
-                content :""
+                content :<InventarioReportSelector/>
             },
             {
                 key : "13",
                 title : "Verificaciones",
-                content :""
+                content :<VerificacionReportSelector/>
             },
             {
                 key : "14",
@@ -77,7 +84,7 @@ export const Reportes =() => {
             {
                 key : "15",
                 title : "Unidades Medida",
-                content :""
+                content :<UnidadReportSelector/>
             },
             {
                 key : "16",
@@ -92,12 +99,12 @@ export const Reportes =() => {
             {
                 key : "18",
                 title : "Solicitudes",
-                content :""
+                content :<SolicitudReportSelector/>
             },
             {
                 key : "19",
                 title : "Movimientos",
-                content :""
+                content :<MovimientoReportSelector/>
             },
             {
                 key : "20",
@@ -122,7 +129,7 @@ export const Reportes =() => {
             {
                 key : "24",
                 title : "Tipo de Movimientos",
-                content :""
+                content :<TipoReportSelector/>
             },
         ]
 

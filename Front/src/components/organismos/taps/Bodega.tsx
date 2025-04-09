@@ -1,6 +1,7 @@
 import Tap from "@/components/molecules/Tabs";
 import { ElementosTable } from "@/pages/Bodega/Elementos";
 import { InventariosTable } from "@/pages/Bodega/Inventarios";
+import { MovimientoTable } from "@/pages/Bodega/Movimientos";
 import { TipoMovimientoTable } from "@/pages/Bodega/TiposMovimiento";
 
 export const Bodega =() => {
@@ -24,7 +25,7 @@ export const Bodega =() => {
             {
                 key : "4",
                 title : "Movimientos",
-                content :""
+                content :<MovimientoTable/>
             }
         ]
 

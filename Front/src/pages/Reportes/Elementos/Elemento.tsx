@@ -14,18 +14,21 @@ export default function ElementoReportSelector() {
   const reports = [
     {
       id: "todos",
-      title: "Todos los Elementos",
+      title: "Total de Elementos Registrados",
       description: (data: Elemento[]) => {
         const total = data.length;
         const activos = data.filter((e) => e.estado).length;
         return `
-Se han registrado un total de ${total} elementos.
-De ellos, ${activos} están activos actualmente.
+En el presente reporte vamos a dar a conocer la totalidad de los elemntos que se han registrado en el sistema dando a conocer su nombre, el costo que tuvo y la fecha en la cual fue registrado. 
 
-Este reporte brinda una visión general del total de elementos registrados en el sistema.`;
+Se han registrado un total de ${total} elementos. De ellos, ${activos} están activos actualmente.
+
+Es iportante conoecr que los elemtos registrados en el sitemas pasan asignarse a un inventario en donde se establecera la cantidad a registar por cada uno de estos.
+        
+        A continuacion daremos a conocer la una tabla con los registros de los elemntos en el sistema:`;
       },
-      accessors: ["nombre", "valor", "created_at", "estado"],
-      headers: ["Nombre", "Valor", "Fecha de creación", "Estado"],
+      accessors: ["nombre", "valor", "created_at"],
+      headers: ["Nombre", "Valor", "Fecha de creación"],
       withTable: true,
       filterFn: (data: Elemento[]) => data,
     },
@@ -38,10 +41,14 @@ Este reporte brinda una visión general del total de elementos registrados en el
         return `
 Actualmente hay ${total} elementos con estado activo.
 
+La importancia de si estos elementos estan activados o no es muy importante puesto que podemos determinar en caso de caducar que el elemento ha sido desactivado del ineventario debido a que ha caducado o se ha agotado.
+
+Por tal motivo se podria llegar a verificar que no hay cantidad alguna disponible en su momento y por lo tanto el elemento o material no estaria disponible en ninguna circunstancia.
+
 Estos elementos representan los recursos disponibles y operativos dentro del sistema.`;
       },
-      accessors: ["nombre", "valor", "created_at", "estado"],
-      headers: ["Nombre", "Valor", "Fecha de creación", "Estado"],
+      accessors: ["nombre", "valor", "created_at"],
+      headers: ["Nombre", "Valor", "Fecha de creación"],
       withTable: true,
       filterFn: (data: Elemento[]) => data.filter((e) => e.estado),
     },
@@ -53,10 +60,14 @@ Estos elementos representan los recursos disponibles y operativos dentro del sis
         return `
 Se han encontrado ${inactivos} elementos con estado inactivo.
 
+Dado que hasta el momento no ha sido desactivado ningun elemento quiere decir que no se han agotado las reservas encontradas en el stock del inevntario y que aunsigue disponible.
+
+Pero por otro lado eso solo da a entender que en el CGDSS se cuenta con los elemetos suficientes para el trabajo solicitados en las diferentes sedes
+
 Es importante revisar estos registros para determinar si deben ser reactivados o dados de baja definitivamente.`;
       },
-      withTable: false,
-      filterFn: (data: Elemento[]) => data.filter((e) => !e.estado),
+      // withTable: false,
+      filterFn: (data: Elemento[]) => data,
     },
     {
       id: "nuevos",
@@ -71,13 +82,17 @@ Es importante revisar estos registros para determinar si deben ser reactivados o
           );
         }).length;
 
+        const porcentaje =
+          data.length > 0 ? ((delMes / data.length) * 100).toFixed(2) : "0.00";
         return `
 Este mes se han registrado ${delMes} nuevos elementos.
+
+Es importante realizar este tipo de seguimiento ya que asi nos damos cuenta como ha progresado el registro de nuevos elementos al mes, en este caso por el momento se maneja un porcentaje del ${porcentaje} %   
 
 El seguimiento de los elementos recientemente añadidos permite evaluar el crecimiento del inventario y la actualización de recursos.`;
       },
       withTable: false,
-      filterFn: (data: Elemento[]) => data, // no es necesaria una tabla
+      filterFn: (data: Elemento[]) => data,
     },
   ];
 
