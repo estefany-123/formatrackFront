@@ -29,7 +29,6 @@ const Admin =() => {
             },
             {
                 key : "3",
-<<<<<<< HEAD
                 title : "Tipos de Sitios",
                 content : <TipoSitioTable/>
             },
@@ -54,51 +53,6 @@ const Admin =() => {
                 content : <CategoriasTable/>
             },
             
-=======
-                title : "Areas",
-                content : <AreaTable/>
-            },
-            {
-                key : "4",
-                title : "#",
-                content : <Home/>
-            },
-            {
-                key : "5",
-                title : "Fichas",
-                content : <FcihasTable/>
-            },
-            {
-                key : "6",
-                title : "Programas de formación",
-                content : <ProgramasTable/>
-            },
-            {
-                key : "7",
-                title : "permisos",
-                content : <Home/>
-            },
-            {
-                key : "8",
-                title : "Rol Modulo",
-                content : <RolModuloTable/>
-            },
-            {
-                key : "9",
-                title : "sedes",
-                content : <SedeTable/>
-            },
-            {
-                key : "10",
-                title : "sitios",
-                content : <SitiosTable/>
-            },
-            {
-                key : "11",
-                title : "permisos",
-                content : <PermisoTable/>
-            }
->>>>>>> origin/luis
         ]
 
   return (
