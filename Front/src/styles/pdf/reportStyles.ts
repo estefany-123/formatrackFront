@@ -24,7 +24,7 @@ export const reportStyles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   description: {
-    fontSize: 18,
+    fontSize: 13,
     marginBottom: 20,
     textAlign: 'justify',
   },
