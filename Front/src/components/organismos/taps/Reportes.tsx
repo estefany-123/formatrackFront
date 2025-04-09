@@ -8,6 +8,7 @@ import SolicitudReportSelector from "@/pages/Reportes/Solicitudes/Solicitud";
 import TipoReportSelector from "@/pages/Reportes/TiposMovimiento/TipoMovimiento";
 import UnidadReportSelector from "@/pages/Reportes/UnidadesMedida/UnidadMedida";
 import VerificacionReportSelector from "@/pages/Reportes/Verificaciones/Verificacion";
+import ReportFichas from "@/pages/Reportes/fichas/Fichas";
 
 export const Reportes =() => {
 
@@ -30,7 +31,7 @@ export const Reportes =() => {
             {
                 key : "4",
                 title : "Fichas",
-                content :""
+                content :<ReportFichas/>
             },
             {
                 key : "5",
