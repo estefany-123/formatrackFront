@@ -31,7 +31,7 @@ const Globaltable = <T extends { key: string; estado: boolean }>({ data, columns
       <TableHeader columns={[...columns, { key: 'actions', label: 'Acciones' }]}>
 
         {(column) => (
-          <TableColumn key={column.key.toString()}>{column.label}</TableColumn>
+          <TableColumn  className="text-center" key={column.key.toString()}>{column.label}</TableColumn>
         )}
 
       </TableHeader>
@@ -43,7 +43,7 @@ const Globaltable = <T extends { key: string; estado: boolean }>({ data, columns
         const column = columns.find((col) => col.key === columnKey);
 
         return (
-          <TableCell>
+          <TableCell className="text-center">
             {column?.render ? column.render(item) : getKeyValue(item, columnKey)}
             {columnKey === "actions" && (
               <div>
