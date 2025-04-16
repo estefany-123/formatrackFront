@@ -19,9 +19,8 @@ export const TipoMovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedTipoMovimiento, setSelectedTipoMovimiento] = useState<TipoMovimiento | null>(
-    null
-  );
+  const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
+    useState<TipoMovimiento | null>(null);
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -64,8 +63,20 @@ export const TipoMovimientoTable = () => {
         </Chip>
       ),
     },
-    {key:"created_at", label:"Fecha Creacion"},
-    {key:"updated_at", label:"Fecha Actualizacion"}
+    {
+      key: "created_at",
+      label: "Fecha Creación",
+      render: (tipo: TipoMovimiento) => (
+        <span>{new Date(tipo.created_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (tipo: TipoMovimiento) => (
+        <span>{new Date(tipo.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
   ];
 
   if (isLoading) {
@@ -80,9 +91,7 @@ export const TipoMovimientoTable = () => {
     ?.filter((tipo) => tipo?.id_tipo !== undefined)
     .map((tipo) => ({
       ...tipo,
-      key: tipo.id_tipo
-        ? tipo.id_tipo.toString()
-        : crypto.randomUUID(),
+      key: tipo.id_tipo ? tipo.id_tipo.toString() : crypto.randomUUID(),
       estado: Boolean(tipo.estado),
     }));
 
@@ -96,9 +105,8 @@ export const TipoMovimientoTable = () => {
         text="Nuevo tipo"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -114,7 +122,7 @@ export const TipoMovimientoTable = () => {
         <button
           type="submit"
           form="tipo-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>

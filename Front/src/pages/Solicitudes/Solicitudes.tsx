@@ -45,6 +45,20 @@ export const SolicitudTable = () => {
   const columns: TableColumn<Solicitud>[] = [
     { key: "descripcion", label: "Nombre" },
     { key: "cantidad", label: "Valor" },
+    {
+      key: "created_at",
+      label: "Fecha Solicitud",
+      render: (solicitud: Solicitud) => (
+        <span>{new Date(solicitud.created_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (solicitud: Solicitud) => (
+        <span>{new Date(solicitud.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
   ];
 
   if (isLoading) {
@@ -74,9 +88,9 @@ export const SolicitudTable = () => {
         text="Nuevo solicitud"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
+        color={undefined}
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -85,14 +99,14 @@ export const SolicitudTable = () => {
         onOpenChange={handleClose}
       >
         <Formulario
-          id="element-form"
+          id="solicitud-form"
           addData={handleAddSolicitud}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          form="solicitud-form"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>

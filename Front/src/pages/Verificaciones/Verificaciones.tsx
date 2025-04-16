@@ -45,6 +45,20 @@ export const VerificacionTable = () => {
   const columns: TableColumn<Verificacion>[] = [
     { key: "persona_encargada", label: "" },
     { key: "persona_asignada", label: "Solicitante" },
+    {
+      key: "created_at",
+      label: "Fecha Verificacion",
+      render: (verificacion: Verificacion) => (
+        <span>{new Date(verificacion.created_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (verificacion: Verificacion) => (
+        <span>{new Date(verificacion.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
   ];
 
   if (isLoading) {
@@ -71,35 +85,34 @@ export const VerificacionTable = () => {
       </h1>
 
       <Buton
-        text="Nuevo elemento"
+        text="Nueva Verificacion"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
-        ModalTitle="Registrar Nuevo Verificacion"
+        ModalTitle="Registrar Nueva Verificacion"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <Formulario
-          id="element-form"
+          id="verificacion-form"
           addData={handleAddVerificacion}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          form="verificacion-form"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Verificacion"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >

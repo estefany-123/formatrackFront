@@ -35,9 +35,9 @@ export const RolTable = () => {
   const handleAddRol = async (rol: Rol) => {
     try {
       await addRol(rol);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose();
     } catch (error) {
-      console.error("Error al agregar el usuario:", error);
+      console.error("Error al agregar el rol:", error);
     }
   };
 
@@ -49,6 +49,20 @@ export const RolTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Rol>[] = [
     { key: "nombre", label: "Nombre" },
+    {
+      key: "created_at",
+      label: "Fecha Creación",
+      render: (rol: Rol) => (
+        <span>{new Date(rol.created_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (rol: Rol) => (
+        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
     {
       key: "estado",
       label: "Estado",
@@ -65,8 +79,6 @@ export const RolTable = () => {
         
       ),
     },
-    {key:"created_at", label:"Fecha Creacion"},
-    {key:"updated_at", label:"Fecha Actualizacion"}
   ];
 
   if (isLoading) {
@@ -81,11 +93,10 @@ export const RolTable = () => {
     ?.filter((rol) => rol?.id_rol !== undefined)
     .map((rol) => ({
       ...rol,
-      key: rol.id_rol
-        ? rol.id_rol.toString()
-        : crypto.randomUUID(),
+      key: rol.id_rol ? rol.id_rol.toString() : crypto.randomUUID(),
       estado: Boolean(rol.estado),
     }));
+    
 
   return (
     <div className="p-4">
@@ -97,9 +108,8 @@ export const RolTable = () => {
         text="Nuevo rol"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -115,7 +125,7 @@ export const RolTable = () => {
         <button
           type="submit"
           form="rol-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>

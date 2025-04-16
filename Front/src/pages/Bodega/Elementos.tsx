@@ -9,7 +9,6 @@ import { Elemento } from "@/types/Elemento";
 import Formulario from "@/components/organismos/Elementos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Elementos/FormUpdate";
 
-
 export const ElementosTable = () => {
   const { elementos, isLoading, isError, error, addElemento, changeState } =
     useElemento();
@@ -38,7 +37,7 @@ export const ElementosTable = () => {
       await addElemento(elemento);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
-      console.error("Error al agregar el usuario:", error);
+      console.error("Error al agregar el elemento:", error);
     }
   };
 
@@ -52,9 +51,24 @@ export const ElementosTable = () => {
     { key: "nombre", label: "Nombre" },
     { key: "valor", label: "Valor" },
     { key: "imagen_elemento", label: "Elemento" },
+    { key: "tipo_elemento", label: "Tipo Elemento" },
+    {
+      key: "created_at",
+      label: "Fecha Creación",
+      render: (elemento: Elemento) => (
+        <span>{new Date(elemento.created_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (elemento: Elemento) => (
+        <span>{new Date(elemento.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
     {
       key: "estado",
-      label: "estado",
+      label: "Estado",
       render: (elemento: Elemento) => (
         <Chip
           className={`px-2 py-1 rounded ${
@@ -89,7 +103,7 @@ export const ElementosTable = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
+      <h1 className="text-2xl font-bold mb-2 mt-2 text-center">
         Elementos Registrados
       </h1>
 
@@ -97,9 +111,8 @@ export const ElementosTable = () => {
         text="Nuevo elemento"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -115,7 +128,7 @@ export const ElementosTable = () => {
         <button
           type="submit"
           form="element-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>
