@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";
 import Formulario from "@/components/organismos/Elementos/FormRegister";
@@ -66,21 +65,7 @@ export const ElementosTable = () => {
         <span>{new Date(elemento.updated_at).toLocaleDateString("es-ES")}</span>
       ),
     },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (elemento: Elemento) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            elemento.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${elemento.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {elemento.estado ? "Activo" : "Inactivo"}
-        </Chip>
-      ),
-    },
+    { key: "estado", label:"Estado"}
   ];
 
   if (isLoading) {

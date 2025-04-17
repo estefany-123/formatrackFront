@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { TipoMovimiento } from "@/types/TipoMovimiento";
 import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
@@ -48,21 +47,6 @@ export const TipoMovimientoTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<TipoMovimiento>[] = [
     { key: "nombre", label: "Nombre" },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (tipo: TipoMovimiento) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            tipo.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${tipo.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {tipo.estado ? "Activo" : "Inactivo"}
-        </Chip>
-      ),
-    },
     {
       key: "created_at",
       label: "Fecha Creación",

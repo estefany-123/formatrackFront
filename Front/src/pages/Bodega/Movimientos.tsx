@@ -136,7 +136,8 @@ export const MovimientoTable = () => {
           data={MovimientoWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={() => {}}
+          showEstado={false}
+          showActions={true}
         />
       )}
     </div>

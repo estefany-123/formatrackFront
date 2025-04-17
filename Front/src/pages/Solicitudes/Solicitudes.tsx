@@ -132,7 +132,6 @@ export const SolicitudTable = () => {
           data={SolicitudsWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={() => {}}
         />
       )}
     </div>

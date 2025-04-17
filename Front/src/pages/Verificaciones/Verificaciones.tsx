@@ -131,7 +131,6 @@ export const VerificacionTable = () => {
           data={VerificacionsWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={() => {}}
         />
       )}
     </div>

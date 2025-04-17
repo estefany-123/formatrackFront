@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { Inventario } from "@/types/Inventario";
@@ -71,21 +70,7 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
         </span>
       ),
     },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (inventario: Inventario) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            inventario.estado ? "text-green-500" : " text-red-500"
-          }`}
-          color={`${inventario.estado ? "success" : "danger"}`}
-          variant="flat"
-        >
-          {inventario.estado ? "Activo" : "Inactivo"}
-        </Chip>
-      ),
-    },
+    { key: "estado", label:"Estado"}
   ];
 
   if (isLoading && !inventariosProp) {

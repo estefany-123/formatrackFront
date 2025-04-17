@@ -7,7 +7,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 
-import { Button, Input, Pagination } from "@heroui/react";
+import { Button, Chip, Input, Pagination } from "@heroui/react";
 import {
   Table,
   TableHeader,
@@ -29,7 +29,9 @@ interface TableProps<T extends { key: string; estado?: boolean }> {
   data: T[];
   columns: TableColumn<T>[];
   onEdit: (item: T) => void;
-  onDelete: (item: T) => void | undefined | Promise<void>;
+  onDelete?: (item: T) => void | undefined | Promise<void>;
+  showEstado?: boolean;
+  showActions?: boolean;
 }
 
 const Globaltable = <T extends { key: string; estado?: boolean }>({
@@ -37,6 +39,8 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   columns,
   onEdit,
   onDelete,
+  showEstado = true,
+  showActions = true,
 }: TableProps<T>) => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -65,8 +69,8 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
     }
     if (startDate || endDate) {
       result = result.filter((item) => {
-        const itemDate = new Date((item as any).created_at); 
-        const valueDate = new Date((item as any).updated_at); 
+        const itemDate = new Date((item as any).created_at);
+        const valueDate = new Date((item as any).updated_at);
         if (startDate && new Date(startDate) > itemDate) return false;
         if (endDate && new Date(endDate) < itemDate) return false;
         if (startDate && new Date(startDate) > valueDate) return false;
@@ -74,10 +78,9 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
         return true;
       });
     }
-  
+
     return result;
   }, [searchTerm, startDate, endDate, data, columns]);
-  
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
@@ -139,19 +142,17 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   return (
     <>
       <div className="flex ml-80 mt-22 space-x-2">
-      <div className="ml-28 ">
-      <Input
-        isClearable
-        label="Buscar"
-        placeholder="Tipo de Busqueda..."
-        radius="lg"
-        value={searchTerm}
-        onValueChange={setSearchTerm}
-        startContent={
-          <MagnifyingGlassIcon className="w-4 h-4"/>
-        }
-      />
-    </div>
+        <div className="ml-28 ">
+          <Input
+            isClearable
+            label="Buscar"
+            placeholder="Tipo de Busqueda..."
+            radius="lg"
+            value={searchTerm}
+            onValueChange={setSearchTerm}
+            startContent={<MagnifyingGlassIcon className="w-4 h-4" />}
+          />
+        </div>
         <h1>Buscar por fecha</h1>
         <input
           type="date"
@@ -235,29 +236,41 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
             <TableRow key={item.key}>
               {(columnKey) => {
                 // Encuentra la configuración de la columna
-                const column = columns.find((col) => col.key === columnKey);
-
                 return (
                   <TableCell className="text-center">
-                    {column?.render
-                      ? column.render(item)
-                      : getKeyValue(item, columnKey)}
-                    {columnKey === "actions" && (
-                      <div>
-                        <button onClick={() => onEdit(item)} color="primary">
-                          <PencilIcon className="h-5 w-5 text-blue-500" />
-                        </button>
+                  {columns.find(c => c.key === columnKey)?.render
+                    ? columns.find(c => c.key === columnKey)!.render!(item)
+                    : getKeyValue(item, columnKey)}
 
-                        <button onClick={() => onDelete(item)}>
+                  {showEstado && columnKey === "estado" && (
+                    <Chip
+                      className={`px-2 py-1 rounded ${
+                        item.estado ? "text-green-500" : "text-red-500"
+                      }`}
+                      color={item.estado ? "success" : "danger"}
+                      variant="flat"
+                    >
+                      {item.estado ? "Activo" : "Inactivo"}
+                    </Chip>
+                  )}
+                  
+                  {showActions && columnKey === "actions" && (
+                    <div className="flex gap-2 justify-center">
+                      <button onClick={() => onEdit(item)}>
+                        <PencilIcon className="h-5 w-5 text-blue-500" />
+                      </button>
+                      {onDelete && (
+                        <button onClick={() => onDelete?.(item)}>
                           {item.estado ? (
-                            <TrashIcon className={`h-5 w-5 text-red-500 `} />
+                            <TrashIcon className="h-5 w-5 text-red-500" />
                           ) : (
-                            <CheckIcon className={`h-5 w-5 text-green-500 `} />
+                            <CheckIcon className="h-5 w-5 text-green-500" />
                           )}
                         </button>
-                      </div>
-                    )}
-                  </TableCell>
+                      )}
+                    </div>
+                  )}
+                </TableCell>
                 );
               }}
             </TableRow>

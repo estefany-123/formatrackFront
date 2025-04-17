@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useRol } from "@/hooks/Roles/useRol";
 import { Rol } from "@/types/Rol";
 import Formulario from "@/components/organismos/Roles/FormRegister";
@@ -63,22 +62,7 @@ export const RolTable = () => {
         <span>{new Date(rol.updated_at).toLocaleDateString("es-ES")}</span>
       ),
     },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (rol: Rol) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            rol.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${rol.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {rol.estado ? "Activo" : "Inactivo"}
-        </Chip>
-        
-      ),
-    },
+    { key: "estado", label:"Estado"}
   ];
 
   if (isLoading) {

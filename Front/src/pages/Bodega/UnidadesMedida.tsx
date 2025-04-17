@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { Unidad } from "@/types/Unidad";
 import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
@@ -61,21 +60,7 @@ export const UnidadTable = () => {
         <span>{new Date(unidad.updated_at).toLocaleDateString("es-ES")}</span>
       ),
     },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (unidad: Unidad) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            unidad.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${unidad.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {unidad.estado ? "Activo" : "Inactivo"}
-        </Chip>
-      ),
-    },
+    { key: "estado", label:"Estado"}
   ];
 
   if (isLoading) {

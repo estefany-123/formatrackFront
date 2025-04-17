@@ -8,4 +8,5 @@ export type Verificacion = {
     created_at:string;
     updated_at:string;
     fk_inventario:number
+    fk_sitio:number
 }
