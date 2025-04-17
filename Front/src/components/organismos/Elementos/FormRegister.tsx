@@ -31,6 +31,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const { unidades, isLoading: loadingUnidades, isError: errorUnidades } = useUnidad();
 
 
+
   const onSubmit = async (e: React.FormEvent) => {
     //preguntar si esta bien no usar el e: React.FormEvent
     //y aqui el preventdefault

@@ -1,8 +1,8 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "./layouts/layout";
-import Home from "./pages/Home/Home";
-import Admin from "./components/organismos/taps/admin";
-import DashboardEstadisticas from "./pages/Estadisticas/DashboardEstadisticas";
+import { Route, Routes } from "react-router-dom"
+import Layout from "./layouts/layout"
+import Home from "./pages/Home/Home"
+import Admin from "./components/organismos/taps/admin"
+import {Estadisticas} from "./components/organismos/taps/estadisticas"
 import { Bodega } from "./components/organismos/taps/Bodega";
 import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
 import { VerificacionTable } from "./pages/Verificaciones/Verificaciones";
@@ -26,7 +26,7 @@ function App() {
         <Route path="reportes" element={<Reportes />} />
         <Route path="verificaciones" element={<VerificacionTable />} />
         <Route path="configuraciones" element={<Configuraciones />} />
-        <Route path="estadisticas" element={<DashboardEstadisticas />} />
+        <Route path="estadisticas" element={<Estadisticas />} />
       </Route>
     </Routes>
   );

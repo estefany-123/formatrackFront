@@ -1,4 +1,5 @@
 import Tap from "@/components/molecules/Tabs";
+import ElementoReportArea from "@/pages/Reportes/areas/Areas";
 import ElementoReportPage from "@/pages/Reportes/Elementos/Elemento";
 import InventarioReportSelector from "@/pages/Reportes/Inventarios/Inventario";
 import MovimientoReportSelector from "@/pages/Reportes/Movimientos/Movimiento";
@@ -7,6 +8,7 @@ import SolicitudReportSelector from "@/pages/Reportes/Solicitudes/Solicitud";
 import TipoReportSelector from "@/pages/Reportes/TiposMovimiento/TipoMovimiento";
 import UnidadReportSelector from "@/pages/Reportes/UnidadesMedida/UnidadMedida";
 import VerificacionReportSelector from "@/pages/Reportes/Verificaciones/Verificacion";
+import ReportFichas from "@/pages/Reportes/fichas/Fichas";
 
 export const Reportes =() => {
 
@@ -29,7 +31,7 @@ export const Reportes =() => {
             {
                 key : "4",
                 title : "Fichas",
-                content :""
+                content :<ReportFichas/>
             },
             {
                 key : "5",
@@ -39,7 +41,7 @@ export const Reportes =() => {
             {
                 key : "6",
                 title : "Areas",
-                content :""
+                content :<ElementoReportArea/>
             },
             {
                 key : "7",
