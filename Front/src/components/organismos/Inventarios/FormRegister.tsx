@@ -8,17 +8,16 @@ type FormularioProps = {
   addData: (inventario: Inventario) => Promise<void>;
   onClose: () => void;
   id: string;
-  idSitio?: number;
 };
 
-export default function Formulario({ addData, onClose, id, idSitio }: FormularioProps) {
+export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const [formData, setFormData] = React.useState<Inventario>({
     id_inventario: 0,
     stock: 0,
     estado: true,
     created_at:'',
     updated_at:'',
-    fk_sitio: idSitio ?? 0,
+    fk_sitio: 0,
     fk_elemento: 0,
   });
 

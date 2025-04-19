@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form } from "@heroui/form";
 import Inpu from "@/components/molecules/input";
 import { Select, SelectItem } from "@heroui/react";
 import { Rol } from "@/types/Rol";
-import { RolSchema } from "@/schemas/Rol";
 
 type FormularioProps = {
   addData: (rol: Rol) => Promise<void>;
@@ -20,30 +19,21 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     updated_at:'',
   });
 
-  const [error, setError] = useState<{ nombre?: string }>({});
-
   const onSubmit = async (e: React.FormEvent) => {
+    //preguntar si esta bien no usar el e: React.FormEvent
+    //y aqui el preventdefault
     e.preventDefault();
-  
-    const result = RolSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors = result.error.flatten().fieldErrors;
-      setError({
-        nombre: fieldErrors.nombre?.[0],
-      });
-      return;
-    }
-
     try {
+      console.log("Enviando formulario con datos:", formData);
       await addData(formData);
+      console.log("Rol guardado correctamente");
       setFormData({
         id_rol: 0,
         nombre: "",
         estado: true,
-        created_at: "",
-        updated_at: "",
+        created_at:'',
+        updated_at:'',
       });
-      setError({});
       onClose();
     } catch (error) {
       console.error("Error al cargar el rol", error);
@@ -58,11 +48,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         type="text"
         name="nombre"
         value={formData.nombre}
-        onChange={(e) => {
-          setFormData({ ...formData, nombre: e.target.value });
-          setError({});
-        }}
-        error={error.nombre}
+        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
       />
 
       <Select
@@ -72,8 +58,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         placeholder="Estado"
         onChange={(e) =>
           setFormData({ ...formData, estado: e.target.value === "true" })
-        }
-        selectedKeys={formData.estado ? "true" : "false"}
+        } // Convierte a booleano
       >
         <SelectItem key="true">Activo</SelectItem>
         <SelectItem key="false">Inactivo</SelectItem>

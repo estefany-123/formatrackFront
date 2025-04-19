@@ -2,9 +2,6 @@ import React from "react";
 import { Form } from "@heroui/form";
 import Inpu from "@/components/molecules/input";
 import { Verificacion } from "@/types/Verificacion";
-import { Select, SelectItem } from "@heroui/react";
-import { useInventario } from "@/hooks/Inventarios/useInventario";
-import { useSitios } from "@/hooks/sitios/useSitios";
 
 type FormularioProps = {
   addData: (verificacion: Verificacion) => Promise<void>;
@@ -20,18 +17,10 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     hora_ingreso: "",
     hora_salida: "",
     observaciones: "",
-    created_at: "",
-    updated_at: "",
+    created_at:'',
+    updated_at:'',
     fk_inventario: 0,
-    fk_sitio: 0,
   });
-
-  const {
-    inventarios,
-    isLoading: loadingInventarios,
-    isError: errorInventarios,
-  } = useInventario();
-  const { sitios, isLoading: loadingSitios } = useSitios();
 
   const onSubmit = async (e: React.FormEvent) => {
     //preguntar si esta bien no usar el e: React.FormEvent
@@ -48,28 +37,15 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         hora_ingreso: "",
         hora_salida: "",
         observaciones: "",
-        created_at: "",
-        updated_at: "",
+        created_at:'',
+        updated_at:'',
         fk_inventario: 0,
-        fk_sitio: 0,
       });
       onClose();
     } catch (error) {
       console.error("Error al cargar la verifiacion", error);
     }
   };
-
-  const inventariosFiltrados = React.useMemo(() => {
-    return (
-      inventarios?.filter((inv) => inv.fk_sitio === formData.fk_sitio) || []
-    );
-  }, [inventarios, formData.fk_sitio]);
-
-  console.log("Sitio seleccionado:", formData.fk_sitio);
-
-  console.log("Inventarios filtrados:", inventariosFiltrados);
-
-
 
   return (
     <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
@@ -123,53 +99,16 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         }
       />
 
-      {!loadingSitios && sitios && (
-<Select
-  label="Sitio"
-  name="fk_sitio"
-  placeholder="Selecciona un sitio"
-  selectedKeys={formData.fk_sitio ? formData.fk_sitio.toString() : undefined}
-  onSelectionChange={(key) =>
-    setFormData({
-      ...formData,
-      fk_sitio: Number(key),
-      fk_inventario: 0,
-    })
-  }
->
-  {sitios.map((sitio) => (
-    <SelectItem key={sitio.id_sitio.toString()}>{sitio.nombre}</SelectItem>
-  ))}
-</Select>
-
-      )}
-
-{formData.fk_sitio > 0 && !loadingInventarios && !errorInventarios && (
-  inventariosFiltrados.length > 0 ? (
-    <Select
-      label="Inventario"
-      name="fk_inventario"
-      placeholder="Selecciona un inventario"
-      selectedKeys={
-        formData.fk_inventario ? formData.fk_inventario.toString() : undefined
-      }
-      onSelectionChange={(key) =>
-        setFormData({ ...formData, fk_inventario: Number(key) })
-      }
-    >
-      {inventariosFiltrados.map((inventario) => (
-        <SelectItem key={inventario.id_inventario.toString()}>
-          Inventario #{inventario.id_inventario} - Elemento #{inventario.fk_elemento}
-        </SelectItem>
-      ))}
-    </Select>
-  ) : (
-    <p className="text-sm text-gray-500 italic">
-      No hay inventarios disponibles para este sitio.
-    </p>
-  )
-)}
-
+      <Inpu
+        label="Inventario"
+        placeholder="Inventario"
+        type="number"
+        name="fk_inventario"
+        value={formData.fk_inventario.toString()}
+        onChange={(e) =>
+          setFormData({ ...formData, fk_inventario: Number(e.target.value) })
+        }
+      />
     </Form>
   );
 }

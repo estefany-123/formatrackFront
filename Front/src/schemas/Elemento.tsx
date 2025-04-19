@@ -3,7 +3,8 @@ import { z } from "zod";
 export const ElementoSchema = z.object({
   nombre: z
     .string({
-
+      required_error: "El nombre es requerido",
+      invalid_type_error: "El nombre debe ser un String",
     })
     .min(1, { message: "El nombre debe contener un argumento por lo menos" }),
 

@@ -52,6 +52,15 @@ Estos roles representan los recursos disponibles y operativos dentro del sistema
       withTable: true,
       filterFn: (data: Rol[]) => data.filter((e) => e.estado),
     },
+    {
+      id: "",
+      title: "",
+      description: (data: Rol[]) => {
+        return `hola`;
+      },
+      withTable: false,
+      filterFn: (data: Rol[]) => data,
+    },
   ];
 
   const selected = reports.find((r) => r.id === selectedReport);

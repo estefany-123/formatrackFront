@@ -22,6 +22,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         nombre: "",
         persona_encargada: "",
         estado: true,
+        created_at:"",
         fk_sede: 0,
     });
 
@@ -37,6 +38,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 nombre: "",
                 persona_encargada: "",
                 estado: true,
+                created_at:"",
                 fk_sede: 0,
             });
             onClose();
