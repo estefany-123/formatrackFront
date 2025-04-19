@@ -12,6 +12,7 @@
 
 // const entidades = ["Fichas", "Areas", "p.formacion", "Sede","permisos","rol_modulo","sitios","usersFichas"]
 
+<<<<<<< HEAD
 // export const EstadisticasGlobal = () => {
 //   // array que guarda todos los datos obtenidos de las entidades.
 //   const [datos, setDatos] = useState<any[]>([])
@@ -19,6 +20,9 @@
 //   const [tipoGrafica, setTipoGrafica] = useState("bar")
 //   // define si se agrupa por fecha exacta o por mes.
 //   const [modo, setModo] = useState("fecha") // fecha o mes
+=======
+const entidades = ["Fichas", "Areas", "p.formacion", "Sede","permisos","rol_modulo","sitios","usersFichas","elemento","verificacion","unidad", "tipoMovimiento", "inventario","solicitud","rol","movimiento"]
+>>>>>>> 665c2ec415871aa74a338e0daf25323c1bf004c4
 
 
 //   // solicitud para carga de datos

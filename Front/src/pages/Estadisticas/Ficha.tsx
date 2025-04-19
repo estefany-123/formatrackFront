@@ -1,7 +1,7 @@
-import { Line, Bar, Pie } from "react-chartjs-2";
+import GraficaBase from "@/components/graficasBase/graficas";
 import { Chart, registerables } from "chart.js";
 import { useFichas } from "../../hooks/fichas/useFichas";
-import { ChartData } from "chart.js";  // Asegúrate de importar ChartData
+import { ChartData } from "chart.js";  
 
 Chart.register(...registerables);
 
@@ -17,7 +17,7 @@ const EstadisticasFichas = () => {
   const conteoInactivasPorMes = new Array(12).fill(0);
   const conteoPorPrograma: { [key: number]: number } = {};
 
-  // Contar fichas activas e inactivas por mes, y total por programa
+
   fichas.forEach((ficha) => {
     const fecha = new Date(ficha.created_at);
     const mes = fecha.getMonth();
@@ -25,7 +25,7 @@ const EstadisticasFichas = () => {
     if (ficha.estado) conteoActivasPorMes[mes]++;
     else conteoInactivasPorMes[mes]++;
     
-    // Contar fichas por programa
+
     if (conteoPorPrograma[ficha.fk_programa]) {
       conteoPorPrograma[ficha.fk_programa]++;
     } else {
@@ -33,7 +33,7 @@ const EstadisticasFichas = () => {
     }
   });
 
-  // 1. Gráfico de barras (Total de fichas por mes)
+
   const barData = {
     labels: mesesNombres,
     datasets: [
@@ -45,7 +45,7 @@ const EstadisticasFichas = () => {
     ],
   };
 
-  // 2. Gráfico de Pastel (Distribución activa/inactiva)
+
   const pieData = {
     labels: ["Activas", "Inactivas"],
     datasets: [
@@ -59,7 +59,6 @@ const EstadisticasFichas = () => {
     ],
   };
 
-  // 3. Gráfico de líneas (Fichas activas vs. inactivas por mes)
   const lineData: ChartData<"line", any[], string> = {
     labels: mesesNombres,
     datasets: [
@@ -80,43 +79,13 @@ const EstadisticasFichas = () => {
     ],
   };
 
-  // 4. Gráfico de barras (Total de fichas por programa)
-  const programData = {
-    labels: Object.keys(conteoPorPrograma).map((key) => `Programa ${key}`),
-    datasets: [
-      {
-        label: "Total de fichas por programa",
-        data: Object.values(conteoPorPrograma),
-        backgroundColor: "#60a5fa",
-      },
-    ],
-  };
+
 
   return (
-    <div className="space-y-8">
-      {/* 1. Gráfico de barras - Total de fichas por mes */}
-      <div className="bg-white shadow rounded p-4 w-full md:w-2/3 mx-auto">
-        <h2 className="text-lg font-semibold mb-2">Total de fichas por mes</h2>
-        <Bar data={barData} options={{ responsive: true, maintainAspectRatio: true }} />
-      </div>
-
-      {/* 2. Gráfico de Pastel - Distribución activa/inactiva */}
-      <div className="bg-white shadow rounded p-4 w-full md:w-1/3 mx-auto">
-        <h2 className="text-lg font-semibold mb-2">Distribución de estado de las fichas</h2>
-        <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: true }} />
-      </div>
-
-      {/* 3. Gráfico de líneas - Fichas activas vs inactivas por mes */}
-      <div className="bg-white shadow rounded p-4 w-full md:w-2/3 mx-auto">
-        <h2 className="text-lg font-semibold mb-2">Fichas activas vs inactivas por mes</h2>
-        <Line data={lineData} options={{ responsive: true, maintainAspectRatio: true }} />
-      </div>
-
-      {/* 4. Gráfico de barras - Fichas por programa */}
-      <div className="bg-white shadow rounded p-4 w-full md:w-2/3 mx-auto">
-        <h2 className="text-lg font-semibold mb-2">Fichas por programa</h2>
-        <Bar data={programData} options={{ responsive: true, maintainAspectRatio: true }} />
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
+      <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="bar" data={barData} titulo="Total de fichas por mes"/>
+      <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="pie" data={pieData} titulo="Distribución de estado de las fichas"/>
+      <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="line" data={lineData} titulo="Fichas activas vs inactivas por mes"/>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Form } from "@heroui/form";
 import Inpu from "@/components/molecules/input";
 import { Elemento } from "@/types/Elemento";
 import { Select, SelectItem } from "@heroui/react";
+import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 
 type FormularioProps = {
   addData: (elemento: Elemento) => Promise<void>;
@@ -19,12 +20,16 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     no_perecedero: false,
     estado: true,
     imagen_elemento: "",
-    created_at:'',
-    updated_at:'',
+    created_at: "",
+    updated_at: "",
     fk_unidad_medida: 0,
     fk_categoria: 0,
     fk_caracteristica: 0,
+    tipo_elemento: "",
   });
+
+  const { unidades, isLoading: loadingUnidades, isError: errorUnidades } = useUnidad();
+
 
   const onSubmit = async (e: React.FormEvent) => {
     //preguntar si esta bien no usar el e: React.FormEvent
@@ -42,11 +47,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         no_perecedero: false,
         estado: true,
         imagen_elemento: "",
-        created_at:'',
-        updated_at:'',
+        created_at: "",
+        updated_at: "",
         fk_unidad_medida: 0,
         fk_categoria: 0,
         fk_caracteristica: 0,
+        tipo_elemento: "",
       });
       onClose();
     } catch (error) {
@@ -75,25 +81,18 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       />
 
       <Select
-        aria-labelledby="tipoElemento"
-        labelPlacement="outside"
-        name="tipoElementoo"
-        placeholder="Tipo de Elemento"
+        label="Tipo de Elemento"
+        name="tipo_elemento"
+        placeholder="Selecciona un tipo"
         onChange={(e) => {
           const value = e.target.value;
-          if (value === "perecedero") {
-            setFormData({
-              ...formData,
-              perecedero: true,
-              no_perecedero: false,
-            });
-          } else if (value === "no_perecedero") {
-            setFormData({
-              ...formData,
-              perecedero: false,
-              no_perecedero: true,
-            });
-          }
+          setFormData({
+            ...formData,
+            tipo_elemento:
+              value === "perecedero" ? "Perecedero" : "No Perecedero",
+            perecedero: value === "perecedero",
+            no_perecedero: value === "no_perecedero",
+          });
         }}
       >
         <SelectItem key="perecedero">Perecedero</SelectItem>
@@ -107,7 +106,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         placeholder="Estado"
         onChange={(e) =>
           setFormData({ ...formData, estado: e.target.value === "true" })
-        } // Convierte a booleano
+        }
       >
         <SelectItem key="true">Activo</SelectItem>
         <SelectItem key="false">Inactivo</SelectItem>
@@ -129,16 +128,22 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           }
         }}
       />
-      <Inpu
-        label="Unidad Medida"
-        placeholder="Unidad Medida"
-        type="number"
-        name="fk_unidad_medida"
-        value={formData.fk_unidad_medida.toString()}
-        onChange={(e) =>
-          setFormData({ ...formData, fk_unidad_medida: Number(e.target.value) })
-        }
-      />
+      {!loadingUnidades && !errorUnidades && unidades && (
+        <Select
+          label="Unidad Medida"
+          name="fk_unidad_medida"
+          placeholder="Selecciona una unidad"
+          onChange={(e) =>
+            setFormData({ ...formData, fk_unidad_medida: Number(e.target.value) })
+          }
+        >
+          {unidades.map((unidad) => (
+            <SelectItem key={unidad.id_unidad}>
+              {unidad.nombre}
+            </SelectItem>
+          ))}
+        </Select>
+      )}
       <Inpu
         label="Categoria"
         placeholder="Categoria"

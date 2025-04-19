@@ -11,4 +11,5 @@ export type Elemento = {
   fk_unidad_medida: number;
   fk_categoria: number;
   fk_caracteristica: number;
+  tipo_elemento:string
 };

@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { TipoMovimiento } from "@/types/TipoMovimiento";
 import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
@@ -19,9 +18,8 @@ export const TipoMovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedTipoMovimiento, setSelectedTipoMovimiento] = useState<TipoMovimiento | null>(
-    null
-  );
+  const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
+    useState<TipoMovimiento | null>(null);
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -50,22 +48,19 @@ export const TipoMovimientoTable = () => {
   const columns: TableColumn<TipoMovimiento>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "estado",
-      label: "Estado",
+      key: "created_at",
+      label: "Fecha Creación",
       render: (tipo: TipoMovimiento) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            tipo.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${tipo.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {tipo.estado ? "Activo" : "Inactivo"}
-        </Chip>
+        <span>{new Date(tipo.created_at).toLocaleDateString("es-ES")}</span>
       ),
     },
-    {key:"created_at", label:"Fecha Creacion"},
-    {key:"updated_at", label:"Fecha Actualizacion"}
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (tipo: TipoMovimiento) => (
+        <span>{new Date(tipo.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
   ];
 
   if (isLoading) {
@@ -80,9 +75,7 @@ export const TipoMovimientoTable = () => {
     ?.filter((tipo) => tipo?.id_tipo !== undefined)
     .map((tipo) => ({
       ...tipo,
-      key: tipo.id_tipo
-        ? tipo.id_tipo.toString()
-        : crypto.randomUUID(),
+      key: tipo.id_tipo ? tipo.id_tipo.toString() : crypto.randomUUID(),
       estado: Boolean(tipo.estado),
     }));
 
@@ -96,9 +89,8 @@ export const TipoMovimientoTable = () => {
         text="Nuevo tipo"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -114,7 +106,7 @@ export const TipoMovimientoTable = () => {
         <button
           type="submit"
           form="tipo-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>

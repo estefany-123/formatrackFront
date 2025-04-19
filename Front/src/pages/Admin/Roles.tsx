@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useRol } from "@/hooks/Roles/useRol";
 import { Rol } from "@/types/Rol";
 import Formulario from "@/components/organismos/Roles/FormRegister";
@@ -35,9 +34,9 @@ export const RolTable = () => {
   const handleAddRol = async (rol: Rol) => {
     try {
       await addRol(rol);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose();
     } catch (error) {
-      console.error("Error al agregar el usuario:", error);
+      console.error("Error al agregar el rol:", error);
     }
   };
 
@@ -50,23 +49,20 @@ export const RolTable = () => {
   const columns: TableColumn<Rol>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "estado",
-      label: "Estado",
+      key: "created_at",
+      label: "Fecha Creación",
       render: (rol: Rol) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            rol.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${rol.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {rol.estado ? "Activo" : "Inactivo"}
-        </Chip>
-        
+        <span>{new Date(rol.created_at).toLocaleDateString("es-ES")}</span>
       ),
     },
-    {key:"created_at", label:"Fecha Creacion"},
-    {key:"updated_at", label:"Fecha Actualizacion"}
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (rol: Rol) => (
+        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    { key: "estado", label:"Estado"}
   ];
 
   if (isLoading) {
@@ -81,11 +77,10 @@ export const RolTable = () => {
     ?.filter((rol) => rol?.id_rol !== undefined)
     .map((rol) => ({
       ...rol,
-      key: rol.id_rol
-        ? rol.id_rol.toString()
-        : crypto.randomUUID(),
+      key: rol.id_rol ? rol.id_rol.toString() : crypto.randomUUID(),
       estado: Boolean(rol.estado),
     }));
+    
 
   return (
     <div className="p-4">
@@ -97,9 +92,8 @@ export const RolTable = () => {
         text="Nuevo rol"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -115,7 +109,7 @@ export const RolTable = () => {
         <button
           type="submit"
           form="rol-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>

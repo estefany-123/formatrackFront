@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { Unidad } from "@/types/Unidad";
 import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
@@ -19,9 +18,7 @@ export const UnidadTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedUnidad, setSelectedUnidad] = useState<Unidad | null>(
-    null
-  );
+  const [selectedUnidad, setSelectedUnidad] = useState<Unidad | null>(null);
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -37,7 +34,7 @@ export const UnidadTable = () => {
       await addUnidad(unidad);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
-      console.error("Error al agregar el usuario:", error);
+      console.error("Error al agregar la unidad:", error);
     }
   };
 
@@ -50,22 +47,20 @@ export const UnidadTable = () => {
   const columns: TableColumn<Unidad>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "estado",
-      label: "Estado",
+      key: "created_at",
+      label: "Fecha Creación",
       render: (unidad: Unidad) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            unidad.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${unidad.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {unidad.estado ? "Activo" : "Inactivo"}
-        </Chip>
+        <span>{new Date(unidad.created_at).toLocaleDateString("es-ES")}</span>
       ),
     },
-    {key:"created_at", label:"Fecha Creacion"},
-    {key:"updated_at", label:"Fecha Actualizacion"}
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (unidad: Unidad) => (
+        <span>{new Date(unidad.updated_at).toLocaleDateString("es-ES")}</span>
+      ),
+    },
+    { key: "estado", label:"Estado"}
   ];
 
   if (isLoading) {
@@ -80,9 +75,7 @@ export const UnidadTable = () => {
     ?.filter((unidad) => unidad?.id_unidad !== undefined)
     .map((unidad) => ({
       ...unidad,
-      key: unidad.id_unidad
-        ? unidad.id_unidad.toString()
-        : crypto.randomUUID(),
+      key: unidad.id_unidad ? unidad.id_unidad.toString() : crypto.randomUUID(),
       estado: Boolean(unidad.estado),
     }));
 
@@ -96,9 +89,8 @@ export const UnidadTable = () => {
         text="Nueva unidad"
         onPress={() => setIsOpen(true)}
         type="button"
-        color="primary"
         variant="solid"
-        className="mb-8"
+        className="relative top-12 text-white bg-blue-700"
       />
 
       <Modall
@@ -114,7 +106,7 @@ export const UnidadTable = () => {
         <button
           type="submit"
           form="unidad-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-blue-700 text-white p-2 rounded-md"
         >
           Guardar
         </button>
