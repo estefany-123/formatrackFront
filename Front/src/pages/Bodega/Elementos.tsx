@@ -47,25 +47,59 @@ export const ElementosTable = () => {
 
   // Definir las columnas de la tabla
   const columns: TableColumn<Elemento>[] = [
+    {
+      label:"Imagen",
+      key: 'imagen_elemento',
+      render: (item: Elemento) => {
+        // Aquí asumimos que el campo `imagen_elemento` está en el objeto `Elemento`
+        return item.imagen_elemento ? (
+          <img src={`http://localhost:3000/img/${item.imagen_elemento}`} alt="Imagen" width={50} height={50} />
+        ) : (
+          <span>Sin imagen</span>
+        );
+      },
+    },
     { key: "nombre", label: "Nombre" },
+    { key: "descripcion", label: "Descripcion" },
     { key: "valor", label: "Valor" },
-    { key: "imagen_elemento", label: "Elemento" },
-    { key: "tipo_elemento", label: "Tipo Elemento" },
+    { key: "tipo_elemento", label: "Tipo Elemento",
+      render:(elementos:Elemento) => (
+        <span>
+        {elementos.perecedero
+          ? "Perecedero"
+          :elementos.no_perecedero
+          ? "No Perecedero"
+          :"No Especificado"
+        }</span>
+      )
+     },
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (elemento: Elemento) => (
-        <span>{new Date(elemento.created_at).toLocaleDateString("es-ES")}</span>
+      render: (rol: Elemento) => (
+        <span>
+          {new Date(rol.created_at).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}
+        </span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (elemento: Elemento) => (
-        <span>{new Date(elemento.updated_at).toLocaleDateString("es-ES")}</span>
+      render: (rol: Elemento) => (
+        <span>
+          {new Date(rol.updated_at).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}
+        </span>
       ),
     },
-    { key: "estado", label:"Estado"}
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {

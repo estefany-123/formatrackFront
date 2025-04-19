@@ -7,18 +7,42 @@ import { Rol } from "@/types/Rol";
 
 export default function RolReportSelector() {
   const { roles } = useRol();
+  const [fechaInicio, setFechaInicio] = useState<string>("");
+  const [fechaFin, setFechaFin] = useState<string>("");
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
 
   if (!roles) return <p>Cargando...</p>;
+
+  const filtrarPorFechas = (data: Rol[],fechaInicio:string, fechaFin:string) => {
+    if (!fechaInicio || !fechaFin) return [];
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+    return data.filter((rol) => {
+      const fecha = new Date(rol.created_at);
+      return fecha >= inicio && fecha <= fin;
+    });
+  };
+
+  const formatFecha = (fecha: string) => {
+    return new Date(fecha).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const dataPorFecha = filtrarPorFechas(roles ,fechaInicio, fechaFin);
 
   const reports = [
     {
       id: "todos",
       title: "Roles Registrados",
-      description: (data: Rol[]) => {
+      description: (data: Rol[], inicio?: string, fin?: string) => {
         const total = data.length;
         const activos = data.filter((e) => e.estado).length;
+        const rango = inicio && fin ? `\n\n📅 Rango seleccionado: del ${formatFecha(inicio)} al ${formatFecha(fin)}.` : "";
         return `
+        ${rango}
 Los roles son muy importantes puesto que gacias ellos el usario va apoder tener el acceso a ciertos modulos de nuestro sistema, es decir que de aqui pparte sobre a que opciones puede acceder en nusetro software.
 
 Si bien es cierto algunos de nuestro roles deben darsel ciertos permisos, ya que gracias a ello es que pueden acceder alos modulos correspondeintes.
@@ -58,7 +82,9 @@ Estos roles representan los recursos disponibles y operativos dentro del sistema
   const handleBack = () => setSelectedReport(null);
 
   if (selectedReport && selected) {
-    const dataFiltrada = selected.filterFn(roles);
+    const dataPorFecha = filtrarPorFechas(roles, fechaInicio, fechaFin);
+    const dataFiltrada = selected.filterFn(dataPorFecha);
+    
 
     return (
       <VisualizadorPDF
@@ -81,17 +107,45 @@ Estos roles representan los recursos disponibles y operativos dentro del sistema
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      {reports.map((r) => (
-        <ReportCard
-          key={r.id}
-          title={r.title}
-          description={
-            typeof r.description === "function" ? r.description(roles) : ""
-          }
-          onClick={() => setSelectedReport(r.id)}
-        />
-      ))}
-    </div>
+    <>
+    <div className="grid xl:grid-cols-2 gap-1 p-4">
+
+      <div className=" grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium">Fecha de inicio</label>
+          <input
+            type="date"
+            className="w-full border rounded p-2"
+            value={fechaInicio}
+            onChange={(e) => setFechaInicio(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Fecha de fin</label>
+          <input
+            type="date"
+            className="w-full border rounded p-2"
+            value={fechaFin}
+            onChange={(e) => setFechaFin(e.target.value)}
+          />
+        </div>
+      </div>
+      </div>
+      {fechaInicio && fechaFin ? (
+        <div className="  md:grid-cols-2 gap-4">
+          {reports.map((r) => (
+            <ReportCard
+              key={r.id}
+              title={r.title}
+              description={r.description(r.filterFn(dataPorFecha))}
+              onClick={() => setSelectedReport(r.id)}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500">Selecciona un rango de fechas para ver los reportes disponibles.</p>
+      )}
+</>
   );
 }
+

@@ -50,17 +50,18 @@ export const TipoMovimientoTable = () => {
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (tipo: TipoMovimiento) => (
-        <span>{new Date(tipo.created_at).toLocaleDateString("es-ES")}</span>
+      render: (rol: TipoMovimiento) => (
+        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (tipo: TipoMovimiento) => (
-        <span>{new Date(tipo.updated_at).toLocaleDateString("es-ES")}</span>
+      render: (rol: TipoMovimiento) => (
+        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {
@@ -113,7 +114,7 @@ export const TipoMovimientoTable = () => {
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Tipo de Movimiento"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >

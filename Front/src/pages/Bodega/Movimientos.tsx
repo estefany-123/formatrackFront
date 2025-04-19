@@ -7,6 +7,7 @@ import { useMovimiento } from "@/hooks/Movimientos/useMovimiento";
 import { Movimiento } from "@/types/Movimiento";
 import Formulario from "@/components/organismos/Movimientos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Movimientos/FormUpdate";
+import { Chip } from "@heroui/chip";
 
 export const MovimientoTable = () => {
   const { movimientos, isLoading, isError, error, addMovimiento } =
@@ -25,10 +26,6 @@ export const MovimientoTable = () => {
     setIsOpenUpdate(false);
     setSelectedMovimiento(null);
   };
-
-  // const handleState = async (elemento: Movimiento) => {
-  //   await changeState(elemento.id_movimiento);
-  // };
 
   const handleAddMovimiento = async (elemento: Movimiento) => {
     try {
@@ -51,18 +48,68 @@ export const MovimientoTable = () => {
     { key: "hora_ingreso", label: "Ingreso" },
     { key: "hora_salida", label: "Salida" },
     {
+      key: "tipo_movimiento",
+      label: "Tipo Movimiento",
+      render: (movimiento: Movimiento) => (
+        <span>
+          {movimiento.devolutivo
+            ? "Devolutivo"
+            : movimiento.no_devolutivo
+            ? "No Devolutivo"
+            : "No especificado"}
+        </span>
+      ),
+    },
+    {
       key: "created_at",
       label: "Fecha Creación",
       render: (movimiento: Movimiento) => (
-        <span>{new Date(movimiento.created_at).toLocaleDateString("es-ES")}</span>
+        <span>
+          {new Date(movimiento.created_at).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}
+        </span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
       render: (movimiento: Movimiento) => (
-        <span>{new Date(movimiento.updated_at).toLocaleDateString("es-ES")}</span>
+        <span>
+          {new Date(movimiento.updated_at).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}
+        </span>
       ),
+    },
+    {
+      key: "estado",
+      label: "Estado",
+      render: (item) => {
+        if (item.aceptado)
+          return (
+            <Chip color="success" variant="flat">
+              Aceptado
+            </Chip>
+          );
+        if (item.cancelado)
+          return (
+            <Chip color="danger" variant="flat">
+              Cancelado
+            </Chip>
+          );
+        if (item.en_proceso)
+          return (
+            <Chip color="warning" variant="flat">
+              Pendiente
+            </Chip>
+          );
+        return <Chip color="default">Sin estado</Chip>;
+      },
     },
   ];
 
@@ -90,7 +137,7 @@ export const MovimientoTable = () => {
       </h1>
 
       <Buton
-        text="Nuevo elemento"
+        text="Nuevo Movimiento"
         onPress={() => setIsOpen(true)}
         type="button"
         variant="solid"
@@ -117,7 +164,7 @@ export const MovimientoTable = () => {
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Movimiento"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >

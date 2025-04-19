@@ -4,6 +4,7 @@ import { ElementosTable } from "@/pages/Bodega/Elementos";
 import { Inventario } from "@/pages/Bodega/Inventarios";
 import { MovimientoTable } from "@/pages/Bodega/Movimientos";
 import { TipoMovimientoTable } from "@/pages/Bodega/TiposMovimiento";
+import CategoriasTable from "@/pages/Admin/categorias";
 
 export const Bodega =() => {
 
@@ -36,7 +37,7 @@ export const Bodega =() => {
             {
                 key : "6",
                 title : "Categorias",
-                content :""
+                content :<CategoriasTable/>
             },
             {
                 key : "7",

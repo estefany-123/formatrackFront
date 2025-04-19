@@ -52,14 +52,14 @@ export const RolTable = () => {
       key: "created_at",
       label: "Fecha Creación",
       render: (rol: Rol) => (
-        <span>{new Date(rol.created_at).toLocaleDateString("es-ES")}</span>
+        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
       render: (rol: Rol) => (
-        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES")}</span>
+        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
     { key: "estado", label:"Estado"}

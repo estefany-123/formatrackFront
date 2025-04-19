@@ -12,6 +12,7 @@ type InputProps = {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   selectedKey?: string;
+  accept?:string
 };
 export default function Inpu({
   label,
@@ -23,7 +24,7 @@ export default function Inpu({
   value,
   onChange,
   error,
-  selectedKey,
+  accept
 }: InputProps) {
   return (
     <Input
@@ -36,6 +37,7 @@ export default function Inpu({
       type={type}
       value={value}
       onChange={onChange}
+      accept={accept}
       className={error ? "border-red-500" : ""}
       {...error && (
         <span className="text-sm text-red-500 mt-1 ml-1">{error}</span>

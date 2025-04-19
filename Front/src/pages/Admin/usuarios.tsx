@@ -99,21 +99,6 @@ const UsersTable = () => {
           Guardar
         </button>
       </Modall>
-
-    return (
-
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4 text-center">Tabla de Usuarios</h1>
-            <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} type="button" color="primary" variant="solid" className="mb-8" />
-
-            <Modall ModalTitle="Agregar Usuario" isOpen={isOpen} onOpenChange={handleClose}>
-
-                <Formulario id="user-form" addData={handleAddUser} onClose={handleClose} />
-                <button type="submit" form="user-form" className="bg-blue-500 text-white p-2 rounded-md">
-                    Guardar
-                </button>
-            </Modall>
-
       <Modall
         ModalTitle="Editar Usuario"
         isOpen={IsOpenUpdate}
@@ -137,7 +122,6 @@ const UsersTable = () => {
           onDelete={handleState}
         />
       )}
-    </div>
     </div>
   );
 };

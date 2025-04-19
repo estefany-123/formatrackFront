@@ -15,6 +15,17 @@ export function useVerificacion() {
     },
   });
 
+  const getElementosPorSitio = (id_sitio:number) => {
+    return useQuery({
+    queryKey: ["verificaciones", id_sitio],
+    queryFn: async () => {
+      const res = await axiosAPI.get(`${url}/${id_sitio}`);
+      return res.data;
+    },
+    enabled: !!id_sitio,
+  });
+  }
+
   const addVerificacionMutation = useMutation({
     mutationFn: async (newVerificacion: Verificacion) => {
       await axiosAPI.post<Verificacion>(url, newVerificacion);
@@ -71,6 +82,7 @@ export function useVerificacion() {
     },
   });
 
+
   const addVerificacion = async (usuario: Verificacion) => {
     return addVerificacionMutation.mutateAsync(usuario);
   };
@@ -90,5 +102,6 @@ export function useVerificacion() {
     addVerificacion,
     getVerificacionById,
     updateVerificacion,
+    getElementosPorSitio
   };
 }
