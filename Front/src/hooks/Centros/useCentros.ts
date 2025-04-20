@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Centro } from '@/types/Centro'
+import { Centro } from '@/schemas/Centro'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useCentro() {
@@ -22,10 +22,11 @@ export function useCentro() {
             return newCentro
         },
         onSuccess: (centros) => {
-            console.log(centros);
+            console.log("Vieja info: ",queryClient.getQueryData(["centros"]));
             queryClient.setQueryData<Centro[]>(["centros"], (oldData) =>
                 oldData ? [...oldData,centros] : [centros]
             );
+            console.log("Nueva info: ",queryClient.getQueryData(["centros"]));
         },
         onError: (error) => {
             console.log("Error al cargar el centro", error);

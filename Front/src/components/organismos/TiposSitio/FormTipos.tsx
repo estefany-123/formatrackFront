@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "@heroui/form"
 import Inpu from "@/components/molecules/input";
-import { TipoSitio } from "@/types/TipoSitio";
+import { TipoSitio } from "@/schemas/TipoSitio";
 import { Select, SelectItem } from "@heroui/react";
 
 type FormularioProps = {
