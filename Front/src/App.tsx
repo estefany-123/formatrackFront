@@ -8,7 +8,7 @@ import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
 import { VerificacionTable } from "./pages/Verificaciones/Verificaciones";
 import { Configuraciones } from "./components/organismos/taps/Configuraciones";
 import { Reportes } from "./components/organismos/taps/Reportes";
-
+import Login from "./pages/Login"
 function App() {
   return (
     <Routes>
@@ -22,6 +22,7 @@ function App() {
         <Route path="configuraciones" element={<Configuraciones/>}/>
         <Route path="estadisticas" element={<DashboardEstadisticas/>}/>
       </Route>
+        <Route path="login" element={<Login/>}/>
     </Routes>
   )
 }

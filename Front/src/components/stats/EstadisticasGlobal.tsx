@@ -8,7 +8,7 @@ import { Bar, Line, Pie, Doughnut, Radar, PolarArea } from "react-chartjs-2"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, RadialLinearScale, Tooltip, Legend)
 
-const entidades = ["Fichas", "Areas", "p.formacion", "Sede","permisos","rol_modulo","sitios","usersFichas"]
+const entidades = ["Fichas", "Areas", "p.formacion", "Sede","permisos","rol_modulo","sitios","usersFichas","elemento","verificacion","unidad", "tipoMovimiento", "inventario","solicitud","rol","movimiento","usuarios","centros","tipoSitio","municipios","categorias","modulos","rutas","caracteristicas"]
 
 export const EstadisticasGlobal = () => {
   const [datos, setDatos] = useState<any[]>([])

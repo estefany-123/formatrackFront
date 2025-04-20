@@ -2,9 +2,9 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
-import Formulario from "@/components/organismos/Usuarios/FormRegister";
+import FormRegister from "@/components/organismos/Usuarios/FormRegister";
 import { useState } from "react";
-import Formupdate from "@/components/organismos/Usuarios/Formupdate";
+import { FormUpdate} from "@/components/organismos/Usuarios/Formupdate";
 import { User } from "@/types/Usuario";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 
@@ -80,7 +80,7 @@ const UsersTable = () => {
 
             <Modall ModalTitle="Agregar Usuario" isOpen={isOpen} onOpenChange={handleClose}>
 
-                <Formulario id="user-form" addData={handleAddUser} onClose={handleClose} />
+                <FormRegister id="user-form" addData={handleAddUser} onClose={handleClose} />
                 <button type="submit" form="user-form" className="bg-blue-500 text-white p-2 rounded-md">
                     Guardar
                 </button>
@@ -88,7 +88,7 @@ const UsersTable = () => {
 
             <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
-                    <Formupdate users={usersWithKey ?? []} userId={selectedUser.id_usuario} id="FormUpdate" onclose={handleCloseUpdate} />
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.id_usuario} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
 
             </Modall>

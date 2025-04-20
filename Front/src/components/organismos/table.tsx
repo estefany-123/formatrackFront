@@ -23,7 +23,7 @@ interface TableProps<T extends { key: string; estado?: boolean }> {
   data: T[];
   columns: TableColumn<T>[];
   onEdit: (item: T) => void;
-  onDelete: (item: T) => void | undefined | Promise<void>;
+  onDelete?: (item: T) => void | Promise<void>;
 }
 
 const Globaltable = <T extends { key: string; estado?: boolean }>({ data, columns, onEdit, onDelete }: TableProps<T>) => {
@@ -32,7 +32,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({ data, column
       <TableHeader columns={[...columns, { key: 'actions', label: 'Acciones' }]}>
 
         {(column) => (
-          <TableColumn  className="text-center" key={column.key.toString()}>{column.label}</TableColumn>
+          <TableColumn className="text-center" key={column.key.toString()}>{column.label}</TableColumn>
         )}
 
       </TableHeader>
@@ -40,7 +40,6 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({ data, column
         {(item) => (
           <TableRow key={item.key}>
             {(columnKey) => {
-              // Encuentra la configuración de la columna
               const column = columns.find((col) => col.key === columnKey);
 
               return (
@@ -49,36 +48,35 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({ data, column
 
                   {columnKey === "estado" && (
                     <Chip
-                      className={`px-2 py-1 rounded ${item.estado ? "text-green-500" : " text-red-500" //color texto
+                      className={`px-2 py-1 rounded ${item.estado ? "text-green-500" : " text-red-500" 
                         }`}
 
-                      color={`${item.estado ? "success" : "danger"}`} //color de fondo
+                      color={`${item.estado ? "success" : "danger"}`} 
                       variant="flat"
                     >
                       {item.estado ? "Activo" : "Inactivo"}
                     </Chip>
                   )}
-                  
+
                   {columnKey === "actions" && (
                     <div>
                       <button onClick={() => onEdit(item)} color="primary">
                         <PencilIcon className="h-5 w-5 text-blue-500" />
                       </button>
 
-                      <button onClick={() => onDelete(item)}>
-                        {
-                          item.estado ?
-                            <TrashIcon
-                              className={`h-5 w-5 text-red-500 `}
-                            />
-                            :
-                            <CheckIcon
-                              className={`h-5 w-5 text-green-500 `} />
+                      
+                        {item.estado ? (
+                          <button onClick={() => onDelete?.(item)} title="Desactivar">
+                            <TrashIcon className="h-5 w-5 text-red-500" />
+                          </button>
+                        ) : (
+                          <button onClick={() => onDelete?.(item)} title="Activar">
+                            <CheckIcon className="h-5 w-5 text-green-500" />
+                          </button>
+                        )}
+                      
 
-                        }
 
-
-                      </button>
                     </div>
                   )}
                 </TableCell>

@@ -1,6 +1,8 @@
 import { axiosAPI } from '@/axios/axiosAPI';
 import { User } from '@/types/Usuario'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { LoginCrede, LoginRes } from '@/types/Usuario';
+import Cookies from "js-cookie";
 
 export function useUsuario() {
 
@@ -23,7 +25,7 @@ export function useUsuario() {
             return newUser
         },
         onSuccess: (user) => {
-            console.log(user);
+            console.log("Esta es la mutación:",user);
             queryClient.setQueryData<User[]>(["users"], (oldData) =>
                 oldData ? [...oldData,user] : [user]
             );
@@ -33,9 +35,25 @@ export function useUsuario() {
         }
     });
 
-    const getUserById = (id: number, users : User[] | undefined = data ): User | null => {
-        return users?.find((user) => user.id_usuario === id) || null;
-    }
+    const loginMutation = useMutation({
+        mutationFn : async (credenciales : LoginCrede ) : Promise<LoginRes> => {
+            const response = await axiosAPI.post<LoginRes>(`${url}/login`,credenciales)
+            console.log("Esto es data :",response.data)
+            return response.data
+        },
+        onSuccess : (data) => {
+            Cookies.set("jwt",data.token,{expires :1})
+        },
+        onError : (error) => {
+            console.log("Error iniciando sesion:",error)
+        }
+    });
+
+
+
+    const getUserById = (id: number, usersList: User[]): User | null => {
+        return usersList.find((user) => user.id_usuario === id) || null;
+    };
 
     const updateUserMutation = useMutation({
         mutationFn: async({ id, update } : { id: number; update: Partial<User> }) => {
@@ -85,6 +103,10 @@ export function useUsuario() {
         return addUserMutation.mutateAsync(usuario);
     };
 
+    const login = async (documento : number, password : string) => {
+        return loginMutation.mutateAsync({documento,password})
+    }
+
     const updateUser = async (id: number, update: Partial<User>) => {
         return updateUserMutation.mutateAsync({ id, update });
     };
@@ -99,6 +121,7 @@ export function useUsuario() {
         isError,
         error,
         addUser,
+        login,
         changeState,
         getUserById,
         updateUser

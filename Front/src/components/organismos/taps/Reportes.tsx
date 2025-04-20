@@ -1,11 +1,13 @@
 import Tap from "@/components/molecules/Tabs";
 import ElementoReportPage from "@/pages/Reportes/Elementos/Elemento";
 import InventarioReportSelector from "@/pages/Reportes/Inventarios/Inventario";
+import ModulosReportSelector from "@/pages/Reportes/Modulos/Modulos";
 import MovimientoReportSelector from "@/pages/Reportes/Movimientos/Movimiento";
 import RolReportSelector from "@/pages/Reportes/Roles/Rol";
 import SolicitudReportSelector from "@/pages/Reportes/Solicitudes/Solicitud";
 import TipoReportSelector from "@/pages/Reportes/TiposMovimiento/TipoMovimiento";
 import UnidadReportSelector from "@/pages/Reportes/UnidadesMedida/UnidadMedida";
+import UserReportSelector from "@/pages/Reportes/Usuarios/Usuarios";
 import VerificacionReportSelector from "@/pages/Reportes/Verificaciones/Verificacion";
 
 export const Reportes =() => {
@@ -14,7 +16,7 @@ export const Reportes =() => {
             {
                 key : "1",
                 title : "Usuarios",
-                content : ""
+                content : <UserReportSelector/>
             },
             {
                 key : "2",
@@ -124,7 +126,7 @@ export const Reportes =() => {
             {
                 key : "23",
                 title : "Modulos",
-                content :""
+                content :<ModulosReportSelector/>
             },
             {
                 key : "24",
