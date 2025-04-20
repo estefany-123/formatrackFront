@@ -5,7 +5,7 @@ import Modall from "@/components/molecules/modal";
 import FormRegister from "@/components/organismos/Usuarios/FormRegister";
 import { useState } from "react";
 import { FormUpdate} from "@/components/organismos/Usuarios/Formupdate";
-import { User } from "@/types/Usuario";
+import { User } from "@/schemas/User";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 
 
@@ -29,7 +29,7 @@ const UsersTable = () => {
     };
 
     const handleState = async (user: User) => {
-        await changeState(user.id_usuario);
+        await changeState(user.id_usuario as number);
     }
 
     const handleAddUser = async (user: User) => {
@@ -88,7 +88,7 @@ const UsersTable = () => {
 
             <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
-                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.id_usuario} id="FormUpdate" onclose={handleCloseUpdate} />
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.id_usuario as number} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
 
             </Modall>

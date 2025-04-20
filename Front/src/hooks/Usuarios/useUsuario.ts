@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { User } from '@/types/Usuario'
+import { User } from '@/schemas/User'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LoginCrede, LoginRes } from '@/types/Usuario';
 import Cookies from "js-cookie";
@@ -26,9 +26,13 @@ export function useUsuario() {
         },
         onSuccess: (user) => {
             console.log("Esta es la mutación:",user);
+            const oldData = queryClient.getQueryData(["users"]);
+            console.log("Datos anteriores:",oldData);
             queryClient.setQueryData<User[]>(["users"], (oldData) =>
                 oldData ? [...oldData,user] : [user]
             );
+            const newData = queryClient.getQueryData(["users"]);
+            console.log("Datos nuevos:",newData);
         },
         onError: (error) => {
             console.log("Error al cargar el usuario", error);

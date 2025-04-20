@@ -3,14 +3,14 @@ import { Input } from "@heroui/input";
 import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 import { UserUpdateSchema, UserUpdate } from "@/schemas/User";
-import { User } from '@/types/Usuario'
+import { User } from '@/schemas/User'
 import { Form } from "@heroui/form";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 
 type FormuProps = {
-    Users: User[];
+    Users: (User & {key : string})[];
     userId: number;
     id: string
     onclose: () => void;
