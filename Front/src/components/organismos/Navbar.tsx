@@ -7,24 +7,36 @@ import {
   Dropdown,
   DropdownMenu,
   Avatar,
+  Button,
 } from "@heroui/react";
 import { FormatrackLogo } from "../atoms/Icons";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useState } from "react";
-import Modall from "@/components/molecules/modal"; // Importar el componente del modal
+import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
+import Modall from "../molecules/modal";
+import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
 
 type NavProps = {
+  en_proceso: string;
   children?: ReactNode;
   onOpenNotificationes?: () => void;
-  id_notificacion:number
-  titulo:string
-  mensaje:string
+  id_notificacion: number;
+  titulo: string;
+  mensaje: string;
 };
 
 export function Nav({ children }: NavProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
-
+  const navigate = useNavigate();
+  const {
+    notificaciones,
+    isLoading,
+    aceptarMovimiento,
+    cancelarMovimiento,
+    aceptarSolicitud,
+    cancelarSolicitud,
+  } = useNotificaciones();
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -33,6 +45,10 @@ export function Nav({ children }: NavProps) {
   function handleClickNotificacion(id_notificacion: number): void {
     throw new Error("Function not implemented.");
   }
+
+  const handleGoToPerfil = () => {
+    navigate("/perfil");
+  };
 
   return (
     <>
@@ -91,8 +107,10 @@ export function Nav({ children }: NavProps) {
                 size="sm"
               />
             </DropdownTrigger>
-            <DropdownMenu aria-label="" variant="flat">
-              <DropdownItem key="Profile">Perfil</DropdownItem>
+            <DropdownMenu variant="flat">
+              <DropdownItem key="Profile" onPress={handleGoToPerfil}>
+                Perfil
+              </DropdownItem>
               <DropdownItem key="logout" color="danger">
                 Cerrar Sesión
               </DropdownItem>
@@ -102,21 +120,67 @@ export function Nav({ children }: NavProps) {
         <div>{children}</div>
       </Navbar>
 
-
-      <Modall ModalTitle="Notificaciones" isOpen={isModalOpen} onOpenChange={handleCloseModal}>
-        <div className="space-y-2">
-          {notificationes.map((n) => (
-            <div key={`notificacion-${n.id_notificacion}`} className="flex flex-col p-2 border-b">
-              <strong>{n.titulo}</strong>
-              <p className="text-xs text-gray-500">{n.mensaje}</p>
-              <button
-                onClick={() => handleClickNotificacion(n.id_notificacion)}
-                className="text-blue-500 text-sm mt-1"
+      <Modall
+        ModalTitle="Notificaciones"
+        isOpen={isModalOpen}
+        onOpenChange={handleCloseModal}
+      >
+        <div className="space-y-4">
+          {isLoading ? (
+            <p>Cargando notificaciones...</p>
+          ) : !notificaciones || notificaciones.length === 0 ? (
+            <p>No tienes notificaciones nuevas.</p>
+          ) : (
+            notificaciones.map((n) => (
+              <div
+                key={`notificacion-${n.id_notificacion}`}
+                className="flex flex-col p-3 border rounded-md shadow-sm"
               >
-                Marcar como leída
-              </button>
-            </div>
-          ))}
+                <strong className="text-base">{n.titulo}</strong>
+                <p className="text-sm text-gray-600">{n.mensaje}</p>
+
+                {n.en_proceso && (
+                  <div className="flex gap-2 mt-2">
+                    {n.fk_movimiento && (
+                      <>
+                        <Button
+                          size="sm"
+                          onPress={() => aceptarMovimiento(n.fk_movimiento!)}
+                        >
+                          Aceptar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="flat"
+                          onPress={() => cancelarMovimiento(n.fk_movimiento!)}
+                        >
+                          Rechazar
+                        </Button>
+                      </>
+                    )}
+
+                    {n.fk_solicitud && (
+                      <>
+                        <Button
+                          size="sm"
+                          onPress={() => aceptarSolicitud(n.fk_solicitud!)}
+                        >
+                          Aceptar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="flat"
+                          onPress={() => cancelarSolicitud(n.fk_solicitud!)}
+                        >
+                          Rechazar
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </Modall>
     </>

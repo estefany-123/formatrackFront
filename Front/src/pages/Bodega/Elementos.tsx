@@ -51,9 +51,8 @@ export const ElementosTable = () => {
       label:"Imagen",
       key: 'imagen_elemento',
       render: (item: Elemento) => {
-        // Aquí asumimos que el campo `imagen_elemento` está en el objeto `Elemento`
         return item.imagen_elemento ? (
-          <img src={`http://localhost:3000/img/${item.imagen_elemento}`} alt="Imagen" width={50} height={50} />
+          <img src={`http://localhost:3000/img/${item.imagen_elemento}`} alt="Imagen" width={200} height={50} />
         ) : (
           <span>Sin imagen</span>
         );
@@ -71,7 +70,7 @@ export const ElementosTable = () => {
           ? "No Perecedero"
           :"No Especificado"
         }</span>
-      )
+      ),
      },
     {
       key: "created_at",
@@ -99,7 +98,7 @@ export const ElementosTable = () => {
         </span>
       ),
     },
-    { key: "estado", label: "Estado" },
+    { key: "estado", label: "Estado"},
   ];
 
   if (isLoading) {

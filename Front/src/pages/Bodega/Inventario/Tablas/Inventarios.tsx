@@ -63,6 +63,28 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
         return <span>{elemento?.nombre ?? "No encontrado"}</span>;
       },
     },
+    {
+      key:"imagen_elemento", label:"Imagen",
+      render: (inventario: Inventario) => {
+        const elemento = elementos.find(
+          (el) => el.id_elemento === inventario.fk_elemento
+        );
+      
+        const imagen = elemento?.imagen_elemento;
+      
+        if (!imagen) return <span>No encontrado</span>;
+      
+        const src = `http://localhost:3000/img/${imagen}`; 
+      
+        return (
+          <img
+            src={src}
+            alt="Imagen del elemento"
+            className="justify-center relative left-6 h-28 rounded shadow"
+          />
+        );
+      },
+    },
     { key: "stock", label: "Cantidad" },
     {
       key: "created_at",

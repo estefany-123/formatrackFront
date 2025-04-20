@@ -8,6 +8,11 @@ import SedeTable from "../../../pages/Admin/sedes";
 import SitiosTable from "../../../pages/Admin/sitios";
 import PermisoTable from "../../../pages/Admin/permisos";
 import { RolTable } from "../../../pages/Admin/Roles";
+import CentrosTable from "@/pages/Admin/centros";
+import MunicipiosTable from "@/pages/Admin/municipio";
+import TipoSitioTable from "@/pages/Admin/tipoSitio";
+import RutasTable from "@/pages/Admin/rutas";
+import ModulosTable from "@/pages/Admin/modulo";
 
 const Admin = () => {
         const tabs = [
@@ -49,12 +54,12 @@ const Admin = () => {
             {
                 key : "8",
                 title : "Centros",
-                content :""
+                content :<CentrosTable/>
             },
             {
                 key : "9",
                 title : "Municipios",
-                content :""
+                content :<MunicipiosTable/>
             },
             {
                 key : "10",
@@ -64,7 +69,7 @@ const Admin = () => {
             {
                 key : "11",
                 title : "Tipos Sitio",
-                content :""
+                content :<TipoSitioTable/>
             },
             {
                 key : "12",
@@ -79,12 +84,12 @@ const Admin = () => {
             {
                 key : "14",
                 title : "Rutas",
-                content :""
+                content :<RutasTable/>
             },
             {
                 key : "15",
                 title : "Modulos",
-                content :""
+                content :<ModulosTable/>
             },
         ]
   return <Tap tabs={tabs}></Tap>;

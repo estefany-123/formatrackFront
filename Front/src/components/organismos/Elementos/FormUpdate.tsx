@@ -99,7 +99,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
         typeof formData.imagen_elemento === "string" && (
           <div className="flex justify-center">
             <img
-              src={`http://localhost:3000/public/img/${formData.imagen_elemento}`}
+              src={`http://localhost:3000/img/${formData.imagen_elemento}`}
               alt="Imagen actual"
               className="w-40 h-40 object-cover rounded-lg mb-4"
             />

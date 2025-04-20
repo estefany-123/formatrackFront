@@ -20,23 +20,23 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     id_solicitud: 0,
     descripcion: "",
     cantidad: 0,
-    estado:true,
+    estado: true,
     aceptada: false,
     pendiente: true,
     rechazada: false,
     created_at: "",
     updated_at: "",
-    fk_sitio:0,
+    fk_sitio: 0,
     fk_usuario: 0,
     fk_inventario: 0,
   });
 
   const { users, isLoading: loadingUsers, isError: errorUsers } = useUsuario();
-    const {
-      sitios,
-      isLoading: loadingSitios,
-      isError: errorSitios,
-    } = useSitios();
+  const {
+    sitios,
+    isLoading: loadingSitios,
+    isError: errorSitios,
+  } = useSitios();
   const {
     inventarios,
     isLoading: loadingInventarios,
@@ -59,13 +59,13 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         id_solicitud: 0,
         descripcion: "",
         cantidad: 0,
-        estado:true,
+        estado: true,
         aceptada: false,
         pendiente: true,
         rechazada: false,
         created_at: "",
         updated_at: "",
-        fk_sitio:0,
+        fk_sitio: 0,
         fk_usuario: 0,
         fk_inventario: 0,
       });
@@ -114,24 +114,24 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           ))}
         </Select>
       )}
-      
-            {!loadingSitios && !errorSitios && sitios && (
-              <Select
-                label="Sitio"
-                name="fk_sitio"
-                placeholder="Selecciona un sitio"
-                onChange={(e) => {
-                  const sitioId = Number(e.target.value);
-                  setFormData({ ...formData, fk_sitio: sitioId });
-                  setSitioSeleccionado(sitioId);
-                  setFormData((prev) => ({ ...prev, fk_inventario: 0 })); // opcional: limpiar inventario seleccionado
-                }}
-              >
-                {sitios.map((sitio) => (
-                  <SelectItem key={sitio.id_sitio}>{sitio.nombre}</SelectItem>
-                ))}
-              </Select>
-            )}
+
+      {!loadingSitios && !errorSitios && sitios && (
+        <Select
+          label="Sitio"
+          name="fk_sitio"
+          placeholder="Selecciona un sitio"
+          onChange={(e) => {
+            const sitioId = Number(e.target.value);
+            setFormData({ ...formData, fk_sitio: sitioId });
+            setSitioSeleccionado(sitioId);
+            setFormData((prev) => ({ ...prev, fk_inventario: 0 })); // opcional: limpiar inventario seleccionado
+          }}
+        >
+          {sitios.map((sitio) => (
+            <SelectItem key={sitio.id_sitio}>{sitio.nombre}</SelectItem>
+          ))}
+        </Select>
+      )}
 
       {!loadingInventarios &&
         !errorInventarios &&

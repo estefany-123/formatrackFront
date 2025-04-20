@@ -27,6 +27,7 @@ export default function Formulario({
     updated_at: "",
     fk_sitio: idSitio ?? 0,
     fk_elemento: 0,
+    imagen_elemento:""
   });
 
   const {
@@ -56,6 +57,7 @@ export default function Formulario({
         updated_at: "",
         fk_sitio: 0,
         fk_elemento: 0,
+        imagen_elemento:""
       });
       onClose();
     } catch (error) {
