@@ -9,20 +9,25 @@ import { VerificacionTable } from "./pages/Verificaciones/Verificaciones";
 import { Configuraciones } from "./components/organismos/taps/Configuraciones";
 import { Reportes } from "./components/organismos/taps/Reportes";
 import Login from "./pages/Login"
+import { useAuth } from "./providers/AuthProvider"
 function App() {
+  const {authenticated} = useAuth()
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="Home" element={<Home />} />
-        <Route path="admin" element={<Admin/>}/>
-        <Route path="bodega" element={<Bodega/>}/>
-        <Route path="solicitudes" element={<SolicitudTable/>}/>
-        <Route path="reportes" element={<Reportes/>}/>
-        <Route path="verificaciones" element={<VerificacionTable/>}/>
-        <Route path="configuraciones" element={<Configuraciones/>}/>
-        <Route path="estadisticas" element={<DashboardEstadisticas/>}/>
-      </Route>
+      {authenticated && 
+        <Route path="/" element={<Layout />}>
+          <Route path="Home" element={<Home />} />
+          <Route path="admin" element={<Admin/>}/>
+          <Route path="bodega" element={<Bodega/>}/>
+          <Route path="solicitudes" element={<SolicitudTable/>}/>
+          <Route path="reportes" element={<Reportes/>}/>
+          <Route path="verificaciones" element={<VerificacionTable/>}/>
+          <Route path="configuraciones" element={<Configuraciones/>}/>
+          <Route path="estadisticas" element={<DashboardEstadisticas/>}/>
+        </Route>
+      }
         <Route path="login" element={<Login/>}/>
+        <Route path="*" element={<h1 className="text-8xl font-bold">404 - Not Found</h1>} />
     </Routes>
   )
 }
