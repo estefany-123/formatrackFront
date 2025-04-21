@@ -5,7 +5,7 @@ import Modall from "@/components/molecules/modal";
 import FormTipos from "@/components/organismos/TiposSitio/FormTipos";
 import { useState } from "react";
 import FormUpTipos from "@/components/organismos/TiposSitio/FormUpTipos";
-import { TipoSitio } from "@/types/TipoSitio";
+import { TipoSitio } from "@/schemas/TipoSitio";
 import { useTipoSitio } from "@/hooks/TipoSitio/useTipoSitio";
 
 
@@ -29,7 +29,7 @@ const TipoSitioTable = () => {
     };
 
     const handleState = async (tipos: TipoSitio) => {
-        await changeState(tipos.id_tipo);
+        await changeState(tipos.id_tipo as number);
         console.log(tipos.id_tipo)
     }
 
@@ -64,6 +64,7 @@ const TipoSitioTable = () => {
     const tiposWithKey = tipos?.filter(tipos => tipos?.id_tipo !== undefined).map((tipos) => ({
         ...tipos,
         key: tipos.id_tipo ? tipos.id_tipo.toString() : crypto.randomUUID(),
+        id_tipo: tipos.id_tipo as number,
         estado: Boolean(tipos.estado)
     }));
 
@@ -84,7 +85,7 @@ const TipoSitioTable = () => {
 
             <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
-                    <FormUpTipos tipos={tiposWithKey ?? []} tipoSitioId={selectedUser.id_tipo} id="FormUpdate" onclose={handleCloseUpdate} />
+                    <FormUpTipos tipos={tiposWithKey ?? []} tipoSitioId={selectedUser.id_tipo as number} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
 
             </Modall>

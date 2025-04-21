@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { TipoSitio } from '@/types/TipoSitio'
+import { TipoSitio } from '@/schemas/TipoSitio'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useTipoSitio() {

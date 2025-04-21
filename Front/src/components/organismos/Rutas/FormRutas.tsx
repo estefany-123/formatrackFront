@@ -1,8 +1,9 @@
-import React from "react";
+
 import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import { Ruta } from "@/types/Ruta";
-import { Select, SelectItem } from "@heroui/react";
+import { Ruta, RutaSchema } from "@/schemas/Ruta";
+import { Input, Select, SelectItem } from "@heroui/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type FormularioProps = {
 
@@ -14,29 +15,14 @@ type FormularioProps = {
 export default function FormRutas({ addData, onClose, id }: FormularioProps) {
 
 
-    const [formData, setFormData] = React.useState<Ruta>({
-        id_ruta: 0,
-        nombre: "",
-        descripcion: "",
-        url_destino: "",
-        estado: true,
-        fk_modulo: 0
-    });
+    const {register,handleSubmit,formState : {errors}, setValue} = useForm({
+        resolver : zodResolver(RutaSchema)
+    })
 
-    const onSubmit = async (e: React.FormEvent) => { //preguntar si esta bien no usar el e: React.FormEvent
-        //y aqui el preventdefault
-        e.preventDefault();
+    const onSubmit = async (data : Ruta) => {
         try {
-            console.log("Enviando formulario con datos:", formData);
-            await addData(formData);
-            setFormData({
-                id_ruta: 0,
-                nombre: "",
-                descripcion: "",
-                url_destino: "",
-                estado: true,
-                fk_modulo: 0
-            });
+            console.log("Enviando formulario con datos:", data);
+            await addData(data);
             onClose();
         } catch (error) {
             console.error("Error al cargar la ruta", error);
@@ -44,24 +30,28 @@ export default function FormRutas({ addData, onClose, id }: FormularioProps) {
     }
 
     return (
-        <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
+        <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
 
-            <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre} onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} />
-            <Inpu label="Descripcion" placeholder="Descripcion" type="text" name="descripcion" value={formData.descripcion} onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })} />
-            <Inpu label="Url destino" placeholder="Url destino" type="text" name="url_destino" value={formData.url_destino} onChange={(e) => setFormData({ ...formData, url_destino: e.target.value })} />
+            <Input {...register("nombre")} label="Nombre" type="text"/>
+            {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
+            <Input {...register("descripcion")} label="Descripcion" type="text"/>
+            {errors.descripcion && <p className="text-red-500">{errors.descripcion.message}</p>}
+            <Input  {...register("url_destino")} label="Url destino" type="text"/>
+            {errors.url_destino && <p className="text-red-500">{errors.url_destino.message}</p>}
 
             <Select
                 aria-labelledby="estado"
                 labelPlacement="outside"
-                name="estado"
                 placeholder="Estado"
-                onChange={(e) => setFormData({ ...formData, estado: e.target.value === "true" })} // Convierte a booleano
+                onChange={(e) => setValue("estado",e.target.value === 'true' ? true : false)}
             >
                 <SelectItem key="true">Activo</SelectItem>
                 <SelectItem key="false" >Inactivo</SelectItem>
             </Select>
+            {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
-            <Inpu label="Modulo" placeholder="Modulo" type="text" name="fk_modulo" value={formData.fk_modulo.toString()} onChange={(e) => setFormData({ ...formData, fk_modulo:Number (e.target.value) })} />
+            <Input label="Modulo" type="number" onChange={(e) => setValue("fk_modulo",parseInt(e.target.value))} />
+            {errors.fk_modulo && <p className="text-red-500">{errors.fk_modulo.message}</p>}
 
 
         </Form>

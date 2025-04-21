@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Ruta } from "@/types/Ruta";
+import { Ruta, RutaUpdate, RutaUpdateSchema } from "@/schemas/Ruta";
 import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
 import { useRuta } from "@/hooks/Rutas/useRuta";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@heroui/input";
 
 
 type Props = {
@@ -14,60 +15,40 @@ type Props = {
 }
 
 const FormUpRutas = ({ rutas, rutaId, id, onclose }: Props) => {
-    const [formData, setFormData] = useState<Partial<Ruta>>({
-        id_ruta: 0,
-        nombre: "",
-        descripcion: "",
-        url_destino: "",
-        estado: true,
-        fk_modulo: 0
+
+    console.log("Datos anteriores: ",rutas);
+    
+    const { updateRuta, getRutaById} = useRuta();
+    
+    const foundRuta = getRutaById(rutaId);
+
+    const {register, handleSubmit, formState : {errors} } = useForm({
+        resolver : zodResolver(RutaUpdateSchema),
+        defaultValues : {
+            ...foundRuta
+        }
     });
 
-    const { updateRuta, getRutaById} = useRuta()
-
-    useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
-        const foundRuta = getRutaById(rutaId);
-
-        if (foundRuta) {
-            setFormData(foundRuta);
-        }
-
-    }, [rutas, rutaId]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { //se ejecuta cuando el usuario cambia algo en un campo
-        const { name, value, type, checked } = e.target;
-
-        setFormData((prev : Partial<Ruta>) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
-
-
-    const handleSubmit = async (e : React.FormEvent) => {
-
-        e.preventDefault();
-        if (!formData.id_ruta) {
-            return <p className="text-center text-gray-500">Ruta no encontrada</p>;
-        }
-        
+    const onSubmit = async (data : RutaUpdate) => {
         try {
-            await updateRuta(formData.id_ruta, formData);
+            await updateRuta(data.id_ruta, data);
             onclose();
         } catch (error) {
             console.log("Error al actualizar la ruta", error);
         }
-    }
+    };
 
 
 
 
     return (
-        <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit}>
-            <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre ?? ''} onChange={handleChange} />
-            <Inpu label="Descripcion" placeholder="Descripcion" type="text" name="descripcion" value={formData.descripcion ?? ''} onChange={handleChange} />
-            <Inpu label="Url destino" placeholder="Url destino" type="text" name="url_destino" value={formData.url_destino ?? ''} onChange={handleChange} />
-
+        <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <Input {...register("nombre")} label="Nombre" type="text"/>
+            {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
+            <Input {...register("descripcion")} label="Descripcion" type="text"/>
+            {errors.descripcion && <p className="text-red-500">{errors.descripcion.message}</p>}
+            <Input {...register("url_destino")} label="Url destino" type="text"/>
+            {errors.url_destino && <p className="text-red-500">{errors.url_destino.message}</p>}
             <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
                 Guardar Cambios
             </button>

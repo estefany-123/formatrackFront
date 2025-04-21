@@ -1,9 +1,10 @@
 import Tap from "@/components/molecules/Tabs";
 import { ElementosTable } from "@/pages/Bodega/Elementos";
-import { InventariosTable } from "@/pages/Bodega/Inventarios";
+import { Inventario } from "@/pages/Bodega/Inventarios";
 import { MovimientoTable } from "@/pages/Bodega/Movimientos";
 import { TipoMovimientoTable } from "@/pages/Bodega/TiposMovimiento";
 import CategoriasTable from "@/pages/Admin/categorias";
+import { UnidadTable } from "@/pages/Bodega/UnidadesMedida";
 
 export const Bodega =() => {
 
@@ -21,7 +22,7 @@ export const Bodega =() => {
             {
                 key : "3",
                 title : "Inventarios",
-                content : <InventariosTable/>
+                content : <Inventario/>
             },
             {
                 key : "4",

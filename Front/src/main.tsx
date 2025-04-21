@@ -6,6 +6,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
 import "@/styles/globals.css";
+import AuthProvider from "./providers/AuthProvider.tsx";
 
 const cacheClient = new QueryClient();
 
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={cacheClient}>
       <BrowserRouter>
         <Provider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </Provider>
       </BrowserRouter>
     </QueryClientProvider>
