@@ -4,14 +4,14 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { Chip } from "@heroui/chip";
-import { useRol } from "@/hooks/Roles/useRol";
-import { Rol } from "@/types/Rol";
-import Formulario from "@/components/organismos/Roles/FormRegister";
-import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
+import { useElemento } from "@/hooks/Elementos/useElemento";
+import { Elemento } from "@/types/Elemento";
+import Formulario from "@/components/organismos/Elementos/FormRegister";
+import { FormuUpdate } from "@/components/organismos/Elementos/FormUpdate";
 
-export const RolTable = () => {
-  const { roles, isLoading, isError, error, addRol, changeState } =
-    useRol();
+export const ElementosTable = () => {
+  const { elementos, isLoading, isError, error, addElemento, changeState } =
+    useElemento();
 
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
@@ -19,52 +19,52 @@ export const RolTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedRol, setSelectedRol] = useState<Rol | null>(
+  const [selectedElemento, setSelectedElemento] = useState<Elemento | null>(
     null
   );
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
-    setSelectedRol(null);
+    setSelectedElemento(null);
   };
 
-  const handleState = async (rol: Rol) => {
-    await changeState(rol.id_rol);
+  const handleState = async (elemento: Elemento) => {
+    await changeState(elemento.id_elemento);
   };
 
-  const handleAddRol = async (rol: Rol) => {
+  const handleAddElemento = async (elemento: Elemento) => {
     try {
-      await addRol(rol);
+      await addElemento(elemento);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
     }
   };
 
-  const handleEdit = (rol: Rol) => {
-    setSelectedRol(rol);
+  const handleEdit = (elemento: Elemento) => {
+    setSelectedElemento(elemento);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<Rol>[] = [
+  const columns: TableColumn<Elemento>[] = [
     { key: "nombre", label: "Nombre" },
+    { key: "valor", label: "Valor" },
     {
       key: "estado",
-      label: "Estado",
-      render: (rol: Rol) => (
-        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      label: "estado",
+      render: (elemento: Elemento) => (
+        <Chip
+          className={`px-2 py-1 rounded ${
+            elemento.estado ? "text-green-500" : " text-red-500" //color texto
+          }`}
+          color={`${elemento.estado ? "success" : "danger"}`} //color de fondo
+          variant="flat"
+        >
+          {elemento.estado ? "Activo" : "Inactivo"}
+        </Chip>
       ),
     },
-    {
-      key: "updated_at",
-      label: "Fecha Actualización",
-      render: (rol: Rol) => (
-        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
-      ),
-    },
-    {key:"created_at", label:"Fecha Creacion"},
-    {key:"updated_at", label:"Fecha Actualizacion"}
   ];
 
   if (isLoading) {
@@ -75,24 +75,24 @@ export const RolTable = () => {
     return <span>Error: {error?.message}</span>;
   }
 
-  const rolesWithKey = roles
-    ?.filter((rol) => rol?.id_rol !== undefined)
-    .map((rol) => ({
-      ...rol,
-      key: rol.id_rol
-        ? rol.id_rol.toString()
+  const ElementosWithKey = elementos
+    ?.filter((elemento) => elemento?.id_elemento !== undefined)
+    .map((elemento) => ({
+      ...elemento,
+      key: elemento.id_elemento
+        ? elemento.id_elemento.toString()
         : crypto.randomUUID(),
-      estado: Boolean(rol.estado),
+      estado: Boolean(elemento.estado),
     }));
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">
-        Roles Registrados
+        Elementos Registrados
       </h1>
 
       <Buton
-        text="Nuevo rol"
+        text="Nuevo elemento"
         onPress={() => setIsOpen(true)}
         type="button"
         color="primary"
@@ -101,18 +101,18 @@ export const RolTable = () => {
       />
 
       <Modall
-        ModalTitle="Registrar Nuevo Rol"
+        ModalTitle="Registrar Nuevo Elemento"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <Formulario
-          id="rol-form"
-          addData={handleAddRol}
+          id="element-form"
+          addData={handleAddElemento}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="rol-form"
+          form="user-form"
           className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar
@@ -120,23 +120,23 @@ export const RolTable = () => {
       </Modall>
 
       <Modall
-        ModalTitle="Editar Rol"
+        ModalTitle="Editar Usuario"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
-        {selectedRol && (
-          <FormUpdate
-            roles={rolesWithKey ?? []}
-            rolId={selectedRol.id_rol}
+        {selectedElemento && (
+          <FormuUpdate
+            elementos={ElementosWithKey ?? []}
+            elementoId={selectedElemento.id_elemento}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
         )}
       </Modall>
 
-      {rolesWithKey && (
+      {ElementosWithKey && (
         <Globaltable
-          data={rolesWithKey}
+          data={ElementosWithKey}
           columns={columns}
           onEdit={handleEdit}
           onDelete={handleState}

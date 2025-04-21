@@ -19,8 +19,9 @@ export const MovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedMovimiento, setSelectedMovimiento] =
-    useState<Movimiento | null>(null);
+  const [selectedMovimiento, setSelectedMovimiento] = useState<Movimiento | null>(
+    null
+  );
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -32,7 +33,7 @@ export const MovimientoTable = () => {
       await addMovimiento(elemento);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
-      console.error("Error al agregar el movimiento:", error);
+      console.error("Error al agregar el usuario:", error);
     }
   };
 
@@ -128,6 +129,7 @@ export const MovimientoTable = () => {
       key: elemento.id_movimiento
         ? elemento.id_movimiento.toString()
         : crypto.randomUUID(),
+
     }));
 
   return (
@@ -140,8 +142,9 @@ export const MovimientoTable = () => {
         text="Nuevo Movimiento"
         onPress={() => setIsOpen(true)}
         type="button"
+        color="primary"
         variant="solid"
-        className="relative top-12 text-white bg-blue-700"
+        className="mb-8"
       />
 
       <Modall
@@ -150,14 +153,14 @@ export const MovimientoTable = () => {
         onOpenChange={handleClose}
       >
         <Formulario
-          id="movimiento-form"
+          id="element-form"
           addData={handleAddMovimiento}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="movimiento-form"
-          className="bg-blue-700 text-white p-2 rounded-md"
+          form="user-form"
+          className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar
         </button>
@@ -182,9 +185,8 @@ export const MovimientoTable = () => {
         <Globaltable
           data={MovimientoWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          showEstado={false}
-          showActions={true}
+        onEdit={handleEdit}
+        onDelete={()=> {}}
         />
       )}
     </div>

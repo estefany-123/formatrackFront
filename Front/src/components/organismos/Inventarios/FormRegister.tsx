@@ -10,7 +10,7 @@ type FormularioProps = {
   addData: (inventario: Inventario) => Promise<void>;
   onClose: () => void;
   id: string;
-  idSitio?: number;
+  idSitio:number
 };
 
 export default function Formulario({

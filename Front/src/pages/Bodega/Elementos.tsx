@@ -3,10 +3,12 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
+import { Chip } from "@heroui/chip";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";
 import Formulario from "@/components/organismos/Elementos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Elementos/FormUpdate";
+
 
 export const ElementosTable = () => {
   const { elementos, isLoading, isError, error, addElemento, changeState } =
@@ -36,7 +38,7 @@ export const ElementosTable = () => {
       await addElemento(elemento);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
-      console.error("Error al agregar el elemento:", error);
+      console.error("Error al agregar el usuario:", error);
     }
   };
 
@@ -121,7 +123,7 @@ export const ElementosTable = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-2 mt-2 text-center">
+      <h1 className="text-2xl font-bold mb-4 text-center">
         Elementos Registrados
       </h1>
 
@@ -129,8 +131,9 @@ export const ElementosTable = () => {
         text="Nuevo elemento"
         onPress={() => setIsOpen(true)}
         type="button"
+        color="primary"
         variant="solid"
-        className="relative top-12 text-white bg-blue-700"
+        className="mb-8"
       />
 
       <Modall
@@ -146,7 +149,7 @@ export const ElementosTable = () => {
         <button
           type="submit"
           form="element-form"
-          className="bg-blue-700 text-white p-2 rounded-md"
+          className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar
         </button>

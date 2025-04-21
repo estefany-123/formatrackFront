@@ -3,6 +3,7 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
+import { Chip } from "@heroui/chip";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { TipoMovimiento } from "@/types/TipoMovimiento";
 import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
@@ -18,8 +19,9 @@ export const TipoMovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
-    useState<TipoMovimiento | null>(null);
+  const [selectedTipoMovimiento, setSelectedTipoMovimiento] = useState<TipoMovimiento | null>(
+    null
+  );
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -76,7 +78,9 @@ export const TipoMovimientoTable = () => {
     ?.filter((tipo) => tipo?.id_tipo !== undefined)
     .map((tipo) => ({
       ...tipo,
-      key: tipo.id_tipo ? tipo.id_tipo.toString() : crypto.randomUUID(),
+      key: tipo.id_tipo
+        ? tipo.id_tipo.toString()
+        : crypto.randomUUID(),
       estado: Boolean(tipo.estado),
     }));
 
@@ -90,8 +94,9 @@ export const TipoMovimientoTable = () => {
         text="Nuevo tipo"
         onPress={() => setIsOpen(true)}
         type="button"
+        color="primary"
         variant="solid"
-        className="relative top-12 text-white bg-blue-700"
+        className="mb-8"
       />
 
       <Modall
@@ -107,7 +112,7 @@ export const TipoMovimientoTable = () => {
         <button
           type="submit"
           form="tipo-form"
-          className="bg-blue-700 text-white p-2 rounded-md"
+          className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar
         </button>

@@ -1,16 +1,16 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "./layouts/layout";
-import Home from "./pages/Home/Home";
-import Admin from "./components/organismos/taps/admin";
-import { Estadisticas } from "./components/organismos/taps/estadisticas";
+import { Route, Routes } from "react-router-dom"
+import Layout from "./layouts/layout"
+import Home from "./pages/Home/Home"
+import Admin from "./components/organismos/taps/admin"
+import {Estadisticas} from "./components/organismos/taps/estadisticas"
 import { Bodega } from "./components/organismos/taps/Bodega";
 import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
 import { VerificacionTable } from "./pages/Verificaciones/Verificaciones";
 import { Reportes } from "./components/organismos/taps/Reportes";
 import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
-import { Inventario } from "./pages/Bodega/Inventarios";
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
-import { Perfil } from "./components/organismos/Perfil";
+import Inventario from "./pages/Reportes/Inventarios/Inventario"
+import { Perfil } from "./components/organismos/Perfil"
 
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
         <Route path="estadisticas" element={<Estadisticas />} />
       </Route>
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -4,14 +4,14 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { Chip } from "@heroui/chip";
-import { useRol } from "@/hooks/Roles/useRol";
-import { Rol } from "@/types/Rol";
-import Formulario from "@/components/organismos/Roles/FormRegister";
-import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
+import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
+import { Unidad } from "@/types/Unidad";
+import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
+import { FormUpdate } from "@/components/organismos/UnidadesMedida/FormUpdate";
 
-export const RolTable = () => {
-  const { roles, isLoading, isError, error, addRol, changeState } =
-    useRol();
+export const UnidadTable = () => {
+  const { unidades, isLoading, isError, error, addUnidad, changeState } =
+    useUnidad();
 
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
@@ -19,48 +19,49 @@ export const RolTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedRol, setSelectedRol] = useState<Rol | null>(
+  const [selectedUnidad, setSelectedUnidad] = useState<Unidad | null>(
     null
   );
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
-    setSelectedRol(null);
+    setSelectedUnidad(null);
   };
 
-  const handleState = async (rol: Rol) => {
-    await changeState(rol.id_rol);
+  const handleState = async (unidad: Unidad) => {
+    await changeState(unidad.id_unidad);
   };
 
-  const handleAddRol = async (rol: Rol) => {
+  const handleAddUnidad = async (unidad: Unidad) => {
     try {
-      await addRol(rol);
+      await addUnidad(unidad);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
     }
   };
 
-  const handleEdit = (rol: Rol) => {
-    setSelectedRol(rol);
+  const handleEdit = (unidad: Unidad) => {
+    setSelectedUnidad(unidad);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<Rol>[] = [
+  const columns: TableColumn<Unidad>[] = [
     { key: "nombre", label: "Nombre" },
     {
       key: "estado",
       label: "Estado",
-      render: (rol: Rol) => (
-        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
-      ),
-    },
-    {
-      key: "updated_at",
-      label: "Fecha Actualización",
-      render: (rol: Rol) => (
-        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (unidad: Unidad) => (
+        <Chip
+          className={`px-2 py-1 rounded ${
+            unidad.estado ? "text-green-500" : " text-red-500" //color texto
+          }`}
+          color={`${unidad.estado ? "success" : "danger"}`} //color de fondo
+          variant="flat"
+        >
+          {unidad.estado ? "Activo" : "Inactivo"}
+        </Chip>
       ),
     },
     {key:"created_at", label:"Fecha Creacion"},
@@ -75,24 +76,24 @@ export const RolTable = () => {
     return <span>Error: {error?.message}</span>;
   }
 
-  const rolesWithKey = roles
-    ?.filter((rol) => rol?.id_rol !== undefined)
-    .map((rol) => ({
-      ...rol,
-      key: rol.id_rol
-        ? rol.id_rol.toString()
+  const UnidadsWithKey = unidades
+    ?.filter((unidad) => unidad?.id_unidad !== undefined)
+    .map((unidad) => ({
+      ...unidad,
+      key: unidad.id_unidad
+        ? unidad.id_unidad.toString()
         : crypto.randomUUID(),
-      estado: Boolean(rol.estado),
+      estado: Boolean(unidad.estado),
     }));
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">
-        Roles Registrados
+        Unidades Registradas
       </h1>
 
       <Buton
-        text="Nuevo rol"
+        text="Nueva unidad"
         onPress={() => setIsOpen(true)}
         type="button"
         color="primary"
@@ -101,18 +102,18 @@ export const RolTable = () => {
       />
 
       <Modall
-        ModalTitle="Registrar Nuevo Rol"
+        ModalTitle="Registrar Nueva Unidad"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <Formulario
-          id="rol-form"
-          addData={handleAddRol}
+          id="unidad-form"
+          addData={handleAddUnidad}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="rol-form"
+          form="unidad-form"
           className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar
@@ -120,23 +121,23 @@ export const RolTable = () => {
       </Modall>
 
       <Modall
-        ModalTitle="Editar Rol"
+        ModalTitle="Editar Unidad"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
-        {selectedRol && (
+        {selectedUnidad && (
           <FormUpdate
-            roles={rolesWithKey ?? []}
-            rolId={selectedRol.id_rol}
+            unidades={UnidadsWithKey ?? []}
+            unidadId={selectedUnidad.id_unidad}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
         )}
       </Modall>
 
-      {rolesWithKey && (
+      {UnidadsWithKey && (
         <Globaltable
-          data={rolesWithKey}
+          data={UnidadsWithKey}
           columns={columns}
           onEdit={handleEdit}
           onDelete={handleState}

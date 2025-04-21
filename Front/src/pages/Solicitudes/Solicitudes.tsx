@@ -102,9 +102,9 @@ export const SolicitudTable = () => {
         text="Nuevo solicitud"
         onPress={() => setIsOpen(true)}
         type="button"
-        color={undefined}
+        color="primary"
         variant="solid"
-        className="relative top-12 text-white bg-blue-700"
+        className="mb-8"
       />
 
       <Modall
@@ -113,14 +113,14 @@ export const SolicitudTable = () => {
         onOpenChange={handleClose}
       >
         <Formulario
-          id="solicitud-form"
+          id="element-form"
           addData={handleAddSolicitud}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="solicitud-form"
-          className="bg-blue-700 text-white p-2 rounded-md"
+          form="user-form"
+          className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar
         </button>

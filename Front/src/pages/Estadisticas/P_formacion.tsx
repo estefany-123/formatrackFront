@@ -1,4 +1,4 @@
-import { Bar,Pie,Line } from "react-chartjs-2";
+import GraficaBase from "@/components/graficasBase/graficas";
 import { Chart,registerables } from "chart.js";
 import  {usePrograma} from '../../hooks/programas/usePrograma' 
 
@@ -74,21 +74,16 @@ const ProgramaEstadisticas = ()=>{
 
 
     return (
-        <div  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-            <div className="bg-white shadow rounded p-4">
-        <h2 className="text-lg font-semibold mb-2">programas por area</h2>
-        <Bar data={barData} />
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
+      <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="bar" data={barData} titulo="programas por area"/>
+      <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="pie" data={pieData} titulo="Distribución de estado"/>
+      <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="line" data={lineData} titulo="Programas de formación  creados por mes"/>
+    </div>
 
-      <div className="bg-white shadow rounded p-4">
-        <h2 className="text-lg font-semibold mb-2">Programas de formación  creados por mes</h2>
-        <Line data={lineData} />
-      </div>
-      <div className="bg-white shadow rounded p-40 ">
-        <h2 className="text-lg font-semibold mb-2">Distribución de estado</h2>
-        <Pie data={pieData} />
-      </div>
-        </div>
+
+     
+
+ 
 
     );
 };
