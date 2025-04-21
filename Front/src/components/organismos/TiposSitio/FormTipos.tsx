@@ -1,8 +1,8 @@
-import React from "react";
 import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import { TipoSitio } from "@/schemas/TipoSitio";
-import { Select, SelectItem } from "@heroui/react";
+import { TipoSitio, TipoSitioSchema } from "@/schemas/TipoSitio";
+import { Input, Select, SelectItem } from "@heroui/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type FormularioProps = {
 
@@ -13,24 +13,14 @@ type FormularioProps = {
 
 export default function FormTipos({ addData, onClose, id }: FormularioProps) {
 
-
-    const [formData, setFormData] = React.useState<TipoSitio>({
-        id_tipo: 0,
-        nombre: "",
-        estado: true
+    const { register, handleSubmit, formState : {errors}, setValue } = useForm({
+        resolver : zodResolver(TipoSitioSchema)
     });
 
-    const onSubmit = async (e: React.FormEvent) => { //preguntar si esta bien no usar el e: React.FormEvent
-        //y aqui el preventdefault
-        e.preventDefault();
+    const onSubmit = async (data : TipoSitio) => {
         try {
-            console.log("Enviando formulario con datos:", formData);
-            await addData(formData);
-            setFormData({
-                id_tipo: 0,
-                nombre: "",
-                estado: true
-            });
+            console.log("Enviando formulario con datos:", data);
+            await addData(data);
             onClose();
         } catch (error) {
             console.error("Error al cargar el tipo de sitio", error);
@@ -38,20 +28,22 @@ export default function FormTipos({ addData, onClose, id }: FormularioProps) {
     }
 
     return (
-        <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
+        <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
 
-            <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre} onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} />
+            <Input {...register("nombre")} label="Nombre" type="text" name="nombre" />
+            {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
 
             <Select
                 aria-labelledby="estado"
                 labelPlacement="outside"
-                name="estado"
                 placeholder="Estado"
-                onChange={(e) => setFormData({ ...formData, estado: e.target.value === "true" })} // Convierte a booleano
+                onChange={(e) => setValue("estado",e.target.value === 'true' ? true : false)} // Convierte a booleano
             >
                 <SelectItem key="true">Activo</SelectItem>
                 <SelectItem key="false" >Inactivo</SelectItem>
             </Select>
+
+            
             
         </Form>
     )
