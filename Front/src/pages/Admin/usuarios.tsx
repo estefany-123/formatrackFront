@@ -5,7 +5,6 @@ import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Usuarios/FormRegister";
 import { useState } from "react";
 import Formupdate from "@/components/organismos/Usuarios/Formupdate";
-import { Chip } from "@heroui/chip";
 import { User } from "@/types/Usuario";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 
@@ -43,31 +42,15 @@ const UsersTable = () => {
     setSelectedUser(user);
     setIsOpenUpdate(true);
   };
-
-  // Definir las columnas de la tabla
-  const columns: TableColumn<User>[] = [
-    { key: "nombre", label: "Nombre" },
-    { key: "apellido", label: "Apellido" },
-    { key: "edad", label: "edad" },
-    { key: "telefono", label: "telefono" },
-    { key: "correo", label: "Correo" },
-    { key: "cargo", label: "Cargo" },
-    {
-      key: "estado",
-      label: "estado",
-      render: (user: User) => (
-        <Chip
-          className={`px-2 py-1 rounded ${
-            user.estado ? "text-green-500" : " text-red-500" //color texto
-          }`}
-          color={`${user.estado ? "success" : "danger"}`} //color de fondo
-          variant="flat"
-        >
-          {user.estado ? "Activo" : "Inactivo"}
-        </Chip>
-      ),
-    },
-  ];
+    // Definir las columnas de la tabla
+    const columns: TableColumn<User>[] = [
+        { key: "nombre", label: "Nombre" },
+        { key: "apellido", label: "Apellido" },
+        { key: "edad", label: "edad" },
+        { key: "telefono", label: "telefono" },
+        { key: "correo", label: "Correo" },
+        { key: "cargo", label: "Cargo" },
+        {key: "estado",label: "estado" },];
 
   if (isLoading) {
     return <span>Cargando datos...</span>;
@@ -116,7 +99,6 @@ const UsersTable = () => {
           Guardar
         </button>
       </Modall>
-
       <Modall
         ModalTitle="Editar Usuario"
         isOpen={IsOpenUpdate}

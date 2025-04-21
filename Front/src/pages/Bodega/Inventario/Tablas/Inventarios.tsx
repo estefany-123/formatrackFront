@@ -7,6 +7,8 @@ import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { Inventario } from "@/types/Inventario";
 import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
+import { Elemento } from "@/types/Elemento";
+import { useElemento } from "@/hooks/Elementos/useElemento";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -16,7 +18,7 @@ interface InventariosTableProps {
 export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: InventariosTableProps) => {
   const { inventarios: inventariosHook, isLoading, isError, error, addInventario, changeState } =
     useInventario();
-
+    const { elementos: elementos } = useElemento();
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
@@ -50,24 +52,52 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<Inventario>[] = [
+  const columns = (elementos: Elemento[]): TableColumn<Inventario>[] => [
+    {
+      key: "fk_elemento",
+      label: "Elemento",
+      render: (inventario: Inventario) => {
+        const elemento = elementos.find(
+          (el) => el.id_elemento === inventario.fk_elemento
+        );
+        return <span>{elemento?.nombre ?? "No encontrado"}</span>;
+      },
+    },
+    {
+      key:"imagen_elemento", label:"Imagen",
+      render: (inventario: Inventario) => {
+        const elemento = elementos.find(
+          (el) => el.id_elemento === inventario.fk_elemento
+        );
+      
+        const imagen = elemento?.imagen_elemento;
+      
+        if (!imagen) return <span>No encontrado</span>;
+      
+        const src = `http://localhost:3000/img/${imagen}`; 
+      
+        return (
+          <img
+            src={src}
+            alt="Imagen del elemento"
+            className="justify-center relative left-6 h-28 rounded shadow"
+          />
+        );
+      },
+    },
     { key: "stock", label: "Cantidad" },
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (inventario: Inventario) => (
-        <span>
-          {new Date(inventario.created_at).toLocaleDateString("es-ES")}
-        </span>
+      render: (rol: Inventario) => (
+        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (inventario: Inventario) => (
-        <span>
-          {new Date(inventario.updated_at).toLocaleDateString("es-ES")}
-        </span>
+      render: (rol: Inventario) => (
+        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
     { key: "estado", label:"Estado"}
@@ -132,7 +162,7 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Elemento del Inventario"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
@@ -149,7 +179,7 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
       {InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
-          columns={columns}
+          columns={columns(elementos ?? [])}
           onEdit={handleEdit}
           onDelete={handleState}
         />

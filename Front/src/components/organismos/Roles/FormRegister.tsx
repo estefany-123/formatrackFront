@@ -15,8 +15,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     id_rol: 0,
     nombre: "",
     estado: true,
-    created_at:'',
-    updated_at:'',
+    created_at: "",
+    updated_at: "",
   });
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -26,7 +26,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     try {
       console.log("Enviando formulario con datos:", formData);
       await addData(formData);
-      console.log("Rol guardado correctamente");
+      console.log("Usuario guardado correctamente");
       setFormData({
         id_rol: 0,
         nombre: "",
@@ -36,7 +36,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       });
       onClose();
     } catch (error) {
-      console.error("Error al cargar el rol", error);
+      console.error("Error al cargar el usuario", error);
     }
   };
 
@@ -48,17 +48,18 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         type="text"
         name="nombre"
         value={formData.nombre}
-        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+        onChange={(e) => {
+          setFormData({ ...formData, nombre: e.target.value });
+        }}
       />
 
       <Select
-        aria-labelledby="estado"
-        labelPlacement="outside"
+        label="Estado"
         name="estado"
         placeholder="Estado"
         onChange={(e) =>
           setFormData({ ...formData, estado: e.target.value === "true" })
-        } // Convierte a booleano
+        }
       >
         <SelectItem key="true">Activo</SelectItem>
         <SelectItem key="false">Inactivo</SelectItem>

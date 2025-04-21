@@ -1,4 +1,5 @@
 export type User = {
+    imagen_url: string | null;
     id_usuario: number;
     documento: number;
     nombre: string;

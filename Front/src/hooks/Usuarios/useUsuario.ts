@@ -16,6 +16,7 @@ export function useUsuario() {
         }
     });
 
+
     const addUserMutation = useMutation({
         mutationFn: async(newUser: User) => {
             await axiosAPI.post<User>(url, newUser)

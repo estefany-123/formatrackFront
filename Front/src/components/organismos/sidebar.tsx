@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { HomeIcon, UserIcon, Cog6ToothIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { HomeIcon, UserIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, Bars3Icon } from "@heroicons/react/24/outline";
 
 const menuItems = [
-  { name: "Inicio", icon: HomeIcon, href: "/home" },
+  { name: "Inicio", icon: HomeIcon, href: "/" },
 
   { name: "Admin", icon: UserIcon, href: "/admin" },
 
@@ -15,8 +15,6 @@ const menuItems = [
   { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
 
   { name: "Verificaciones", icon: ClipboardDocumentCheckIcon, href:"/verificaciones" },
-
-  { name: "Configuración", icon: Cog6ToothIcon, href: "/configuraciones" },
 ];
 
 export default function Sidebar() {

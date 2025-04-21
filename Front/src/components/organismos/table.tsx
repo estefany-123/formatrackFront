@@ -32,6 +32,7 @@ interface TableProps<T extends { key: string; estado?: boolean }> {
   onDelete?: (item: T) => void | undefined | Promise<void>;
   showEstado?: boolean;
   showActions?: boolean;
+  searchValue?: (item: T) => string;
 }
 
 const Globaltable = <T extends { key: string; estado?: boolean }>({

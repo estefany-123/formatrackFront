@@ -67,7 +67,7 @@ const AreaEstadisticas = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
+    <div className="bg-white dark:bg-zinc-800 dark:text-white grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
       <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="bar" data={barData} titulo="Áreas por sede" />
       <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="line" data={lineData} titulo="Áreas creadas por mes" />
       <GraficaBase className="bg-white dark:bg-zinc-800 dark:text-white" tipo="pie" data={pieData} titulo="Distribución de estado" />
