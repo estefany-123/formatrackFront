@@ -63,7 +63,8 @@ export const RolTable = () => {
         <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
       ),
     },
-    { key: "estado", label:"Estado"}
+    {key:"created_at", label:"Fecha Creacion"},
+    {key:"updated_at", label:"Fecha Actualizacion"}
   ];
 
   if (isLoading) {

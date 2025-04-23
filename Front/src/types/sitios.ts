@@ -5,6 +5,7 @@ export type Sitios = {
     ubicacion: string;
     estado: boolean;
     created_at:string;
+    updated_at:string;
     fk_tipo_sitio: number;
     fk_area: number;
 }

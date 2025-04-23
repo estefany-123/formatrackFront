@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Ruta } from '@/types/Ruta'
+import { Ruta } from '@/schemas/Ruta'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useRuta() {

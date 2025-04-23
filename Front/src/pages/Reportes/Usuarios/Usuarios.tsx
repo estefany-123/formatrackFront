@@ -2,55 +2,57 @@ import { useState } from "react";
 import { VisualizadorPDF } from "@/components/organismos/PDFVisualizer";
 import { ReportTemplate } from "@/components/templates/Report";
 import { ReportCard } from "@/components/molecules/ReportCard";
-import { useRol } from "@/hooks/Roles/useRol";
-import { Rol } from "@/types/Rol";
+import { useUsuario } from "@/hooks/Usuarios/useUsuario";
+import { User } from "@/types/Usuario";
 
-export default function RolReportSelector() {
-  const { roles } = useRol();
+export default function UserReportSelector() {
+  const { users } = useUsuario();
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
 
-  if (!roles) return <p>Cargando...</p>;
+  if (!users) return <p>Cargando...</p>;
 
   const reports = [
     {
       id: "todos",
-      title: "Roles Registrados",
-      description: (data: Rol[]) => {
+      title: "Usuarios Registrados",
+      description: (data: User[]) => {
         const total = data.length;
         const activos = data.filter((e) => e.estado).length;
         return `
-Los roles son muy importantes puesto que gacias ellos el usario va apoder tener el acceso a ciertos modulos de nuestro sistema, es decir que de aqui pparte sobre a que opciones puede acceder en nusetro software.
+En el presente reporte se presenta un resumen general de los usuarios registrados en el sistema, mostrando información relevante como su nombre, correo electrónico y fecha de registro.
 
-Si bien es cierto algunos de nuestro roles deben darsel ciertos permisos, ya que gracias a ello es que pueden acceder alos modulos correspondeintes.
+Es importante llevar un control detallado de los usuarios ya que ellos son quienes interactúan directamente con las funcionalidades del sistema. Su gestión adecuada garantiza un mejor manejo de accesos, trazabilidad y soporte.
 
-Se han registrado un total de ${total} roles.
-De ellos, ${activos} están activos actualmente.
+Hasta el momento, se han registrado un total de ${total} usuarios.
+De ellos, ${activos} se encuentran activos actualmente, lo cual representa el grupo de personas que tiene acceso vigente al sistema.
 
-Este reporte brinda una visión general del total de roles registrados en el sistema.`;
+A continuación se muestra una tabla con los datos de los usuarios registrados:`;
       },
       accessors: ["nombre", "created_at"],
       headers: ["Nombre", "Fecha de creación"],
       withTable: true,
-      filterFn: (data: Rol[]) => data,
+      filterFn: (data: User[]) => data,
     },
     {
       id: "activos e inactivos",
-      title: "Roles Activos e Inactivos",
-      description: (data: Rol[]) => {
+      title: "Usuarios Activos e Inactivos",
+      description: (data: User[]) => {
         const activos = data.filter((e) => e.estado);
         const inactivos = data.filter((e) => !e.estado).length;
         const total = activos.length;
         return `
-Tenemos entre la garn variedad de roles no siempre todos van a estar activos hay algunas ocasiones en las que por motivos de no implementar mas un rol que se deciden llevar acabo el proceso de desactivacion bien sea que por el momento ya no hay usuarios con ese rol o que posiblemente no se vilvera a usar mas
+En todo sistema, es común que algunos usuarios permanezcan inactivos por diversas razones, como la finalización de sus labores, falta de uso prolongado o suspensión temporal del acceso.
 
-Actualmente hay ${total} roles con estado activo y ${inactivos} de ellos esta inactivado.
+Llevar un control sobre estos estados es fundamental para mantener la seguridad y la integridad de la plataforma, evitando accesos innecesarios o no autorizados.
 
-Estos roles representan los recursos disponibles y operativos dentro del sistema.`;
+Actualmente hay ${total} usuarios con estado activo y ${inactivos} usuarios inactivos.
+
+Este reporte permite identificar cuántos usuarios están participando activamente en el sistema y cuáles podrían requerir revisión, reactivación o eliminación definitiva.`;
       },
       accessors: ["nombre", "valor", "created_at"],
       headers: ["Nombre", "Valor", "Fecha de creación"],
       withTable: true,
-      filterFn: (data: Rol[]) => data.filter((e) => e.estado),
+      filterFn: (data: User[]) => data.filter((e) => e.estado),
     },
   ];
 
@@ -58,7 +60,7 @@ Estos roles representan los recursos disponibles y operativos dentro del sistema
   const handleBack = () => setSelectedReport(null);
 
   if (selectedReport && selected) {
-    const dataFiltrada = selected.filterFn(roles);
+    const dataFiltrada = selected.filterFn(users);
 
     return (
       <VisualizadorPDF
@@ -87,7 +89,7 @@ Estos roles representan los recursos disponibles y operativos dentro del sistema
           key={r.id}
           title={r.title}
           description={
-            typeof r.description === "function" ? r.description(roles) : ""
+            typeof r.description === "function" ? r.description(users) : ""
           }
           onClick={() => setSelectedReport(r.id)}
         />

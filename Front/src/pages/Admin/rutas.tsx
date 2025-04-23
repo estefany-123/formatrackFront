@@ -5,7 +5,7 @@ import Modall from "@/components/molecules/modal";
 import FormRutas from "@/components/organismos/Rutas/FormRutas";
 import { useState } from "react";
 import FormUpRutas from "@/components/organismos/Rutas/FormUpRutas";
-import { Ruta } from "@/types/Ruta";
+import { Ruta } from "@/schemas/Ruta";
 import { useRuta } from "@/hooks/Rutas/useRuta";
 
 

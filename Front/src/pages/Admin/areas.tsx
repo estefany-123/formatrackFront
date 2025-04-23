@@ -56,24 +56,37 @@ const AreaTable = () => {
     const columns: TableColumn<Area>[] = [
         { key: "nombre", label: "Nombre" },
         { key: "persona_encargada", label: "persona_encargada" },
-
+        { key: "estado", label: "Estado" },
         {
-            key: "estado",
-            label: "estado",
-            render: (area: Area) => (
-                <Chip
-                    className={`px-2 py-1 rounded ${area.estado ? "text-green-500" : " text-red-500" //color texto
-                        }`}
-                    
-                        color={`${area.estado ? "success" : "danger" }`} //color de fondo
-                        variant="flat"
-                >
-                    {area.estado ? "Activo" : "Inactivo"}
-                </Chip>
-            ),
-        },
+            key: "created_at",
+            label: "Fecha Creación",
+            render: (Area: Area) => (
+              <span>
+                {new Date(Area.created_at).toLocaleDateString("es-ES", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+      ),
+      },
+        {
+            key: "updated_at",
+            label: "Fecha Actualizacion",
+            render: (Area: Area) => (
+              <span>
+                {new Date(Area.updated_at).toLocaleDateString("es-ES", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+      ),
+      },
 
     ];
+
+    
 
     if (isLoading) {
         return <span>Cargando datos...</span>;

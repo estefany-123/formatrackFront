@@ -1,3 +1,4 @@
+
 export type User = {
     imagen_url: string | null;
     id_usuario: number;
@@ -11,4 +12,15 @@ export type User = {
     cargo: string;
     password: string;
     fk_rol: number;
+}
+
+export type LoginCrede = {
+    documento : number,
+    password : string
+}
+
+export type LoginRes = {
+    token : string,
+    documento : number,
+    password : string
 }

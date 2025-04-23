@@ -28,6 +28,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     fk_unidad_medida: 0,
     fk_categoria: 0,
     fk_caracteristica: 0,
+    tipo_elemento:""
   });
 
   const {
@@ -68,6 +69,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         fk_unidad_medida: 0,
         fk_categoria: 0,
         fk_caracteristica: 0,
+        tipo_elemento:""
       });
       onClose();
     } catch (error) {

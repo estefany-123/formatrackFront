@@ -55,22 +55,33 @@ const ProgramasTable = () => {
     // Definir las columnas de la tabla
     const columns: TableColumn<Pformacion>[] = [
         { key: "nombre", label: "Nombre" },
-
+        { key: "estado", label: "Estado" },
         {
-            key: "estado",
-            label: "estado",
-            render: (programa: Pformacion) => (
-                <Chip
-                    className={`px-2 py-1 rounded ${programa.estado ? "text-green-500" : " text-red-500" //color texto
-                        }`}
-                    
-                        color={`${programa.estado ? "success" : "danger" }`} //color de fondo
-                        variant="flat"
-                >
-                    {programa.estado ? "Activo" : "Inactivo"}
-                </Chip>
-            ),
-        },
+            key: "created_at",
+            label: "Fecha Creación",
+            render: (Pformacion: Pformacion) => (
+              <span>
+                {new Date(Pformacion.created_at).toLocaleDateString("es-ES", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+      ),
+      },
+        {
+            key: "updated_at",
+            label: "Fecha Actualizacion",
+            render: (Pformacion: Pformacion) => (
+              <span>
+                {new Date(Pformacion.updated_at).toLocaleDateString("es-ES", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+      ),
+      },
 
     ];
 

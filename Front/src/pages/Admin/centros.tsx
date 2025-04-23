@@ -5,7 +5,7 @@ import Modall from "@/components/molecules/modal";
 import FormCentros from "@/components/organismos/Centros/FormCentros";
 import { useState } from "react";
 import FormUpCentro from "@/components/organismos/Centros/FormUpCentro";
-import { Centro } from "@/types/Centro";
+import { Centro } from "@/schemas/Centro";
 import { useCentro } from "@/hooks/Centros/useCentros";
 
 
@@ -29,7 +29,7 @@ const CentrosTable = () => {
     };
 
     const handleState = async (centros: Centro) => {
-        await changeState(centros.id_centro);
+        await changeState(centros.id_centro as number);
         console.log(centros.id_centro)
     }
 
@@ -65,6 +65,7 @@ const CentrosTable = () => {
     const centrosWithKey = centros?.filter(centros => centros?.id_centro !== undefined).map((centros) => ({
         ...centros,
         key: centros.id_centro ? centros.id_centro.toString() : crypto.randomUUID(),
+        id_centro : centros.id_centro as number,
         estado: Boolean(centros.estado)
     }));
 
@@ -85,7 +86,7 @@ const CentrosTable = () => {
 
             <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
-                    <FormUpCentro centros={centrosWithKey ?? []} centroId={selectedUser.id_centro} id="FormUpdate" onclose={handleCloseUpdate} />
+                    <FormUpCentro centros={centrosWithKey ?? []} centroId={selectedUser.id_centro as number} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
 
             </Modall>

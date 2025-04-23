@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { HomeIcon, UserIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 const menuItems = [
   { name: "Inicio", icon: HomeIcon, href: "/" },
@@ -52,8 +53,8 @@ export default function Sidebar() {
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
         {menuItems.map((item) => (
           <div key={item.name}>
-            <a
-              href={item.href}
+            <Link
+              to={item.href}
               onClick={() => toggleItem(item.name)}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
                 openItems.includes(item.name)
@@ -63,7 +64,7 @@ export default function Sidebar() {
             >
               <item.icon className="w-6 h-6" />
               {!collapsed && <span>{item.name}</span>}
-              </a>
+              </Link>
           </div>
         ))}
       </nav>

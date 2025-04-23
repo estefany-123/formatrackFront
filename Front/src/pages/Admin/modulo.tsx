@@ -5,7 +5,7 @@ import Modall from "@/components/molecules/modal";
 import FormModulos from "@/components/organismos/Modulos/FormModulos";
 import { useState } from "react";
 import FormUpModulo from "@/components/organismos/Modulos/FormUpModulo";
-import {Modulo } from "@/types/Modulo";
+import {Modulo } from "@/schemas/Modulo";
 import {useModulo } from "@/hooks/Modulos/useModulo";
 
 

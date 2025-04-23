@@ -22,6 +22,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const onSubmit = async (e: React.FormEvent) => {
     //preguntar si esta bien no usar el e: React.FormEvent
     //y aqui el preventdefault
+    //preguntar si esta bien no usar el e: React.FormEvent
+    //y aqui el preventdefault
     e.preventDefault();
     try {
       console.log("Enviando formulario con datos:", formData);
@@ -38,7 +40,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     } catch (error) {
       console.error("Error al cargar el usuario", error);
     }
-  };
+  }
 
   return (
     <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">

@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Modulo } from '@/types/Modulo'
+import { Modulo } from '@/schemas/Modulo'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useModulo() {

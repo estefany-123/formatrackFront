@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Area } from '@/types/area'
+import { Area } from '@/schemas/Area'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useAreas() {

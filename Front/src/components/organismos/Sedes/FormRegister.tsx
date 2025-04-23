@@ -1,67 +1,145 @@
-import React from "react";
-import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import { Sede } from "@/types/sedes";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+import { Form } from "@heroui/form";
+import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/react";
+import { Combobox } from "@headlessui/react";
+import { useState } from "react";
+import { useCentro } from "@/hooks/Centros/useCentros";
+import { sede, sedeSchema } from "@/schemas/sedes";
 
-type FormularioProps = {
+type FormularioSedeProps = {
+  addData: (data: sede) => Promise<void>;
+  onClose: () => void;
+  id: string;
+};
 
-    addData: (Sede: Sede) => Promise<void>;
-    onClose: () => void;
-    id: string
-}
+export default function FormularioSede({
+  addData,
+  onClose,
+  id,
+}: FormularioSedeProps) {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<sede>({
+    resolver: zodResolver(sedeSchema),
+    mode: "onChange",
+  });
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+  const { centros } = useCentro();
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
 
+  const filteredCentros =
+    query === ""
+      ? centros
+      : centros?.filter((centro) =>
+          centro.nombre.toLowerCase().includes(query.toLowerCase())
+        );
 
-    const [formData, setFormData] = React.useState<Sede>({
-        id_sede: 0,
-        nombre: "",
-        estado: true,
-        fk_centro: 0,
-    });
-
-    const onSubmit = async (e : React.FormEvent) => { //preguntar si esta bien no usar el e: React.FormEvent
-        //y aqui el preventdefault
-        e.preventDefault();
-        try {
-            console.log("Enviando formulario con datos:", formData);
-            await addData(formData);
-            console.log("sede guardada correctamente");
-            setFormData({
-                id_sede: 0,
-                nombre: "",
-                estado: true,
-                fk_centro: 0,
-            });
-            onClose();
-        } catch (error) {
-            console.error("Error al cargar la sede ", error);
-        }
+  const onSubmit = async (data: sede) => {
+    try {
+      await addData(data);
+      onClose();
+    } catch (error) {
+      console.error("Error al guardar sede:", error);
     }
+  };
 
-    return (
-        <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
-         
-            <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre} onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} />
+  return (
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
+      <Input
+        label="Nombre de la sede"
+        type="text"
+        placeholder="Nombre"
+        {...register("nombre")}
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
+      />
 
-            <Select
-                aria-labelledby="estado"
-                labelPlacement="outside"
-                name="estado"
-                placeholder="Estado"
-                onChange={(e) => setFormData({ ...formData, estado: e.target.value === "true" })} // Convierte a booleano
+      <Controller
+        control={control}
+        name="estado"
+        render={({ field }) => (
+          <Select
+            label="Estado"
+            placeholder="Seleccione un estado"
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+          >
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
+        )}
+      />
+      {errors.estado && (
+        <p className="text-red-500">{errors.estado.message}</p>
+      )}
+
+      <Controller
+        control={control}
+        name="fk_centro"
+        render={({ field }) => (
+          <div className="w-full">
+            <label className="text-sm text-gray-700 font-medium mb-1 block">
+              Centro
+            </label>
+            <Combobox
+              value={field.value}
+              onChange={(val) => {
+                field.onChange(val);
+                setOpen(false);
+              }}
             >
-                <SelectItem key="true">Activo</SelectItem>
-                <SelectItem key="false" >Inactivo</SelectItem>
-            </Select>
-
-            {/* <Inpu label="Estado" placeholder="Estado" type="checkbox" name="estado" value={formData.estado.toString()} onChange={(e) => setFormData({ ...formData, estado: e.target.checked })} /> */}
-
-           
-
-            <Inpu label="centro" placeholder="centro" type="number" name="fk_centro" value={formData.fk_centro.toString()} onChange={(e) => setFormData({ ...formData, fk_centro: Number(e.target.value) })} />
-
-        </Form>
-    )
+              <div className="relative">
+                <Combobox.Input
+                  className="w-full border rounded-md p-2"
+                  displayValue={(id: number) =>
+                    centros?.find((c) => c.id_centro === id)?.nombre || ""
+                  }
+                  onClick={() => setOpen(true)}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setOpen(true);
+                  }}
+                  placeholder="Selecciona un centro..."
+                />
+                {open && (
+                  <Combobox.Options className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white border shadow">
+                    {filteredCentros?.length === 0 && (
+                      <div className="p-2 text-sm text-gray-500">
+                        No se encontraron centros.
+                      </div>
+                    )}
+                    {filteredCentros?.map((centro) => (
+                      <Combobox.Option
+                        key={centro.id_centro}
+                        value={centro.id_centro}
+                        className="cursor-pointer p-2 hover:bg-blue-100"
+                      >
+                        {centro.nombre}
+                      </Combobox.Option>
+                    ))}
+                  </Combobox.Options>
+                )}
+              </div>
+            </Combobox>
+            {errors.fk_centro && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_centro.message}
+              </p>
+            )}
+          </div>
+        )}
+      />
+    </Form>
+  );
 }
