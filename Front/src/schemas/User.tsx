@@ -23,7 +23,7 @@ export const UserUpdateSchema = z.object({
         .string()
         .email({ message: "Correo es requerido" }),
     cargo: z
-        .string({ required_error: "Cargo es requerido" }),
+        .string().min(1,{ message: "Cargo es requerido" }),
 })
 
 export type UserUpdate = z.infer<typeof UserUpdateSchema>
