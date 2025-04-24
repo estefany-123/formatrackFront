@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 export const fichaUpdateSchema = z.object({
-    id_area: z
+    id_ficha: z
         .number(),
     codigo_ficha:z
         .number({ message: "codigo ficha es requerida " })
-        .min(3, { message: "Longitud minima de 3" }),
+       
 
 
 })
@@ -14,8 +14,8 @@ export type fichaUpdate = z.infer<typeof fichaUpdateSchema>
 
 export const fichaSchema = z.object({
     id_ficha: z
-        .number()
-        .optional(),
+        .number(),
+        
 
     nombre: z
         .string()

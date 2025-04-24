@@ -1,78 +1,62 @@
-import React, { useState, useEffect } from "react";
-import { Ficha } from "@/types/Ficha";
-import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import {useFichas} from "@/hooks/fichas/useFichas";
+import { Input } from "@heroui/input";
+import { useForm } from "react-hook-form";
+import { fichaUpdateSchema, fichaUpdate } from "@/schemas/fichas";
+import { Ficha } from "@/schemas/fichas";
+import { Form } from "@heroui/form";
+import { useFichas } from "@/hooks/fichas/useFichas";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+type FormuProps = {
+  fichas: (Ficha & { key: string })[];
+  fichaId: number;
+  id: string;
+  onclose: () => void;
+};
 
+export const FormUpdateFicha = ({ fichas, fichaId, id, onclose }: FormuProps) => {
+  const { updateFicha, getFichaById } = useFichas();
 
-type Props = {
-    Fichas: Ficha[] ;
-    fichasId: number;
-    id: string
-    onclose: () => void;
+  const foundFicha = getFichaById(fichaId, fichas) as Ficha;
 
-}
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<fichaUpdate>({
+    resolver: zodResolver(fichaUpdateSchema),
+    mode: "onChange",
+    defaultValues: {
+      id_ficha: foundFicha.id_ficha,
+      codigo_ficha: foundFicha.codigo_ficha,
+    },
+  });
 
-const FormuUpdate = ({ Fichas, fichasId, id, onclose }: Props) => {
-    const [formData, setFormData] = useState<Partial<Ficha>>({
-        id_ficha: 0,
-        codigo_ficha: 0,
-        estado: false,
-        fk_programa: 0,
-    });
-
-    const {updateFicha, getFichaById} = useFichas()
-
-    useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
-        const foundFichas = getFichaById(fichasId);
-
-        if (foundFichas) {
-            setFormData(foundFichas);
-        }
-
-    }, [Fichas, fichasId]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { //se ejecuta cuando el usuario cambia algo en un campo
-        const { name, value, type, checked } = e.target;
-
-        setFormData((prev : Partial<Ficha>) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
-
-
-    const handleSubmit = async (e : React.FormEvent) => {
-
-        e.preventDefault();
-        if (!formData.id_ficha) {
-            return <p className="text-center text-gray-500">Ficha no encontrado</p>;
-        }
-        
-        try {
-            await updateFicha(formData.id_ficha, formData);
-            onclose();
-        } catch (error) {
-            console.log("Error al actualizar la ficha", error);
-        }
+  const onSubmit = async (data: fichaUpdate) => {
+    if (!data.id_ficha) return;
+    try {
+      // Llamada para actualizar la ficha
+      await updateFicha(data.id_ficha, data);
+      // Cerrar el modal después de la actualización
+      onclose();
+    } catch (error) {
+      console.error("Error al actualizar la ficha:", error);
     }
+  };
 
+  return (
+    <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <Input
+        label="Código Ficha"
+        placeholder="Ingrese el código de ficha"
+        {...register("codigo_ficha")}
+        isInvalid={!!errors.codigo_ficha}
+        errorMessage={errors.codigo_ficha?.message}
+      />
 
-
-
-    return (
-        <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit}>
-         
-            <Inpu label="codigo_ficha" placeholder="codigo_ficha" type="codigo_ficha" name="codigo_ficha" value={String(formData.codigo_ficha) ?? ''} onChange={handleChange} />
-           
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-                Guardar Cambios
-            </button>
-        </Form>
-    )
-
-}
-
-
-export default FormuUpdate;
+      {/* Botón submit de tipo "submit" */}
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
+        Guardar Cambios
+      </button>
+    </Form>
+  );
+};

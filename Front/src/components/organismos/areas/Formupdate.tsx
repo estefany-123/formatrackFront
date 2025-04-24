@@ -2,7 +2,6 @@ import { Input } from "@heroui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AreaUpdateSchema, AreaUpdate, Area } from "@/schemas/Area";
-import { Form } from "@heroui/form";
 import { useAreas } from "@/hooks/areas/useAreas";
 
 type FormuProps = {
@@ -49,7 +48,7 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
   };
 
   return (
-    <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -67,7 +66,8 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
       <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
         Guardar Cambios
       </button>
-    </Form>
+      
+    </form>
   );
 };
 
