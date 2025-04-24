@@ -110,13 +110,13 @@ export const VerificacionTable = () => {
         onOpenChange={handleClose}
       >
         <Formulario
-          id="element-form"
+          id="verificacion-form"
           addData={handleAddVerificacion}
           onClose={handleClose}
         />
         <button
           type="submit"
-          form="user-form"
+          form="verificacion-form"
           className="bg-blue-500 text-white p-2 rounded-md"
         >
           Guardar

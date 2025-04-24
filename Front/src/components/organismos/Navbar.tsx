@@ -14,7 +14,8 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
 import Modall from "../molecules/modal";
-import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
+import Cookies from "universal-cookie";
+// import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
 
 type NavProps = {
   en_proceso: string;
@@ -29,14 +30,15 @@ export function Nav({ children }: NavProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
   const navigate = useNavigate();
-  const {
-    notificaciones,
-    isLoading,
-    aceptarMovimiento,
-    cancelarMovimiento,
-    aceptarSolicitud,
-    cancelarSolicitud,
-  } = useNotificaciones();
+  const cookies = new Cookies();
+  // const {
+  //   notificaciones,
+  //   isLoading,
+  //   aceptarMovimiento,
+  //   cancelarMovimiento,
+  //   aceptarSolicitud,
+  //   cancelarSolicitud,
+  // } = useNotificaciones();
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -111,7 +113,7 @@ export function Nav({ children }: NavProps) {
               <DropdownItem key="Profile" onPress={handleGoToPerfil}>
                 Perfil
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={()=>{cookies.remove("token");window.location.href='/'}}>
                 Cerrar Sesión
               </DropdownItem>
             </DropdownMenu>
@@ -120,12 +122,12 @@ export function Nav({ children }: NavProps) {
         <div>{children}</div>
       </Navbar>
 
-      <Modall
+      {/*<Modall
         ModalTitle="Notificaciones"
         isOpen={isModalOpen}
         onOpenChange={handleCloseModal}
       >
-        <div className="space-y-4">
+         <div className="space-y-4">
           {isLoading ? (
             <p>Cargando notificaciones...</p>
           ) : !notificaciones || notificaciones.length === 0 ? (
@@ -182,7 +184,7 @@ export function Nav({ children }: NavProps) {
             ))
           )}
         </div>
-      </Modall>
+      </Modall> */}
     </>
   );
 }

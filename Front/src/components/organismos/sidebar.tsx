@@ -1,24 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HomeIcon, UserIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";
 
-const menuItems = [
-  { name: "Inicio", icon: HomeIcon, href: "/" },
-
-  { name: "Admin", icon: UserIcon, href: "/admin" },
-
-  { name: "Bodega", icon: CubeIcon, href: "/bodega" },
-
-  { name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes"},
-
-  { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes"},
-
-  { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
-
-  { name: "Verificaciones", icon: ClipboardDocumentCheckIcon, href:"/verificaciones" },
-];
+const menuItems : Record<string,{name:string,icon:typeof HomeIcon,href:string}> = {
+  "Inicio" : { name: "Inicio", icon: HomeIcon, href: "/" },
+  "Admin" : { name: "Admin", icon: UserIcon, href: "/admin" },
+  "Bodega" : { name: "Bodega", icon: CubeIcon, href: "/bodega" },
+  "Solicitudes" :{ name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes"},
+  "Reportes" : { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes"},
+  "Estadisticas" : { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
+  "Verificaciones" : { name: "Verificaciones", icon: ClipboardDocumentCheckIcon, href:"/verificaciones" }
+}
+type modulo = {
+  nombre : string
+}
 
 export default function Sidebar() {
+  //Logica para obtener modulos
+
+  const [modulos,setModulos] = useState<modulo[]>([])
+
+  useEffect(()=>{
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const decodedToken : {modulos : modulo[]} = jwtDecode(token);
+    setModulos(decodedToken.modulos);
+  },[])
+
+
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -51,7 +62,10 @@ export default function Sidebar() {
         </button>
       </div>
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-        {menuItems.map((item) => (
+        {modulos && modulos.map((modulo : {nombre : string}) => {
+          const item = menuItems[modulo.nombre];
+          
+          return(
           <div key={item.name}>
             <Link
               to={item.href}
@@ -66,7 +80,7 @@ export default function Sidebar() {
               {!collapsed && <span>{item.name}</span>}
               </Link>
           </div>
-        ))}
+        )})}
       </nav>
     </aside>
   );

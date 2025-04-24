@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export function useVerificacion() {
   const queryClient = useQueryClient();
 
-  const url = "verifiaccion";
+  const url = "verificacion";
 
   const { data, isLoading, isError, error } = useQuery<Verificacion[]>({
     queryKey: ["verificaciones"],

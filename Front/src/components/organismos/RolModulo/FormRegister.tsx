@@ -19,6 +19,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         fk_rol: 0,
         fk_modulo: 0,
         fk_permiso: 0,
+        created_at:""
     });
 
     const onSubmit = async (e : React.FormEvent) => { //preguntar si esta bien no usar el e: React.FormEvent
@@ -33,6 +34,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 fk_rol: 0,
                 fk_modulo: 0,
                 fk_permiso: 0,
+                created_at:""
             });
             onClose();
         } catch (error) {

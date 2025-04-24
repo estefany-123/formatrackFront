@@ -119,6 +119,7 @@ const AreaTable = () => {
                     columns={columns}
                     onEdit={handleEdit}
                     onDelete={handleState}
+                    showEstado={false}
 
                 />
 

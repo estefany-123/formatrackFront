@@ -39,11 +39,8 @@ function App() {
       )}
 
 
-      <Route path="login" element={<Login />} />
-      <Route
-        path="*"
-        element={<h1 className="text-8xl font-bold">404 - Not Found</h1>}
-      />
+      <Route path="/" element={<Login />} />
+      
     </Routes>
   )
 }

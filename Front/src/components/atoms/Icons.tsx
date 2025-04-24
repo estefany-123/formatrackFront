@@ -1,7 +1,7 @@
 export const FormatrackLogo = () => {
     return (
       <img
-        src="/src/assets/Formatrack.png"
+        src="formatrackFront\Front\src\assets\login.png"
         alt="Formatrack Logo"
         width={36}
         height={36}

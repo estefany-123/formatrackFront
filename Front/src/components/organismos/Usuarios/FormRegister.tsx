@@ -24,6 +24,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         resolver: zodResolver(UserSchema),
         mode: "onChange", 
     });
+    
 
     const onSubmit = async (data: User) => {
         console.log(data);

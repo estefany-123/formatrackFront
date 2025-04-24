@@ -88,7 +88,7 @@ const RolModuloTable = () => {
             <Modall ModalTitle="Agregar RolModulo" isOpen={isOpen} onOpenChange={handleClose}>
 
                 <Formulario id="RolModulo-form" addData={handleAddRolMOdulo} onClose={handleClose} />
-                <button type="submit" form="user-form" className="bg-blue-500 text-white p-2 rounded-md">
+                <button type="submit" form="RolModulo-form" className="bg-blue-500 text-white p-2 rounded-md">
                     Guardar
                 </button>
             </Modall>
