@@ -84,7 +84,7 @@ const CentrosTable = () => {
                 </button>
             </Modall>
 
-            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+            <Modall ModalTitle="Editar Centro" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
                     <FormUpCentro centros={centrosWithKey ?? []} centroId={selectedUser.id_centro as number} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}

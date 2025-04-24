@@ -83,7 +83,7 @@ const TipoSitioTable = () => {
                 </button>
             </Modall>
 
-            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+            <Modall ModalTitle="Editar Tipo de sitio" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
                     <FormUpTipos tipos={tiposWithKey ?? []} tipoSitioId={selectedUser.id_tipo as number} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
