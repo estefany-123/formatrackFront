@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Sitios } from '@/types/sitios'
+import { sitio } from '@/schemas/sitios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useSitios() {
@@ -8,7 +8,7 @@ export function useSitios() {
 
     const url = 'Sitio';
 
-    const { data, isLoading, isError, error } = useQuery<Sitios[]>({
+    const { data, isLoading, isError, error } = useQuery<sitio[]>({
         queryKey: ["sitios"],
         queryFn: async () => {
             const res = await axiosAPI.get(url);
@@ -17,13 +17,13 @@ export function useSitios() {
     });
 
     const addSitioMutation = useMutation({
-        mutationFn: async(newSitio: Sitios) => {
-            await axiosAPI.post<Sitios>(url, newSitio)
+        mutationFn: async(newSitio: sitio) => {
+            await axiosAPI.post<sitio>(url, newSitio)
             return newSitio
         },
         onSuccess: (sitio) => {
             console.log(sitio);
-            queryClient.setQueryData<Sitios[]>(["sitios"], (oldData) =>
+            queryClient.setQueryData<sitio[]>(["sitios"], (oldData) =>
                 oldData ? [...oldData,sitio] : [sitio]
             );
         },
@@ -32,18 +32,18 @@ export function useSitios() {
         }
     });
 
-    const getSitioById = (id: number, sitios : Sitios[] | undefined = data ): Sitios | null => {
+    const getSitioById = (id: number, sitios : sitio[] | undefined = data ): sitio | null => {
         return sitios?.find((sitio) => sitio.id_sitio === id) || null;
     }
 
     const updateSitioMutation = useMutation({
-        mutationFn: async({ id, update } : { id: number; update: Partial<Sitios> }) => {
-            await axiosAPI.put<Sitios>(`${url}/${id}`, update);
+        mutationFn: async({ id, update } : { id: number; update: Partial<sitio> }) => {
+            await axiosAPI.put<sitio>(`${url}/${id}`, update);
             return {id, update}
         },
         onSuccess: ({ id, update }) => {
             console.log("dato 1: ",id," dato 2: ",update);
-            queryClient.setQueryData<Sitios[]>(["sitios"], (oldData) =>
+            queryClient.setQueryData<sitio[]>(["sitios"], (oldData) =>
                 oldData
                     ? oldData.map((sitio) =>
                         sitio.id_sitio === id ? { ...sitio, ...update } : sitio
@@ -59,14 +59,14 @@ export function useSitios() {
 
     const changeStateMutation = useMutation({
         mutationFn: async (id_sitio: number) => {
-            await axiosAPI.put<Sitios>(`sitio/estado/${id_sitio}`);
+            await axiosAPI.put<sitio>(`sitio/estado/${id_sitio}`);
             return id_sitio
         },
 
         onSuccess: (id_sitio: number) => {
-            queryClient.setQueryData<Sitios[]>(["sitios"], (oldData) =>
+            queryClient.setQueryData<sitio[]>(["sitios"], (oldData) =>
                 oldData
-                    ? oldData.map((sitio: Sitios) =>
+                    ? oldData.map((sitio: sitio) =>
                         sitio.id_sitio == id_sitio
                             ? { ...sitio, estado: !sitio.estado }
                             : sitio
@@ -80,11 +80,11 @@ export function useSitios() {
         },
     });
 
-    const addSitio = async (sitio: Sitios) => {
+    const addSitio = async (sitio: sitio) => {
         return addSitioMutation.mutateAsync(sitio);
     };
 
-    const updateSitio = async (id: number, update: Partial<Sitios>) => {
+    const updateSitio = async (id: number, update: Partial<sitio>) => {
         return updateSitioMutation.mutateAsync({ id, update });
     };
 

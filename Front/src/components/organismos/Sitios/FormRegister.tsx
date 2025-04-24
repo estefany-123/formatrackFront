@@ -168,7 +168,7 @@ export default function FormularioSitio({ addData, onClose, id }: FormularioProp
                 <Combobox.Input
                   className="w-full border rounded-md p-2"
                   displayValue={(id: number) =>
-                    tipos?.find((t) => t.id_tipo_sitio === id)?.nombre || ""
+                    tipos?.find((t) => t.id_tipo === id)?.nombre || ""
                   }
                   onClick={() => setOpenTipo(true)}
                   onChange={(e) => {
@@ -184,8 +184,8 @@ export default function FormularioSitio({ addData, onClose, id }: FormularioProp
                     )}
                     {filteredTipos?.map((tipo) => (
                       <Combobox.Option
-                        key={tipo.id_tipo_sitio}
-                        value={tipo.id_tipo_sitio}
+                        key={tipo.id_tipo}
+                        value={tipo.id_tipo}
                         className="cursor-pointer p-2 hover:bg-blue-100"
                       >
                         {tipo.nombre}

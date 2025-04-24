@@ -1,5 +1,5 @@
 import { axiosAPI } from "@/axios/axiosAPI";
-import { Rol } from "@/types/Rol";
+import { Rol } from "@/schemas/Rol";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useRol() {

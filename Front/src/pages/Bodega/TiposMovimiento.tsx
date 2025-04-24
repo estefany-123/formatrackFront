@@ -3,9 +3,8 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
-import { TipoMovimiento } from "@/types/TipoMovimiento";
+import { Tipo } from "@/schemas/TipoMovimiento";
 import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
 import { FormUpdate } from "@/components/organismos/TiposMovimiento/FormUpdate";
 
@@ -19,20 +18,19 @@ export const TipoMovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedTipoMovimiento, setSelectedTipoMovimiento] = useState<TipoMovimiento | null>(
-    null
-  );
+  const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
+    useState<Tipo | null>(null);
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedTipoMovimiento(null);
   };
 
-  const handleState = async (tipo: TipoMovimiento) => {
-    await changeState(tipo.id_tipo);
+  const handleState = async (tipo: Tipo) => {
+    await changeState(tipo.id_tipo as number);
   };
 
-  const handleAddTipoMovimiento = async (tipo: TipoMovimiento) => {
+  const handleAddTipoMovimiento = async (tipo: Tipo) => {
     try {
       await addTipoMovimiento(tipo);
       handleClose(); // Cerrar el modal después de darle agregar usuario
@@ -41,26 +39,40 @@ export const TipoMovimientoTable = () => {
     }
   };
 
-  const handleEdit = (tipo: TipoMovimiento) => {
+  const handleEdit = (tipo: Tipo) => {
     setSelectedTipoMovimiento(tipo);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<TipoMovimiento>[] = [
+  const columns: TableColumn<Tipo>[] = [
     { key: "nombre", label: "Nombre" },
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (rol: TipoMovimiento) => (
-        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (tipo: Tipo) => (
+        <span>
+          {tipo.created_at
+            ? new Date(tipo.created_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (rol: TipoMovimiento) => (
-        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (tipo: Tipo) => (
+        <span>
+          {tipo.updated_at ? new Date(tipo.updated_at).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }): "N/A"}
+        </span>
       ),
     },
     { key: "estado", label: "Estado" },
@@ -78,9 +90,8 @@ export const TipoMovimientoTable = () => {
     ?.filter((tipo) => tipo?.id_tipo !== undefined)
     .map((tipo) => ({
       ...tipo,
-      key: tipo.id_tipo
-        ? tipo.id_tipo.toString()
-        : crypto.randomUUID(),
+      key: tipo.id_tipo ? tipo.id_tipo.toString() : crypto.randomUUID(),
+      id_tipo: tipo.id_tipo || 0,
       estado: Boolean(tipo.estado),
     }));
 
@@ -126,7 +137,7 @@ export const TipoMovimientoTable = () => {
         {selectedTipoMovimiento && (
           <FormUpdate
             tipos={TipoMovimientosWithKey ?? []}
-            tipoId={selectedTipoMovimiento.id_tipo}
+            tipoId={selectedTipoMovimiento.id_tipo as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

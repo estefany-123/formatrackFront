@@ -1,5 +1,5 @@
 import { axiosAPI } from "@/axios/axiosAPI";
-import { Movimiento } from "@/types/Movimiento";
+import { Movimiento } from "@/schemas/Movimento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useMovimiento() {

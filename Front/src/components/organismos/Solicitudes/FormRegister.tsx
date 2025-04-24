@@ -1,8 +1,7 @@
 import React from "react";
 import { Form } from "@heroui/form";
 import Inpu from "@/components/molecules/input";
-// import { Select, SelectItem } from "@heroui/react";
-import { Solicitud } from "@/types/Solicitud";
+import { Solicitud } from "@/schemas/Solicitud";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { Select, SelectItem } from "@heroui/react";
 import { useSitios } from "@/hooks/sitios/useSitios";

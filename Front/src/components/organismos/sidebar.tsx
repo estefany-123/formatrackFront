@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HomeIcon, UserIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { HomeIcon, UserIcon, CubeIcon, EnvelopeIcon, DocumentChartBarIcon, ChartBarIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
 const menuItems = [
@@ -15,7 +15,6 @@ const menuItems = [
 
   { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
 
-  { name: "Verificaciones", icon: ClipboardDocumentCheckIcon, href:"/verificaciones" },
 ];
 
 export default function Sidebar() {

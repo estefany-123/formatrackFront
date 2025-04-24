@@ -1,5 +1,5 @@
 import { axiosAPI } from "@/axios/axiosAPI";
-import { Elemento } from "@/types/Elemento";
+import { Elemento } from "@/schemas/Elemento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useElemento() {

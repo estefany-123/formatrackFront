@@ -6,10 +6,10 @@ import { Select, SelectItem } from "@heroui/react";
 import { Combobox } from "@headlessui/react";
 import { useState } from "react";
 import { useCentro } from "@/hooks/Centros/useCentros";
-import { sede, sedeSchema } from "@/schemas/sedes";
+import { Sede, sedeSchema } from "@/schemas/sedes";
 
 type FormularioSedeProps = {
-  addData: (data: sede) => Promise<void>;
+  addData: (data: Sede) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -24,7 +24,7 @@ export default function FormularioSede({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<sede>({
+  } = useForm<Sede>({
     resolver: zodResolver(sedeSchema),
     mode: "onChange",
   });
@@ -40,7 +40,7 @@ export default function FormularioSede({
           centro.nombre.toLowerCase().includes(query.toLowerCase())
         );
 
-  const onSubmit = async (data: sede) => {
+  const onSubmit = async (data: Sede) => {
     try {
       await addData(data);
       onClose();
@@ -80,9 +80,7 @@ export default function FormularioSede({
           </Select>
         )}
       />
-      {errors.estado && (
-        <p className="text-red-500">{errors.estado.message}</p>
-      )}
+      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
       <Controller
         control={control}

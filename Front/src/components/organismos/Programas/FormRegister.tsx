@@ -7,10 +7,10 @@ import { Combobox } from "@headlessui/react";
 import { useState } from "react";
 
 import { useCentro } from "@/hooks/Centros/useCentros";
-import { sede, sedeSchema } from "@/schemas/sedes";
+import { programa, programaSchema } from "@/schemas/programas";
 
 type FormularioSedeProps = {
-  addData: (data: sede) => Promise<void>;
+  addData: (data: programa) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -25,8 +25,8 @@ export default function FormularioSede({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<sede>({
-    resolver: zodResolver(sedeSchema),
+  } = useForm<programa>({
+    resolver: zodResolver(programaSchema),
     mode: "onChange",
   });
 
@@ -41,12 +41,12 @@ export default function FormularioSede({
           centro.nombre.toLowerCase().includes(query.toLowerCase())
         );
 
-  const onSubmit = async (data: sede) => {
+  const onSubmit = async (data: programa) => {
     try {
       await addData(data);
       onClose();
     } catch (error) {
-      console.error("Error al guardar sede:", error);
+      console.error("Error al guardar el programa:", error);
     }
   };
 
@@ -57,7 +57,7 @@ export default function FormularioSede({
       className="w-full space-y-4"
     >
       <Input
-        label="Nombre de la sede"
+        label="Nombre del programa"
         type="text"
         placeholder="Nombre"
         {...register("nombre")}
@@ -87,11 +87,11 @@ export default function FormularioSede({
 
       <Controller
         control={control}
-        name="fk_centro"
+        name="fk_area"
         render={({ field }) => (
           <div className="w-full">
             <label className="text-sm text-gray-700 font-medium mb-1 block">
-              Centro
+              Area
             </label>
             <Combobox
               value={field.value}
@@ -111,13 +111,13 @@ export default function FormularioSede({
                     setQuery(e.target.value);
                     setOpen(true);
                   }}
-                  placeholder="Selecciona un centro..."
+                  placeholder="Selecciona un area..."
                 />
                 {open && (
                   <Combobox.Options className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white border shadow">
                     {filteredCentros?.length === 0 && (
                       <div className="p-2 text-sm text-gray-500">
-                        No se encontraron centros.
+                        No se encontraron areas.
                       </div>
                     )}
                     {filteredCentros?.map((centro) => (
@@ -133,9 +133,9 @@ export default function FormularioSede({
                 )}
               </div>
             </Combobox>
-            {errors.fk_centro && (
+            {errors.fk_area && (
               <p className="text-sm text-red-500 mt-1">
-                {errors.fk_centro.message}
+                {errors.fk_area.message}
               </p>
             )}
           </div>

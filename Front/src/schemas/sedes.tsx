@@ -1,40 +1,33 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const sedeUpdateSchema = z.object({
-    id_sede: z
-        .number(),
-        nombre: z
-        .string()
-        .min(1, { message: "Nombre es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
-   
+  id_sede: z.number(),
+  nombre: z
+    .string()
+    .min(1, { message: "Nombre es requerido" })
+    .min(3, { message: "Longitud minima de 3" }),
 
-})
+  estado: z.boolean({ required_error: "Estado es requerido" }),
+  fk_centro: z.number({ message: "centro es requerido" }),
+});
 
-export type sedeUpdate = z.infer<typeof sedeUpdateSchema>
+export type sedeUpdate = z.infer<typeof sedeUpdateSchema>;
 
 export const sedeSchema = z.object({
-    id_sede: z
-        .number()
-        .optional(),
+  id_sede: z.number().optional(),
 
-    nombre: z
-        .string()
-        .min(1, { message: "Nombre es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
-   
-    created_at : z
-        .string().default(""),
+  nombre: z
+    .string()
+    .min(1, { message: "Nombre es requerido" })
+    .min(3, { message: "Longitud minima de 3" }),
 
-    estado: z
-        .boolean({ required_error: "Estado es requerido" }),
+  created_at: z.string().default("").optional(),
 
- 
-    fk_centro: z
-        .number({ message: "centro es requerido" })
-        
-})
+  updated_at: z.string().default("").optional(),
 
-export type sede = z.infer<typeof sedeSchema>
+  estado: z.boolean({ required_error: "Estado es requerido" }),
 
+  fk_centro: z.number({ message: "centro es requerido" }),
+});
 
+export type Sede = z.infer<typeof sedeSchema>;

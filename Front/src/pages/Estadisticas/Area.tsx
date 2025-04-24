@@ -1,11 +1,13 @@
 import { Chart, registerables } from "chart.js";
 import { useAreas } from "../../hooks/areas/useAreas";
 import GraficaBase from "@/components/graficasBase/graficas";
+import { useSede } from "@/hooks/sedes/useSedes";
 
 Chart.register(...registerables);
 
 const AreaEstadisticas = () => {
   const { areas, isLoading } = useAreas();
+  const {sede} =useSede()
 
   if (isLoading) return <p>Cargando...</p>;
   if (!areas || areas.length === 0) return <p>No hay datos de áreas.</p>;
@@ -14,21 +16,22 @@ const AreaEstadisticas = () => {
   const conteoPorSede: Record<string, number> = {}; 
   const conteoPorMes: number[] = new Array(12).fill(0); 
   const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-  let activas = 0; // Contador de áreas activas
-
+  let activas = 0; 
+  
   areas.forEach((area) => {
-   
-    const sedeKey = `Sede ${area.fk_sede}`;
-    conteoPorSede[sedeKey] = (conteoPorSede[sedeKey] || 0) + 1;
-
-   
+    const sedeEncontrada = sede?.find((s) => s.id_sede === area.fk_sede);
+    const sedeNombre = sedeEncontrada ? sedeEncontrada.nombre : `Sede ${area.fk_sede}`;
+  
+    conteoPorSede[sedeNombre] = (conteoPorSede[sedeNombre] || 0) + 1;
+  
     const mes = new Date(area.created_at).getMonth();
     conteoPorMes[mes]++;
-
-    
+  
     if (area.estado) activas++;
   });
-
+  
+  
+  
   const inactivas = areas.length - activas; 
 
 

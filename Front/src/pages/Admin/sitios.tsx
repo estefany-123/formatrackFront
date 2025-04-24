@@ -4,10 +4,9 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Sitios/FormRegister";
 import { useState } from "react";
-import Formupdate from "@/components/organismos/Sitios/Formupdate";
-import { Chip } from "@heroui/chip"
-import { Sitios } from "@/types/sitios";
+import {FormUpdate} from "@/components/organismos/Sitios/Formupdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
+import { sitio } from "@/schemas/sitios";
 
 
 
@@ -21,7 +20,7 @@ const SitiosTable = () => {
 
     //Modal actualizar
     const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-    const [selectedSitio, setSelectedSitio] = useState<Sitios | null>(null);
+    const [selectedSitio, setSelectedSitio] = useState<sitio | null>(null);
 
 
     const handleCloseUpdate = () => {
@@ -29,11 +28,11 @@ const SitiosTable = () => {
         setSelectedSitio(null);
     };
 
-    const handleState = async (sitio: Sitios) => {
-        await changeState(sitio.id_sitio);
+    const handleState = async (sitio: sitio) => {
+        await changeState(sitio.id_sitio as number);
     }
 
-    const handleAddSitio = async (sitio: Sitios) => {
+    const handleAddSitio = async (sitio: sitio) => {
         try {
             await addSitio(sitio);
             handleClose(); // Cerrar el modal después de darle agregar usuario
@@ -43,7 +42,7 @@ const SitiosTable = () => {
     };
 
 
-    const handleEdit = (sitio: Sitios) => {
+    const handleEdit = (sitio: sitio) => {
         setSelectedSitio(sitio);
         setIsOpenUpdate(true);
     };
@@ -53,10 +52,30 @@ const SitiosTable = () => {
 
 
     // Definir las columnas de la tabla
-    const columns: TableColumn<Sitios>[] = [
+    const columns: TableColumn<sitio>[] = [
         { key: "nombre", label: "Nombre" },
         { key: "persona_encargada", label: "persona_encargada" },
         { key: "ubicacion", label: "ubicacion" },
+            {
+              key: "created_at",
+              label: "Fecha CReacion",
+              render: (sitio: sitio) => (
+                <span>
+                  {sitio.created_at ? new Date(sitio.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' }) : 'N/A'}
+                </span>
+              ),
+              
+            },
+            {
+              key: "updated_at",
+              label: "Fecha Actualización",
+              render: (sitio: sitio) => (
+                <span>
+                  {sitio.updated_at ? new Date(sitio.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' }) : 'N/A'}
+                </span>
+              ),
+              
+            },
         { key: "estado", label: "Estado" }
 
     ];
@@ -72,6 +91,7 @@ const SitiosTable = () => {
     const sitiosWithKey = sitios?.filter(sitio => sitio?.id_sitio !== undefined).map((sitio) => ({
         ...sitio,
         key: sitio.id_sitio ? sitio.id_sitio.toString() : crypto.randomUUID(),
+        id_sitio:sitio.id_sitio || 0,
         estado: Boolean(sitio.estado)
     }));
 
@@ -94,7 +114,7 @@ const SitiosTable = () => {
 
             <Modall ModalTitle="Editar Sitio" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedSitio && (
-                    <Formupdate sitios={sitiosWithKey ?? []} sitioId={selectedSitio.id_sitio} id="FormUpdate" onclose={handleCloseUpdate} />
+                    <FormUpdate sitios={sitiosWithKey ?? []} sitioId={selectedSitio.id_sitio as number} id="FormUpdate" onclose={handleCloseUpdate} />
                 )}
 
             </Modall>

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AreaUpdateSchema, AreaUpdate, Area } from "@/schemas/Area";
 import { useAreas } from "@/hooks/areas/useAreas";
+import { Button } from "@heroui/button";
 
 type FormuProps = {
   areas: Area[];
@@ -19,21 +20,16 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AreaUpdate>({
     resolver: zodResolver(AreaUpdateSchema),
     mode: "onChange",
-    defaultValues: foundArea
-      ? {
+    defaultValues:{
           id_area: foundArea.id_area,
           nombre: foundArea.nombre,
           persona_encargada: foundArea.persona_encargada,
+          estado: foundArea.estado,
         }
-      : {
-          id_area: 0,
-          nombre: "",
-          persona_encargada: "",
-        },
   });
 
   const onSubmit = async (data: AreaUpdate) => {
@@ -47,6 +43,7 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
     }
   };
 
+  console.log("Errores", errors);
   return (
     <form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <Input
@@ -63,9 +60,9 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
         isInvalid={!!errors.persona_encargada}
         errorMessage={errors.persona_encargada?.message}
       />
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
+      <Button type="submit" isLoading={isSubmitting} className="bg-blue-500 text-white p-2 rounded-md">
         Guardar Cambios
-      </button>
+      </Button>
       
     </form>
   );

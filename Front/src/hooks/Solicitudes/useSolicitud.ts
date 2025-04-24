@@ -1,5 +1,5 @@
 import { axiosAPI } from "@/axios/axiosAPI";
-import { Solicitud } from "@/types/Solicitud";
+import { Solicitud } from "@/schemas/Solicitud";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useSolicitud() {

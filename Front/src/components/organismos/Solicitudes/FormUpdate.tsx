@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "@heroui/form";
 import Inpu from "@/components/molecules/input";
-import { Solicitud } from "@/types/Solicitud";
+import { Solicitud } from "@/schemas/Solicitud";
 import { useSolicitud } from "@/hooks/Solicitudes/useSolicitud";
 
 type Props = {
