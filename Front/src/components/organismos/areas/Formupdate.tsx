@@ -1,80 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { Area } from "@/types/area";
-import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import {useAreas} from "@/hooks/areas/useAreas";
+import { Input } from "@heroui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AreaUpdateSchema, AreaUpdate, Area } from "@/schemas/Area";
+import { useAreas } from "@/hooks/areas/useAreas";
+import { Button } from "@heroui/button";
 
+type FormuProps = {
+  areas: Area[];
+  areaId: number;
+  id: string;
+  onclose: () => void;
+};
 
+export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
+  const { updateArea, getAreaById } = useAreas();
 
-type Props = {
-    areas: Area[] ;
-    areaId: number;
-    id: string
-    onclose: () => void;
+  const foundArea = getAreaById(areaId, areas) as Area;
 
-}
-
-const FormuUpdate = ({ areas, areaId, id, onclose }: Props) => {
-    const [formData, setFormData] = useState<Partial<Area>>({
-        id_area: 0,
-        nombre: "",
-        persona_encargada: "",
-        estado: false,
-        fk_sede: 0,
-    });
-
-    const {updateArea, getAreaById} = useAreas()
-
-    useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
-        const foundArea = getAreaById(areaId);
-
-        if (foundArea) {
-            setFormData(foundArea);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<AreaUpdate>({
+    resolver: zodResolver(AreaUpdateSchema),
+    mode: "onChange",
+    defaultValues:{
+          id_area: foundArea.id_area,
+          nombre: foundArea.nombre,
+          persona_encargada: foundArea.persona_encargada,
+          estado: foundArea.estado,
         }
+  });
 
-    }, [areas, areaId]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { //se ejecuta cuando el usuario cambia algo en un campo
-        const { name, value, type, checked } = e.target;
-
-        setFormData((prev : Partial<Area>) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
-
-
-    const handleSubmit = async (e : React.FormEvent) => {
-
-        e.preventDefault();
-        if (!formData.id_area) {
-            return <p className="text-center text-gray-500">area no encontrado</p>;
-        }
-        
-        try {
-            await updateArea(formData.id_area, formData);
-            onclose();
-        } catch (error) {
-            console.log("Error al actualizar el area", error);
-        }
+  const onSubmit = async (data: AreaUpdate) => {
+    console.log("Enviando datos:", data);
+    if (!data.id_area) return;
+    try {
+      await updateArea(data.id_area, data);
+      onclose();
+    } catch (error) {
+      console.error("Error al actualizar el área: ", error);
     }
+  };
 
-
-
-
-    return (
-        <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit}>
-            <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre ?? ''} onChange={handleChange} />
-            <Inpu label="persona_encargada" placeholder="persona_encargada" type="text" name="persona_encargada" value={formData.persona_encargada} onChange={handleChange} />
-           
-
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-                Guardar Cambios
-            </button>
-        </Form>
-    )
-
-}
-
+  console.log("Errores", errors);
+  return (
+    <form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <Input
+        label="Nombre"
+        placeholder="Nombre"
+        {...register("nombre")}
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
+      />
+      <Input
+        label="Persona Encargada"
+        placeholder="Persona encargada"
+        {...register("persona_encargada")}
+        isInvalid={!!errors.persona_encargada}
+        errorMessage={errors.persona_encargada?.message}
+      />
+      <Button type="submit" isLoading={isSubmitting} className="bg-blue-500 text-white p-2 rounded-md">
+        Guardar Cambios
+      </Button>
+      
+    </form>
+  );
+};
 
 export default FormuUpdate;

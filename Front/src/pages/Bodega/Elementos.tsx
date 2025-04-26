@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";
 import Formulario from "@/components/organismos/Elementos/FormRegister";

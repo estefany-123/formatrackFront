@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Ficha } from '@/types/Ficha'
+import { Ficha } from '@/schemas/fichas'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useFichas() {

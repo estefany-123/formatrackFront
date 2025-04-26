@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Solicitudes/FormUpdate";
 import Formulario from "@/components/organismos/Solicitudes/FormRegister";
 import { useSolicitud } from "@/hooks/Solicitudes/useSolicitud";
-import { Solicitud } from "@/types/Solicitud";
+import { Solicitud } from "@/schemas/Solicitud";
 import { Chip } from "@heroui/chip";
 
 export const SolicitudTable = () => {
@@ -50,14 +50,14 @@ export const SolicitudTable = () => {
       key: "created_at",
       label: "Fecha Solicitud",
       render: (solicitud: Solicitud) => (
-        <span>{new Date(solicitud.created_at).toLocaleDateString("es-ES")}</span>
+        <span>{ solicitud.created_at ? new Date(solicitud.created_at).toLocaleDateString("es-ES"): "N/A"}</span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
       render: (solicitud: Solicitud) => (
-        <span>{new Date(solicitud.updated_at).toLocaleDateString("es-ES")}</span>
+        <span>{ solicitud.updated_at ? new Date(solicitud.updated_at).toLocaleDateString("es-ES"):"N/A"}</span>
       ),
     },
     {
@@ -90,6 +90,7 @@ export const SolicitudTable = () => {
       key: solicitud.id_solicitud
         ? solicitud.id_solicitud.toString()
         : crypto.randomUUID(),
+      id_solicitud:solicitud.id_solicitud || 0
     }));
 
   return (
@@ -134,7 +135,7 @@ export const SolicitudTable = () => {
         {selectedSolicitud && (
           <FormUpdate
             solicitudes={SolicitudsWithKey ?? []}
-            solicitudId={selectedSolicitud.id_solicitud}
+            solicitudId={selectedSolicitud.id_solicitud as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

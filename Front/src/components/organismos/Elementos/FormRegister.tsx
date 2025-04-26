@@ -1,11 +1,13 @@
-import React from "react";
-import { Form } from "@heroui/form";
-import Inpu from "@/components/molecules/input";
-import { Elemento } from "@/types/Elemento";
-import { Select, SelectItem } from "@heroui/react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
+import { Form } from "@heroui/form";
+import { Input } from "@heroui/react";
+import { Elemento, ElementoSchema } from "@/schemas/Elemento";
+import { Combobox } from "@headlessui/react";
+import { useState } from "react";
 
 type FormularioProps = {
   addData: (elemento: Elemento) => Promise<void>;
@@ -14,200 +16,198 @@ type FormularioProps = {
 };
 
 export default function Formulario({ addData, onClose, id }: FormularioProps) {
-  const [formData, setFormData] = React.useState<Elemento>({
-    id_elemento: 0,
-    nombre: "",
-    descripcion:"",
-    valor: 0,
-    perecedero: true,
-    no_perecedero: false,
-    estado: true,
-    imagen_elemento: "",
-    created_at:'',
-    updated_at:'',
-    fk_unidad_medida: 0,
-    fk_categoria: 0,
-    fk_caracteristica: 0,
-    tipo_elemento:""
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<Elemento>({
+    resolver: zodResolver(ElementoSchema),
+    mode: "onChange",
   });
 
-  const {
-    unidades,
-    isLoading: loadingUnidades,
-    isError: errorUnidades,
-  } = useUnidad();
-  const {
-    categorias,
-    isLoading: loadingCategorias,
-    isError: errorCategorias,
-  } = useCategoria();
-  const {
-    caracteristicas,
-    isLoading: loadingCaracteristicas,
-    isError: errorCaracteristicas,
-  } = useCaracteristica();
+  const { unidades } = useUnidad();
+  const { categorias } = useCategoria();
+  const { caracteristicas } = useCaracteristica();
 
-  const onSubmit = async (e: React.FormEvent) => {
-    //preguntar si esta bien no usar el e: React.FormEvent
-    //y aqui el preventdefault
-    e.preventDefault();
+  const [queryUnidad, setQueryUnidad] = useState("");
+  const [queryCategoria, setQueryCategoria] = useState("");
+  const [queryCaracteristica, setQueryCaracteristica] = useState("");
+
+  const filterByQuery = (list: any[] | undefined, key: string, query: string) => {
+    if (!list) return [];
+    return query === ""
+      ? list
+      : list.filter((item) =>
+          item[key].toLowerCase().includes(query.toLowerCase())
+        );
+  };
+
+  const onSubmit = async (data: Elemento) => {
     try {
-      console.log("Enviando formulario con datos:", formData);
-      await addData(formData);
-      console.log("Elemento guardado correctamente");
-      setFormData({
-        id_elemento: 0,
-        nombre: "",
-        descripcion:"",
-        valor: 0,
-        perecedero: true,
-        no_perecedero: false,
-        estado: true,
-        imagen_elemento: "",
-        created_at:'',
-        updated_at:'',
-        fk_unidad_medida: 0,
-        fk_categoria: 0,
-        fk_caracteristica: 0,
-        tipo_elemento:""
-      });
+      await addData(data);
       onClose();
     } catch (error) {
-      console.error("Error al cargar el elemento", error);
+      console.error("Error al guardar el elemento:", error);
     }
   };
 
   return (
-    <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
-      <Inpu
+    <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+      <Input
         label="Nombre"
         placeholder="Nombre"
-        type="text"
-        name="nombre"
-        value={formData.nombre}
-        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+        {...register("nombre")}
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
       />
-      <Inpu
-        label="Descripcion"
-        placeholder="Descripcion"
-        type="text"
-        name="descripcion"
-        value={formData.descripcion}
-        onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+      <Input
+        label="Descripción"
+        placeholder="Descripción"
+        {...register("descripcion")}
+        isInvalid={!!errors.descripcion}
+        errorMessage={errors.descripcion?.message}
       />
-      <Inpu
+      <Input
         label="Valor"
-        placeholder="Valor"
         type="number"
-        name="valor"
-        onChange={(e) =>
-          setFormData({ ...formData, valor: Number(e.target.value) })
-        }
+        placeholder="Valor"
+        {...register("valor", { valueAsNumber: true })}
+        isInvalid={!!errors.valor}
+        errorMessage={errors.valor?.message}
       />
 
-      <Select
-        aria-labelledby="tipoElemento"
-        labelPlacement="outside"
-        name="tipoElementoo"
-        placeholder="Tipo de Elemento"
-        onChange={(e) => {
-          const value = e.target.value;
-          if (value === "perecedero") {
-            setFormData({
-              ...formData,
-              perecedero: true,
-              no_perecedero: false,
-            });
-          } else if (value === "no_perecedero") {
-            setFormData({
-              ...formData,
-              perecedero: false,
-              no_perecedero: true,
-            });
-          }
-        }}
-      >
-        <SelectItem key="perecedero">Perecedero</SelectItem>
-        <SelectItem key="no_perecedero">No Perecedero</SelectItem>
-      </Select>
+      {/* Tipo de elemento */}
+      <Controller
+        control={control}
+        name="tipoElemento"
+        render={({ field }) => (
+          <select
+            {...field}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(value);
+              setValue("perecedero", value === "perecedero");
+              setValue("no_perecedero", value === "no_perecedero");
+            }}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="">Selecciona un tipo</option>
+            <option value="perecedero">Perecedero</option>
+            <option value="no_perecedero">No Perecedero</option>
+          </select>
+        )}
+      />
 
-      <Select
-        label="Estado"
+      {/* Estado */}
+      <Controller
+        control={control}
         name="estado"
-        placeholder="Estado"
-        onChange={(e) =>
-          setFormData({ ...formData, estado: e.target.value === "true" })
-        } // Convierte a booleano
-      >
-        <SelectItem key="true">Activo</SelectItem>
-        <SelectItem key="false">Inactivo</SelectItem>
-      </Select>
+        render={({ field }) => (
+          <select
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
+        )}
+      />
 
-      <Inpu
+      {/* Imagen */}
+      <Input
         label="Imagen"
         type="file"
-        name="imagen_elemento"
         accept="image/*"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) {
-            setFormData({ ...formData, imagen_elemento: file });
-          }
+          setValue("imagen_elemento", file);
         }}
       />
-      {!loadingUnidades && !errorUnidades && unidades && (
-        <Select
-          label="Unidad Medida"
-          name="fk_unidad_medida"
-          placeholder="Selecciona una unidad"
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              fk_unidad_medida: Number(e.target.value),
-            })
-          }
-        >
-          {unidades.map((unidad) => (
-            <SelectItem key={unidad.id_unidad}>{unidad.nombre}</SelectItem>
-          ))}
-        </Select>
-      )}
-      {!loadingCategorias && !errorCategorias && categorias && (
-        <Select
-          label="Categoria"
-          name="fk_categoria"
-          placeholder="Selecciona una categoria"
-          onChange={(e) =>
-            setFormData({ ...formData, fk_categoria: Number(e.target.value) })
-          }
-        >
-          {categorias.map((categoria) => (
-            <SelectItem key={categoria.id_categoria}>
-              {categoria.nombre}
-            </SelectItem>
-          ))}
-        </Select>
-      )}
 
-      {!loadingCaracteristicas && !errorCaracteristicas && caracteristicas && (
-        <Select
-          label="Caracteristica"
-          name="fk_caracteristica"
-          placeholder="Selecciona una caracteristica"
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              fk_caracteristica: Number(e.target.value),
-            })
-          }
-        >
-          {caracteristicas.map((caracteristica) => (
-            <SelectItem key={caracteristica.id_caracteristica}>
-              {caracteristica.nombre}
-            </SelectItem>
-          ))}
-        </Select>
-      )}
+      {/* Unidad de medida */}
+      <Controller
+        control={control}
+        name="fk_unidad_medida"
+        render={({ field }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Unidad de medida</label>
+            <Combobox value={field.value} onChange={field.onChange}>
+              <Combobox.Input
+                className="w-full border p-2 rounded"
+                placeholder="Buscar unidad..."
+                displayValue={(id: number) => unidades?.find(u => u.id_unidad === id)?.nombre || ""}
+                onChange={(e) => setQueryUnidad(e.target.value)}
+              />
+              <Combobox.Options className="border bg-white max-h-60 overflow-auto mt-1 rounded-md shadow">
+                {filterByQuery(unidades, "nombre", queryUnidad).map((unidad) => (
+                  <Combobox.Option key={unidad.id_unidad} value={unidad.id_unidad} className="p-2 hover:bg-blue-100 cursor-pointer">
+                    {unidad.nombre}
+                  </Combobox.Option>
+                ))}
+              </Combobox.Options>
+            </Combobox>
+            {errors.fk_unidad_medida && <p className="text-sm text-red-500 mt-1">{errors.fk_unidad_medida.message}</p>}
+          </div>
+        )}
+      />
+
+      {/* Categoría */}
+      <Controller
+        control={control}
+        name="fk_categoria"
+        render={({ field }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+            <Combobox value={field.value} onChange={field.onChange}>
+              <Combobox.Input
+                className="w-full border p-2 rounded"
+                placeholder="Buscar categoría..."
+                displayValue={(id: number) => categorias?.find(c => c.id_categoria === id)?.nombre || ""}
+                onChange={(e) => setQueryCategoria(e.target.value)}
+              />
+              <Combobox.Options className="border bg-white max-h-60 overflow-auto mt-1 rounded-md shadow">
+                {filterByQuery(categorias, "nombre", queryCategoria).map((cat) => (
+                  <Combobox.Option key={cat.id_categoria} value={cat.id_categoria} className="p-2 hover:bg-blue-100 cursor-pointer">
+                    {cat.nombre}
+                  </Combobox.Option>
+                ))}
+              </Combobox.Options>
+            </Combobox>
+            {errors.fk_categoria && <p className="text-sm text-red-500 mt-1">{errors.fk_categoria.message}</p>}
+          </div>
+        )}
+      />
+
+      {/* Característica */}
+      <Controller
+        control={control}
+        name="fk_caracteristica"
+        render={({ field }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Característica</label>
+            <Combobox value={field.value} onChange={field.onChange}>
+              <Combobox.Input
+                className="w-full border p-2 rounded"
+                placeholder="Buscar característica..."
+                displayValue={(id: number) => caracteristicas?.find(c => c.id_caracteristica === id)?.nombre || ""}
+                onChange={(e) => setQueryCaracteristica(e.target.value)}
+              />
+              <Combobox.Options className="border bg-white max-h-60 overflow-auto mt-1 rounded-md shadow">
+                {filterByQuery(caracteristicas, "nombre", queryCaracteristica).map((car) => (
+                  <Combobox.Option key={car.id_caracteristica} value={car.id_caracteristica} className="p-2 hover:bg-blue-100 cursor-pointer">
+                    {car.nombre}
+                  </Combobox.Option>
+                ))}
+              </Combobox.Options>
+            </Combobox>
+            {errors.fk_caracteristica && <p className="text-sm text-red-500 mt-1">{errors.fk_caracteristica.message}</p>}
+          </div>
+        )}
+      />
     </Form>
   );
 }

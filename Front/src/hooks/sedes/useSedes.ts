@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Sede } from '@/types/sedes'
+import { Sede } from '@/schemas/sedes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useSede() {

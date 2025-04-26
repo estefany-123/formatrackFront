@@ -5,7 +5,6 @@ import Admin from "./components/organismos/taps/admin"
 import { Estadisticas } from "./components/organismos/taps/estadisticas"
 import { Bodega } from "./components/organismos/taps/Bodega"
 import { SolicitudTable } from "./pages/Solicitudes/Solicitudes"
-import { VerificacionTable } from "./pages/Verificaciones/Verificaciones"
 import { Reportes } from "./components/organismos/taps/Reportes"
 import { useAuth } from "./providers/AuthProvider"
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio"
@@ -33,14 +32,10 @@ function App() {
           />
           <Route path="solicitudes" element={<SolicitudTable />} />
           <Route path="reportes" element={<Reportes />} />
-          <Route path="verificaciones" element={<VerificacionTable />} />
           <Route path="estadisticas" element={<Estadisticas />} />
         </Route>
       )}
-
-
       <Route path="/" element={<Login />} />
-      
     </Routes>
   )
 }

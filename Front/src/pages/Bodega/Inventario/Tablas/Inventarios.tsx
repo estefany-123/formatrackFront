@@ -150,7 +150,7 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
           id="inventario-form"
           addData={handleAddInventario}
           onClose={handleClose}
-          idSitio={idSitio}
+          idSitio={idSitio!}
         />
         <button
           type="submit"

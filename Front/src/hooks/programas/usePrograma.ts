@@ -1,5 +1,5 @@
 import { axiosAPI } from '@/axios/axiosAPI';
-import { Pformacion } from '@/types/programaFormacion'
+import { programa } from '@/schemas/programas'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function usePrograma() {
@@ -8,7 +8,7 @@ export function usePrograma() {
 
     const url = 'P.formacion';
 
-    const { data, isLoading, isError, error } = useQuery<Pformacion[]>({
+    const { data, isLoading, isError, error } = useQuery<programa[]>({
         queryKey: ["programa"], 
         queryFn: async () => {
             const res = await axiosAPI.get(url);
@@ -17,13 +17,13 @@ export function usePrograma() {
     });
 
     const addProgramaMutation = useMutation({
-        mutationFn: async(newPrograma: Pformacion) => {
-            await axiosAPI.post<Pformacion>(url, newPrograma)
+        mutationFn: async(newPrograma: programa) => {
+            await axiosAPI.post<programa>(url, newPrograma)
             return newPrograma
         },
         onSuccess: (Programa) => {
             console.log(Programa);
-            queryClient.setQueryData<Pformacion[]>(["programa"], (oldData) => 
+            queryClient.setQueryData<programa[]>(["programa"], (oldData) => 
                 oldData ? [...oldData,Programa] : [Programa]
             );
         },
@@ -32,18 +32,18 @@ export function usePrograma() {
         }
     });
 
-    const getProgramaById = (id: number, Programa : Pformacion[] | undefined = data ): Pformacion | null => {
+    const getProgramaById = (id: number, Programa : programa[] | undefined = data ): programa | null => {
         return Programa?.find((Programa) => Programa.id_programa === id) || null;
     }
 
     const updateProgramaMutation = useMutation({
-        mutationFn: async({ id, update } : { id: number; update: Partial<Pformacion> }) => {
-            await axiosAPI.put<Pformacion>(`${url}/${id}`, update);
+        mutationFn: async({ id, update } : { id: number; update: Partial<programa> }) => {
+            await axiosAPI.put<programa>(`${url}/${id}`, update);
             return {id, update}
         },
         onSuccess: ({ id, update }) => {
             console.log("dato 1: ",id," dato 2: ",update);
-            queryClient.setQueryData<Pformacion[]>(["programa"], (oldData) => 
+            queryClient.setQueryData<programa[]>(["programa"], (oldData) => 
                 oldData
                     ? oldData.map((Programa) =>
                         Programa.id_programa === id ? { ...Programa, ...update } : Programa
@@ -59,14 +59,14 @@ export function usePrograma() {
 
     const changeStateMutation = useMutation({
         mutationFn: async (id_programa: number) => {
-            await axiosAPI.put<Pformacion>(`P.formacion/estado/${id_programa}`);
+            await axiosAPI.put<programa>(`P.formacion/estado/${id_programa}`);
             return id_programa
         },
 
         onSuccess: (id_programa: number) => {
-            queryClient.setQueryData<Pformacion[]>(["programa"], (oldData) => 
+            queryClient.setQueryData<programa[]>(["programa"], (oldData) => 
                 oldData
-                    ? oldData.map((programa: Pformacion) =>
+                    ? oldData.map((programa: programa) =>
                         programa.id_programa == id_programa
                             ? { ...programa, estado: !programa.estado }
                             : programa
@@ -80,11 +80,11 @@ export function usePrograma() {
         },
     });
 
-    const addPrograma = async (ficha: Pformacion) => {
+    const addPrograma = async (ficha: programa) => {
         return addProgramaMutation.mutateAsync(ficha);
     };
 
-    const updatePrograma = async (id: number, update: Partial<Pformacion>) => {
+    const updatePrograma = async (id: number, update: Partial<programa>) => {
         return updateProgramaMutation.mutateAsync({ id, update });
     };
 

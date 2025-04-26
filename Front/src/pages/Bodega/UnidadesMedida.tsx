@@ -4,7 +4,7 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
-import { Unidad } from "@/types/Unidad";
+import { Unidad } from "@/schemas/Unidad";
 import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
 import { FormUpdate } from "@/components/organismos/UnidadesMedida/FormUpdate";
 
@@ -26,7 +26,7 @@ export const UnidadTable = () => {
   };
 
   const handleState = async (unidad: Unidad) => {
-    await changeState(unidad.id_unidad);
+    await changeState(unidad.id_unidad as number);
   };
 
   const handleAddUnidad = async (unidad: Unidad) => {
@@ -49,18 +49,34 @@ export const UnidadTable = () => {
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (rol: Unidad) => (
-        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (unidad: Unidad) => (
+        <span>
+          {unidad.created_at
+            ? new Date(unidad.created_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (rol: Unidad) => (
-        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (unidad: Unidad) => (
+        <span>
+          {unidad.updated_at
+            ? new Date(unidad.updated_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
       ),
     },
-    { key: "estado", label:"Estado"}
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {
@@ -76,6 +92,7 @@ export const UnidadTable = () => {
     .map((unidad) => ({
       ...unidad,
       key: unidad.id_unidad ? unidad.id_unidad.toString() : crypto.randomUUID(),
+      id_unidad:unidad.id_unidad || 0,
       estado: Boolean(unidad.estado),
     }));
 
@@ -120,7 +137,7 @@ export const UnidadTable = () => {
         {selectedUnidad && (
           <FormUpdate
             unidades={UnidadsWithKey ?? []}
-            unidadId={selectedUnidad.id_unidad}
+            unidadId={selectedUnidad.id_unidad as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

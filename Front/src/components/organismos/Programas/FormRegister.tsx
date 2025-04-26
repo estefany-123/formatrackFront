@@ -1,83 +1,146 @@
-import React from "react";
-import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import { Pformacion } from "@/types/programaFormacion";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+import { Form } from "@heroui/form";
+import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/react";
-import {useAreas} from "@/hooks/areas/useAreas"
+import { Combobox } from "@headlessui/react";
+import { useState } from "react";
 
-type FormularioProps = {
+import { useCentro } from "@/hooks/Centros/useCentros";
+import { programa, programaSchema } from "@/schemas/programas";
 
-    addData: (Programa: Pformacion) => Promise<void>;
-    onClose: () => void;
-    id: string
-}
+type FormularioSedeProps = {
+  addData: (data: programa) => Promise<void>;
+  onClose: () => void;
+  id: string;
+};
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function FormularioSede({
+  addData,
+  onClose,
+  id,
+}: FormularioSedeProps) {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<programa>({
+    resolver: zodResolver(programaSchema),
+    mode: "onChange",
+  });
 
-    const { areas, isLoading: loadingAreas, isError: errorAreas } = useAreas();
-    const [formData, setFormData] = React.useState<Pformacion>({
-        id_programa: 0,
-        nombre: "",
-        estado: true,
-        fk_area: 0,
-    });
+  const { centros } = useCentro();
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
 
-    const onSubmit = async (e : React.FormEvent) => { //preguntar si esta bien no usar el e: React.FormEvent
-        //y aqui el preventdefault
-        e.preventDefault();
-        try {
-            console.log("Enviando formulario con datos:", formData);
-            await addData(formData);
-            console.log("ficha guardada correctamente");
-            setFormData({
-                id_programa: 0,
-                nombre: "",
-                estado: true,
-                fk_area: 0,
-            });
-            onClose();
-        } catch (error) {
-            console.error("Error al cargar el programa", error);
-        }
+  const filteredCentros =
+    query === ""
+      ? centros
+      : centros?.filter((centro) =>
+          centro.nombre.toLowerCase().includes(query.toLowerCase())
+        );
+
+  const onSubmit = async (data: programa) => {
+    try {
+      await addData(data);
+      onClose();
+    } catch (error) {
+      console.error("Error al guardar el programa:", error);
     }
+  };
 
-    return (
-        <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
-         <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre} onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} />
-            
-            <Select
-                aria-labelledby="estado"
-                labelPlacement="outside"
-                name="estado"
-                placeholder="Estado"
-                onChange={(e) => setFormData({ ...formData, estado: e.target.value === "true" })} // Convierte a booleano
+  return (
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
+      <Input
+        label="Nombre del programa"
+        type="text"
+        placeholder="Nombre"
+        {...register("nombre")}
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
+      />
+
+      <Controller
+        control={control}
+        name="estado"
+        render={({ field }) => (
+          <Select
+            label="Estado"
+            placeholder="Seleccione un estado"
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+          >
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
+        )}
+      />
+      {errors.estado && (
+        <p className="text-red-500">{errors.estado.message}</p>
+      )}
+
+      <Controller
+        control={control}
+        name="fk_area"
+        render={({ field }) => (
+          <div className="w-full">
+            <label className="text-sm text-gray-700 font-medium mb-1 block">
+              Area
+            </label>
+            <Combobox
+              value={field.value}
+              onChange={(val) => {
+                field.onChange(val);
+                setOpen(false);
+              }}
             >
-                <SelectItem key="true">Activo</SelectItem>
-                <SelectItem key="false" >Inactivo</SelectItem>
-            </Select>
-
-            {/* <Inpu label="Estado" placeholder="Estado" type="checkbox" name="estado" value={formData.estado.toString()} onChange={(e) => setFormData({ ...formData, estado: e.target.checked })} /> */}
-
-           
-           
-
-            {/* <Inpu label="area" placeholder="area" type="number" name="fk_area" value={formData.fk_area.toString()} onChange={(e) => setFormData({ ...formData, fk_area: Number(e.target.value) })} /> */}
-              {!loadingAreas && !errorAreas && areas && (
-                                <Select
-                                  label="areas"
-                                  name="fk_area"
-                                  placeholder="Selecciona una area"
-                                  onChange={(e) =>
-                                    setFormData({ ...formData, fk_area: Number(e.target.value) })
-                                  }
-                                >
-                                  {areas.map((area) => (
-                                    <SelectItem key={area.id_area}>
-                                      {area.nombre}
-                                    </SelectItem>
-                                  ))}
-                                </Select>
-                              )}
-        </Form>
-    )
+              <div className="relative">
+                <Combobox.Input
+                  className="w-full border rounded-md p-2"
+                  displayValue={(id: number) =>
+                    centros?.find((c) => c.id_centro === id)?.nombre || ""
+                  }
+                  onClick={() => setOpen(true)}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setOpen(true);
+                  }}
+                  placeholder="Selecciona un area..."
+                />
+                {open && (
+                  <Combobox.Options className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white border shadow">
+                    {filteredCentros?.length === 0 && (
+                      <div className="p-2 text-sm text-gray-500">
+                        No se encontraron areas.
+                      </div>
+                    )}
+                    {filteredCentros?.map((centro) => (
+                      <Combobox.Option
+                        key={centro.id_centro}
+                        value={centro.id_centro}
+                        className="cursor-pointer p-2 hover:bg-blue-100"
+                      >
+                        {centro.nombre}
+                      </Combobox.Option>
+                    ))}
+                  </Combobox.Options>
+                )}
+              </div>
+            </Combobox>
+            {errors.fk_area && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_area.message}
+              </p>
+            )}
+          </div>
+        )}
+      />
+    </Form>
+  );
 }

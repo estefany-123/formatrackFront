@@ -9,7 +9,6 @@ import SolicitudReportSelector from "@/pages/Reportes/Solicitudes/Solicitud";
 import TipoReportSelector from "@/pages/Reportes/TiposMovimiento/TipoMovimiento";
 import UnidadReportSelector from "@/pages/Reportes/UnidadesMedida/UnidadMedida";
 import UserReportSelector from "@/pages/Reportes/Usuarios/Usuarios";
-import VerificacionReportSelector from "@/pages/Reportes/Verificaciones/Verificacion";
 import ReportFichas from "@/pages/Reportes/fichas/Fichas";
 
 export const Reportes =() => {
@@ -78,7 +77,7 @@ export const Reportes =() => {
             {
                 key : "13",
                 title : "Verificaciones",
-                content :<VerificacionReportSelector/>
+                content :""
             },
             {
                 key : "14",

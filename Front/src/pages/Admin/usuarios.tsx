@@ -1,3 +1,4 @@
+
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
@@ -76,7 +77,7 @@ const UsersTable = () => {
             <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} type="button" color="primary" variant="solid" className="mb-8" />
 
             <Modall ModalTitle="Agregar Usuario" isOpen={isOpen} onOpenChange={handleClose}>
-
+           
                 <FormRegister id="user-form" addData={handleAddUser} onClose={handleClose} />
                 <button type="submit" form="user-form" className="bg-blue-500 text-white p-2 rounded-md">
                     Guardar
@@ -102,4 +103,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export default UsersTable;

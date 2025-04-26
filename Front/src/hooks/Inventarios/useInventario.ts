@@ -1,5 +1,5 @@
 import { axiosAPI } from "@/axios/axiosAPI";
-import { Inventario } from "@/types/Inventario";
+import { Inventario } from "@/schemas/Inventario";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useInventario() {

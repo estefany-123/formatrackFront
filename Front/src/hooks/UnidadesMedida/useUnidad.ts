@@ -1,5 +1,5 @@
 import { axiosAPI } from "@/axios/axiosAPI";
-import { Unidad } from "@/types/Unidad";
+import { Unidad } from "@/schemas/Unidad";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useUnidad() {
