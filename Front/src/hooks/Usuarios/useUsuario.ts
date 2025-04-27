@@ -1,8 +1,8 @@
 import { axiosAPI } from '@/axios/axiosAPI';
 import { User } from '@/schemas/User'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LoginCrede, LoginRes } from '@/types/Usuario';
-import Cookies from "js-cookie";
+
+
 
 export function useUsuario() {
 
@@ -39,19 +39,7 @@ export function useUsuario() {
         }
     });
 
-    const loginMutation = useMutation({
-        mutationFn : async (credenciales : LoginCrede ) : Promise<LoginRes> => {
-            const response = await axiosAPI.post<LoginRes>(`${url}/login`,credenciales)
-            console.log("Esto es data :",response.data)
-            return response.data
-        },
-        onSuccess : (data) => {
-            Cookies.set("jwt",data.token,{expires :1})
-        },
-        onError : (error) => {
-            console.log("Error iniciando sesion:",error)
-        }
-    });
+    
 
 
 
@@ -107,9 +95,7 @@ export function useUsuario() {
         return addUserMutation.mutateAsync(usuario);
     };
 
-    const login = async (documento : number, password : string) => {
-        return loginMutation.mutateAsync({documento,password})
-    }
+    
 
     const updateUser = async (id: number, update: Partial<User>) => {
         return updateUserMutation.mutateAsync({ id, update });
@@ -125,7 +111,6 @@ export function useUsuario() {
         isError,
         error,
         addUser,
-        login,
         changeState,
         getUserById,
         updateUser

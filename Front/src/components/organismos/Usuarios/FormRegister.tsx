@@ -14,7 +14,7 @@ type FormularioProps = {
 
 export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
-    
+   
     const {
         control,
         register,
