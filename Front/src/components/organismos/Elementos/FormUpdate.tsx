@@ -55,7 +55,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
     }
 
     try {
-      const updatedData: Partial<Elemento> = {
+      const updatedData: Elemento = {
         ...formData,
       };
 

@@ -1,13 +1,12 @@
 import { Input } from "@heroui/input";
 import { useForm } from "react-hook-form";
 import { fichaUpdateSchema, fichaUpdate } from "@/schemas/fichas";
-import { Ficha } from "@/schemas/fichas";
 import { Form } from "@heroui/form";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type FormuProps = {
-  fichas: (Ficha & { key: string })[];
+  fichas: (fichaUpdate & { key: string })[];
   fichaId: number;
   id: string;
   onclose: () => void;
@@ -16,7 +15,7 @@ type FormuProps = {
 export const FormUpdateFicha = ({ fichas, fichaId, id, onclose }: FormuProps) => {
   const { updateFicha, getFichaById } = useFichas();
 
-  const foundFicha = getFichaById(fichaId, fichas) as Ficha;
+  const foundFicha = getFichaById(fichaId, fichas) as fichaUpdate;
 
   const {
     register,
@@ -26,17 +25,17 @@ export const FormUpdateFicha = ({ fichas, fichaId, id, onclose }: FormuProps) =>
     resolver: zodResolver(fichaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_ficha: foundFicha.id_ficha,
+      id_ficha: foundFicha.id_ficha ?? 0,
       codigo_ficha: foundFicha.codigo_ficha,
+      estado: foundFicha.estado,
+      fk_programa: foundFicha.fk_programa
     },
   });
 
   const onSubmit = async (data: fichaUpdate) => {
     if (!data.id_ficha) return;
     try {
-      // Llamada para actualizar la ficha
       await updateFicha(data.id_ficha, data);
-      // Cerrar el modal después de la actualización
       onclose();
     } catch (error) {
       console.error("Error al actualizar la ficha:", error);

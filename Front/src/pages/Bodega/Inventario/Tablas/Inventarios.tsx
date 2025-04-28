@@ -15,10 +15,19 @@ interface InventariosTableProps {
   idSitio?: number;
 }
 
-export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: InventariosTableProps) => {
-  const { inventarios: inventariosHook, isLoading, isError, error, addInventario, changeState } =
-    useInventario();
-    const { elementos: elementos } = useElemento();
+export const InventariosTable = ({
+  inventarios: inventariosProp,
+  idSitio,
+}: InventariosTableProps) => {
+  const {
+    inventarios: inventariosHook,
+    isLoading,
+    isError,
+    error,
+    addInventario,
+    changeState,
+  } = useInventario();
+  const { elementos: elementos } = useElemento();
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
@@ -33,8 +42,8 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
     setSelectedInventario(null);
   };
 
-  const handleState = async (inventario: Inventario) => {
-    await changeState(inventario.id_inventario);
+  const handleState = async (id_inventario: number) => {
+    await changeState(id_inventario);
   };
 
   const handleAddInventario = async (inventario: Inventario) => {
@@ -64,18 +73,19 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
       },
     },
     {
-      key:"imagen_elemento", label:"Imagen",
+      key: "imagen_elemento",
+      label: "Imagen",
       render: (inventario: Inventario) => {
         const elemento = elementos.find(
           (el) => el.id_elemento === inventario.fk_elemento
         );
-      
+
         const imagen = elemento?.imagen_elemento;
-      
+
         if (!imagen) return <span>No encontrado</span>;
-      
-        const src = `http://localhost:3000/img/${imagen}`; 
-      
+
+        const src = `http://localhost:3000/img/${imagen}`;
+
         return (
           <img
             src={src}
@@ -89,18 +99,34 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (rol: Inventario) => (
-        <span>{new Date(rol.created_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (inventario: Inventario) => (
+        <span>
+          {inventario.created_at
+            ? new Date(inventario.created_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (rol: Inventario) => (
-        <span>{new Date(rol.updated_at).toLocaleDateString("es-ES", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+      render: (inventario: Inventario) => (
+        <span>
+          {inventario.updated_at
+            ? new Date(inventario.updated_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
       ),
     },
-    { key: "estado", label:"Estado"}
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading && !inventariosProp) {
@@ -114,12 +140,17 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
   const filtered = inventariosProp ?? inventariosHook;
 
   const InventariosWithKey = filtered
-    ?.filter((inventario) => inventario?.id_inventario !== undefined && (idSitio ? inventario.fk_sitio === idSitio : true))
+    ?.filter(
+      (inventario) =>
+        inventario?.id_inventario !== undefined &&
+        (idSitio ? inventario.fk_sitio === idSitio : true)
+    )
     .map((inventario) => ({
       ...inventario,
       key: inventario.id_inventario
         ? inventario.id_inventario.toString()
         : crypto.randomUUID(),
+      id_inventario: inventario.id_inventario || 0,
       estado: Boolean(inventario.estado),
     }));
 
@@ -130,17 +161,6 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
           Inventarios Registrados
         </h1>
       )}
-
-      
-        <Buton
-          text="Nuevo inventario"
-          onPress={() => setIsOpen(true)}
-          type="button"
-          variant="solid"
-          className="relative top-12 text-white bg-blue-700"
-        />
-      
-
       <Modall
         ModalTitle="Registrar Nuevo Inventario"
         isOpen={isOpen}
@@ -169,7 +189,7 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
         {selectedInventario && (
           <FormUpdate
             inventarios={InventariosWithKey ?? []}
-            inventarioId={selectedInventario.id_inventario}
+            inventarioId={selectedInventario.id_inventario as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -181,7 +201,16 @@ export const InventariosTable = ({ inventarios: inventariosProp, idSitio }: Inve
           data={InventariosWithKey}
           columns={columns(elementos ?? [])}
           onEdit={handleEdit}
-          onDelete={handleState}
+          onDelete={(inventario) => handleState(inventario.id_inventario)}
+          extraHeaderContent={
+            <Buton
+              text="Nuevo inventario"
+              onPress={() => setIsOpen(true)}
+              type="button"
+              variant="solid"
+              className="text-white bg-blue-700"
+            />
+          }
         />
       )}
     </div>

@@ -1,20 +1,34 @@
-import { Route, Routes } from "react-router-dom"
-import Layout from "./layouts/layout"
-import Home from "./pages/Home/Home"
-import Admin from "./components/organismos/taps/admin"
-import { Estadisticas } from "./components/organismos/taps/estadisticas"
-import { Bodega } from "./components/organismos/taps/Bodega"
-import { SolicitudTable } from "./pages/Solicitudes/Solicitudes"
-import { Reportes } from "./components/organismos/taps/Reportes"
-import { useAuth } from "./providers/AuthProvider"
-import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio"
-import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea"
-import { Inventario } from "./pages/Bodega/Inventarios"
-import { Perfil } from "./components/organismos/Perfil"
-import Login from "./pages/Login"
+import { Route, Routes } from "react-router-dom";
+import Layout from "./layouts/layout";
+import Home from "./pages/Home/Home";
+import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
+import { useAuth } from "./providers/AuthProvider";
+import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
+import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
+import { Inventario } from "./pages/Bodega/Inventarios";
+import { Perfil } from "./components/organismos/Perfil";
+import Login from "./pages/Login";
+import UsersTable from "./pages/Admin/usuarios";
+import SedeTable from "./pages/Admin/sedes";
+import AreaTable from "./pages/Admin/areas";
+import { RolTable } from "./pages/Admin/Roles";
+import FichasTable from "./pages/Admin/fichas";
+import ProgramasTable from "./pages/Admin/programas";
+import CentrosTable from "./pages/Admin/centros";
+import MunicipiosTable from "./pages/Admin/municipio";
+import SitiosTable from "./pages/Admin/sitios";
+import TipoSitioTable from "./pages/Admin/tipoSitio";
+import PermisoTable from "./pages/Admin/permisos";
+import RutasTable from "./pages/Admin/rutas";
+import ModulosTable from "./pages/Admin/modulo";
+import { ElementosTable } from "./pages/Bodega/Elementos";
+import { MovimientoTable } from "./pages/Bodega/Movimientos";
+import { TipoMovimientoTable } from "./pages/Bodega/TiposMovimiento";
+import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
+import CategoriasTable from "./pages/Admin/categorias";
 
 function App() {
-  const { authenticated } = useAuth()
+  const { authenticated } = useAuth();
 
   return (
     <Routes>
@@ -22,22 +36,41 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="perfil" element={<Perfil />} />
-          <Route path="admin" element={<Admin />} />
-          <Route path="bodega" element={<Bodega />} />
+          <Route path="admin/usuarios" element={<UsersTable />} />
+          <Route path="admin/roles" element={<RolTable />} />
+          <Route path="admin/fichas" element={<FichasTable />} />
+          <Route path="admin/programas" element={<ProgramasTable />} />
+          <Route path="admin/areas" element={<AreaTable />} />
+          <Route path="admin/sedes" element={<SedeTable />} />
+          <Route path="admin/centros" element={<CentrosTable />} />
+          <Route path="admin/municipios" element={<MunicipiosTable />} />
+          <Route path="admin/sitios" element={<SitiosTable />} />
+          <Route path="admin/tiposSitio" element={<TipoSitioTable />} />
+          <Route path="admin/permisos" element={<PermisoTable />} />
+          <Route path="admin/rutas" element={<RutasTable />} />
+          <Route path="admin/modulos" element={<ModulosTable />} />
+          <Route path="bodega/elementos" element={<ElementosTable />} />
+          <Route path="bodega/movimientos" element={<MovimientoTable />} />
+          <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
+          <Route path="bodega/unidades" element={<UnidadTable />} />
+          <Route path="bodega/categorias" element={<CategoriasTable />} />
+          <Route path="bodega/caracteristicas" element={<CategoriasTable />} />
+          <Route path="bodega/inventario/" element={<Inventario />} />
           <Route path="bodega/inventario/areas" element={<Inventario />} />
-          <Route path="bodega/inventario/areas/:id" element={<InventarioArea />} />
+          <Route
+            path="bodega/inventario/areas/:id"
+            element={<InventarioArea />}
+          />
           <Route
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
           <Route path="solicitudes" element={<SolicitudTable />} />
-          <Route path="reportes" element={<Reportes />} />
-          <Route path="estadisticas" element={<Estadisticas />} />
         </Route>
       )}
       <Route path="/" element={<Login />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

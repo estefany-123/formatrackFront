@@ -4,9 +4,11 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
-import { Tipo } from "@/schemas/TipoMovimiento";
 import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
 import { FormUpdate } from "@/components/organismos/TiposMovimiento/FormUpdate";
+import { TipoMovimiento } from "@/types/TipoMovimiento";
+import { Button, Card, CardBody } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
 
 export const TipoMovimientoTable = () => {
   const { tipos, isLoading, isError, error, addTipoMovimiento, changeState } =
@@ -19,18 +21,24 @@ export const TipoMovimientoTable = () => {
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
-    useState<Tipo | null>(null);
+    useState<TipoMovimiento | null>(null);
+
+    const navigate = useNavigate()
+
+    const handleGoToElemento = () => {
+      navigate('/bodega/movimientos')
+    }
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedTipoMovimiento(null);
   };
 
-  const handleState = async (tipo: Tipo) => {
-    await changeState(tipo.id_tipo as number);
+  const handleState = async (id_tipo: number) => {
+    await changeState(id_tipo);
   };
 
-  const handleAddTipoMovimiento = async (tipo: Tipo) => {
+  const handleAddTipoMovimiento = async (tipo: TipoMovimiento) => {
     try {
       await addTipoMovimiento(tipo);
       handleClose(); // Cerrar el modal después de darle agregar usuario
@@ -39,18 +47,18 @@ export const TipoMovimientoTable = () => {
     }
   };
 
-  const handleEdit = (tipo: Tipo) => {
+  const handleEdit = (tipo: TipoMovimiento) => {
     setSelectedTipoMovimiento(tipo);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<Tipo>[] = [
+  const columns: TableColumn<TipoMovimiento>[] = [
     { key: "nombre", label: "Nombre" },
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (tipo: Tipo) => (
+      render: (tipo: TipoMovimiento) => (
         <span>
           {tipo.created_at
             ? new Date(tipo.created_at).toLocaleDateString("es-ES", {
@@ -65,13 +73,15 @@ export const TipoMovimientoTable = () => {
     {
       key: "updated_at",
       label: "Fecha Actualización",
-      render: (tipo: Tipo) => (
+      render: (tipo: TipoMovimiento) => (
         <span>
-          {tipo.updated_at ? new Date(tipo.updated_at).toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }): "N/A"}
+          {tipo.updated_at
+            ? new Date(tipo.updated_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
         </span>
       ),
     },
@@ -97,18 +107,23 @@ export const TipoMovimientoTable = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Tipos de Movimientos Registrados
-      </h1>
-
-      <Buton
-        text="Nuevo tipo"
-        onPress={() => setIsOpen(true)}
-        type="button"
-        color="primary"
-        variant="solid"
-        className="mb-8"
-      />
+      <div className="flex pb-4 pt-4">
+        <Card className="w-full">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Gestionar Tipos</h1>
+              <div className="flex gap-2">
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToElemento}
+                >
+                  Movimientos
+                </Button>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
 
       <Modall
         ModalTitle="Registrar Nuevo Tipo de Movimiento"
@@ -149,7 +164,16 @@ export const TipoMovimientoTable = () => {
           data={TipoMovimientosWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={handleState}
+          onDelete={(tipo) => handleState(tipo.id_tipo)}
+          extraHeaderContent={
+            <Buton
+              text="Nuevo tipo"
+              onPress={() => setIsOpen(true)}
+              type="button"
+              variant="solid"
+              className="text-white bg-blue-700"
+            />
+          }
         />
       )}
     </div>

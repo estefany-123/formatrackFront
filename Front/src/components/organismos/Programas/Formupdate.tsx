@@ -1,25 +1,22 @@
 import { Form } from "@heroui/form"
 import {usePrograma} from "@/hooks/programas/usePrograma";
-import { programa, programaUpdate, programaUpdateSchema } from "@/schemas/programas";
+import { programaUpdate, programaUpdateSchema } from "@/schemas/programas";
 import { Input } from "@heroui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@heroui/button";
 
-
-
 type Props = {
-    programas: programa [] ;
+    programas: programaUpdate [] ;
     programaId: number;
     id: string
     onclose: () => void;
-
 }
 
 export const FormUpdate = ({ programas, programaId, id, onclose }: Props) => {
     const { updatePrograma, getProgramaById } = usePrograma();
   
-    const foundPrograma = getProgramaById(programaId, programas) as programa;
+    const foundPrograma = getProgramaById(programaId, programas) as programaUpdate;
   
     const {
       register,
@@ -29,7 +26,7 @@ export const FormUpdate = ({ programas, programaId, id, onclose }: Props) => {
       resolver: zodResolver(programaUpdateSchema),
       mode: "onChange",
       defaultValues: {
-        id_programa:foundPrograma.id_programa,
+        id_programa:foundPrograma.id_programa ?? 0,
         nombre:foundPrograma.nombre,
         estado:foundPrograma.estado,
         fk_area:foundPrograma.fk_area

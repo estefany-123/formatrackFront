@@ -31,7 +31,11 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   };
 
   return (
-    <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -40,23 +44,25 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-            <Controller
-                control={control}
-                name="estado"
-                render={({ field }) => (
-                    <Select
-                        label="Estado"
-                        placeholder="Selecciona estado"
-                        {...field} 
-                        value={field.value ? "true" : "false"}
-                        onChange={(e) => field.onChange(e.target.value === "true")} 
-                    >
-                        <SelectItem key="true">Activo</SelectItem>
-                        <SelectItem key="false">Inactivo</SelectItem>
-                    </Select>
-                )}
-            />
-            {errors.estado && <p className="text-red-500">{errors.estado?.message}</p>}
+      <Controller
+        control={control}
+        name="estado"
+        render={({ field }) => (
+          <Select
+            label="Estado"
+            placeholder="Selecciona estado"
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+          >
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
+        )}
+      />
+      {errors.estado && (
+        <p className="text-red-500">{errors.estado?.message}</p>
+      )}
     </Form>
   );
 }

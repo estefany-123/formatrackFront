@@ -2,10 +2,10 @@ import { Form } from "@heroui/form";
 import { Input, Select, SelectItem } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Rol, RolSchema } from "@/schemas/Rol";
+import { RolCreate, RolCreateSchema } from "@/schemas/Rol";
 
 type FormularioProps = {
-  addData: (rol: Rol) => Promise<void>;
+  addData: (rol: RolCreate) => Promise<any>;
   onClose: () => void;
   id: string;
 };
@@ -16,12 +16,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Rol>({
-    resolver: zodResolver(RolSchema),
+  } = useForm<RolCreate>({
+    resolver: zodResolver(RolCreateSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: Rol) => {
+  const onSubmit = async (data: RolCreate) => {
     try {
       await addData(data);
       onClose();

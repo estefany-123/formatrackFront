@@ -2,28 +2,30 @@ import { z } from "zod";
 
 export const programaUpdateSchema = z.object({
   id_programa: z.number(),
+  
   nombre: z
     .string()
     .min(1, { message: "Nombre es requerido" })
     .min(3, { message: "Longitud minima de 3" }),
-  estado: z.boolean({ required_error: "Estado es requerido" }),
 
+  estado: z.boolean({ required_error: "Estado es requerido" }),
+  
   fk_area: z.number({ message: "area  es requerido" }),
 });
 
 export type programaUpdate = z.infer<typeof programaUpdateSchema>;
 
 export const programaSchema = z.object({
-  id_programa: z.number().optional(),
+  id_programa: z.number(),
 
   nombre: z
     .string()
     .min(1, { message: "Nombre es requerido" })
     .min(3, { message: "Longitud minima de 3" }),
 
-  created_at: z.string().default("").optional(),
+  created_at: z.string(),
 
-  updated_at: z.string().default("").optional(),
+  updated_at: z.string(),
 
   estado: z.boolean({ required_error: "Estado es requerido" }),
 
@@ -31,3 +33,16 @@ export const programaSchema = z.object({
 });
 
 export type programa = z.infer<typeof programaSchema>;
+
+export const programaCreateSchema = z.object({
+  nombre: z
+    .string()
+    .min(1, { message: "Nombre es requerido" })
+    .min(3, { message: "Longitud minima de 3" }),
+
+  estado: z.boolean({ required_error: "Estado es requerido" }),
+
+  fk_area: z.number({ message: "area  es requerido" }),
+});
+
+export type programaCreate = z.infer<typeof programaCreateSchema>;

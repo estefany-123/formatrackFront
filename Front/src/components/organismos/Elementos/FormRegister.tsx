@@ -4,13 +4,11 @@ import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 import { Form } from "@heroui/form";
-import { Input } from "@heroui/react";
-import { Elemento, ElementoSchema } from "@/schemas/Elemento";
-import { Combobox } from "@headlessui/react";
-import { useState } from "react";
+import { Input, Select, SelectItem } from "@heroui/react";
+import { ElementoCreate, ElementoCreateSchema } from "@/schemas/Elemento";
 
 type FormularioProps = {
-  addData: (elemento: Elemento) => Promise<void>;
+  addData: (elemento: ElementoCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -22,8 +20,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<Elemento>({
-    resolver: zodResolver(ElementoSchema),
+  } = useForm<ElementoCreate>({
+    resolver: zodResolver(ElementoCreateSchema),
     mode: "onChange",
   });
 
@@ -31,20 +29,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const { categorias } = useCategoria();
   const { caracteristicas } = useCaracteristica();
 
-  const [queryUnidad, setQueryUnidad] = useState("");
-  const [queryCategoria, setQueryCategoria] = useState("");
-  const [queryCaracteristica, setQueryCaracteristica] = useState("");
-
-  const filterByQuery = (list: any[] | undefined, key: string, query: string) => {
-    if (!list) return [];
-    return query === ""
-      ? list
-      : list.filter((item) =>
-          item[key].toLowerCase().includes(query.toLowerCase())
-        );
-  };
-
-  const onSubmit = async (data: Elemento) => {
+  const onSubmit = async (data: ElementoCreate) => {
     try {
       await addData(data);
       onClose();
@@ -54,7 +39,11 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   };
 
   return (
-    <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -78,133 +67,164 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         errorMessage={errors.valor?.message}
       />
 
-      {/* Tipo de elemento */}
       <Controller
         control={control}
         name="tipoElemento"
         render={({ field }) => (
-          <select
+          <Select
+            label="Tipo de Elemento"
+            placeholder="Selecciona tipo"
             {...field}
+            value={field.value ?? ""}
             onChange={(e) => {
               const value = e.target.value;
               field.onChange(value);
               setValue("perecedero", value === "perecedero");
               setValue("no_perecedero", value === "no_perecedero");
             }}
-            className="w-full p-2 border rounded-md"
           >
-            <option value="">Selecciona un tipo</option>
-            <option value="perecedero">Perecedero</option>
-            <option value="no_perecedero">No Perecedero</option>
-          </select>
+            <SelectItem key="perecedero">Perecedero</SelectItem>
+            <SelectItem key="no_perecedero">No Perecedero</SelectItem>
+          </Select>
         )}
       />
+      {errors.tipoElemento && (
+        <p className="text-red-500">{errors.tipoElemento?.message}</p>
+      )}
 
-      {/* Estado */}
       <Controller
         control={control}
         name="estado"
         render={({ field }) => (
-          <select
+          <Select
+            label="Estado"
+            placeholder="Seleccione un estado"
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
-            className="w-full p-2 border rounded-md"
           >
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-          </select>
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
         )}
       />
+      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
-      {/* Imagen */}
       <Input
         label="Imagen"
         type="file"
         accept="image/*"
         onChange={(e) => {
-          const file = e.target.files?.[0];
+          const file = e.target.files?.[0] ?? null;
           setValue("imagen_elemento", file);
         }}
       />
 
-      {/* Unidad de medida */}
       <Controller
         control={control}
         name="fk_unidad_medida"
         render={({ field }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Unidad de medida</label>
-            <Combobox value={field.value} onChange={field.onChange}>
-              <Combobox.Input
-                className="w-full border p-2 rounded"
-                placeholder="Buscar unidad..."
-                displayValue={(id: number) => unidades?.find(u => u.id_unidad === id)?.nombre || ""}
-                onChange={(e) => setQueryUnidad(e.target.value)}
-              />
-              <Combobox.Options className="border bg-white max-h-60 overflow-auto mt-1 rounded-md shadow">
-                {filterByQuery(unidades, "nombre", queryUnidad).map((unidad) => (
-                  <Combobox.Option key={unidad.id_unidad} value={unidad.id_unidad} className="p-2 hover:bg-blue-100 cursor-pointer">
+          <div className="w-full">
+            <Select
+              label="Unidad"
+              {...field}
+              className="w-full"
+              placeholder="Selecciona una unidad de medida..."
+              aria-label="Seleccionar Unidad de Medida"
+              onChange={(e) => field.onChange(Number(e.target.value))} 
+            >
+              {unidades?.length ? (
+                unidades.map((unidad) => (
+                  <SelectItem
+                    key={unidad.id_unidad}
+                    textValue={unidad.nombre} 
+                  >
                     {unidad.nombre}
-                  </Combobox.Option>
-                ))}
-              </Combobox.Options>
-            </Combobox>
-            {errors.fk_unidad_medida && <p className="text-sm text-red-500 mt-1">{errors.fk_unidad_medida.message}</p>}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>No hay unidades disponibles</SelectItem>
+              )}
+            </Select>
+            {errors.fk_unidad_medida && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_unidad_medida.message}
+              </p>
+            )}
           </div>
         )}
       />
 
-      {/* Categoría */}
       <Controller
         control={control}
         name="fk_categoria"
         render={({ field }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-            <Combobox value={field.value} onChange={field.onChange}>
-              <Combobox.Input
-                className="w-full border p-2 rounded"
-                placeholder="Buscar categoría..."
-                displayValue={(id: number) => categorias?.find(c => c.id_categoria === id)?.nombre || ""}
-                onChange={(e) => setQueryCategoria(e.target.value)}
-              />
-              <Combobox.Options className="border bg-white max-h-60 overflow-auto mt-1 rounded-md shadow">
-                {filterByQuery(categorias, "nombre", queryCategoria).map((cat) => (
-                  <Combobox.Option key={cat.id_categoria} value={cat.id_categoria} className="p-2 hover:bg-blue-100 cursor-pointer">
+          <div className="w-full">
+            <Select
+              label="Categoria"
+              {...field}
+              className="w-full"
+              placeholder="Selecciona una categoría..."
+              aria-label="Seleccionar Categoría"
+              onChange={(e) => field.onChange(Number(e.target.value))} // Convierte el valor a number
+            >
+              {categorias?.length ? (
+                categorias.map((cat) => (
+                  <SelectItem
+                    key={cat.id_categoria}
+                    textValue={cat.nombre} // Usa textValue en lugar de value
+                  >
                     {cat.nombre}
-                  </Combobox.Option>
-                ))}
-              </Combobox.Options>
-            </Combobox>
-            {errors.fk_categoria && <p className="text-sm text-red-500 mt-1">{errors.fk_categoria.message}</p>}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>
+                  No hay categorías disponibles
+                </SelectItem>
+              )}
+            </Select>
+            {errors.fk_categoria && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_categoria.message}
+              </p>
+            )}
           </div>
         )}
       />
 
-      {/* Característica */}
       <Controller
         control={control}
         name="fk_caracteristica"
         render={({ field }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Característica</label>
-            <Combobox value={field.value} onChange={field.onChange}>
-              <Combobox.Input
-                className="w-full border p-2 rounded"
-                placeholder="Buscar característica..."
-                displayValue={(id: number) => caracteristicas?.find(c => c.id_caracteristica === id)?.nombre || ""}
-                onChange={(e) => setQueryCaracteristica(e.target.value)}
-              />
-              <Combobox.Options className="border bg-white max-h-60 overflow-auto mt-1 rounded-md shadow">
-                {filterByQuery(caracteristicas, "nombre", queryCaracteristica).map((car) => (
-                  <Combobox.Option key={car.id_caracteristica} value={car.id_caracteristica} className="p-2 hover:bg-blue-100 cursor-pointer">
+          <div className="w-full">
+            <Select
+              label="Caracteristica"
+              {...field}
+              className="w-full"
+              placeholder="Selecciona una característica..."
+              aria-label="Seleccionar Característica"
+              onChange={(e) => field.onChange(Number(e.target.value))} // Convierte el valor a number
+            >
+              {caracteristicas?.length ? (
+                caracteristicas.map((car) => (
+                  <SelectItem
+                    key={car.id_caracteristica}
+                    textValue={car.nombre} // Usa textValue en lugar de value
+                  >
                     {car.nombre}
-                  </Combobox.Option>
-                ))}
-              </Combobox.Options>
-            </Combobox>
-            {errors.fk_caracteristica && <p className="text-sm text-red-500 mt-1">{errors.fk_caracteristica.message}</p>}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>
+                  No hay características disponibles
+                </SelectItem>
+              )}
+            </Select>
+            {errors.fk_caracteristica && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_caracteristica.message}
+              </p>
+            )}
           </div>
         )}
       />

@@ -4,8 +4,6 @@ import { Form } from "@heroui/form"
 import Inpu from "@/components/molecules/input";
 import {usePermisos} from "@/hooks/permisos/usePermisos";
 
-
-
 type Props = {
     permiso: Permisos[] ;
     permsoId: number;

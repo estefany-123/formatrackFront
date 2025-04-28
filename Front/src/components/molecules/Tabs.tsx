@@ -1,5 +1,5 @@
 import { Tabs, Tab } from "@heroui/react";
-import { Card } from "@/components/atoms/Card";
+import { Card } from "@heroui/react";
 import React, { useState } from "react";
 
 type TabItem = {

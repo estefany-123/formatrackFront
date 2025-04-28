@@ -3,48 +3,35 @@ import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/react";
-import { Combobox } from "@headlessui/react";
-import { useState } from "react";
-
-import { sitio, sitioSchema } from "@/schemas/sitios";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { useTipoSitio } from "@/hooks/TipoSitio/useTipoSitio";
+import { sitioCreate, sitioCreateSchema } from "@/schemas/sitios";
 
 type FormularioProps = {
-  addData: (data: sitio) => Promise<void>;
+  addData: (data: sitioCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
 
-export default function FormularioSitio({ addData, onClose, id }: FormularioProps) {
+export default function FormularioSitio({
+  addData,
+  onClose,
+  id,
+}: FormularioProps) {
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<sitio>({
-    resolver: zodResolver(sitioSchema),
+  } = useForm<sitioCreate>({
+    resolver: zodResolver(sitioCreateSchema),
     mode: "onChange",
   });
 
   const { areas } = useAreas();
   const { tipos } = useTipoSitio();
-  const [queryArea, setQueryArea] = useState("");
-  const [queryTipo, setQueryTipo] = useState("");
-  const [openArea, setOpenArea] = useState(false);
-  const [openTipo, setOpenTipo] = useState(false);
 
-  const filteredAreas =
-    queryArea === ""
-      ? areas
-      : areas?.filter((a) => a.nombre.toLowerCase().includes(queryArea.toLowerCase()));
-
-  const filteredTipos =
-    queryTipo === ""
-      ? tipos
-      : tipos?.filter((t) => t.nombre.toLowerCase().includes(queryTipo.toLowerCase()));
-
-  const onSubmit = async (data: sitio) => {
+  const onSubmit = async (data: sitioCreate) => {
     try {
       await addData(data);
       onClose();
@@ -54,7 +41,11 @@ export default function FormularioSitio({ addData, onClose, id }: FormularioProp
   };
 
   return (
-    <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
       <Input
         label="Nombre del sitio"
         type="text"
@@ -104,49 +95,28 @@ export default function FormularioSitio({ addData, onClose, id }: FormularioProp
         control={control}
         name="fk_area"
         render={({ field }) => (
-          <div className="w-full">
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Área</label>
-            <Combobox
+          <div className="w-full mb-4">
+            <Select
+            label="Area"
               value={field.value}
-              onChange={(val) => {
-                field.onChange(val);
-                setOpenArea(false);
-              }}
+              onChange={(e) => field.onChange(e.target.value)}
+              placeholder="Selecciona un área..."
             >
-              <div className="relative">
-                <Combobox.Input
-                  className="w-full border rounded-md p-2"
-                  displayValue={(id: number) =>
-                    areas?.find((a) => a.id_area === id)?.nombre || ""
-                  }
-                  onClick={() => setOpenArea(true)}
-                  onChange={(e) => {
-                    setQueryArea(e.target.value);
-                    setOpenArea(true);
-                  }}
-                  placeholder="Selecciona un área..."
-                />
-                {openArea && (
-                  <Combobox.Options className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white border shadow">
-                    {filteredAreas?.length === 0 && (
-                      <div className="p-2 text-sm text-gray-500">No se encontraron áreas.</div>
-                    )}
-                    {filteredAreas?.map((area) => (
-                      <Combobox.Option
-                        key={area.id_area}
-                        value={area.id_area}
-                        className="cursor-pointer p-2 hover:bg-blue-100"
-                      >
-                        {area.nombre}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                )}
-              </div>
-              {errors.fk_area && (
-                <p className="text-sm text-red-500 mt-1">{errors.fk_area.message}</p>
+              {areas?.length ? (
+                areas.map((area) => (
+                  <SelectItem key={area.id_area} textValue={area.nombre}>
+                    {area.nombre}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>No hay áreas disponibles</SelectItem>
               )}
-            </Combobox>
+            </Select>
+            {errors.fk_area && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_area.message}
+              </p>
+            )}
           </div>
         )}
       />
@@ -156,48 +126,27 @@ export default function FormularioSitio({ addData, onClose, id }: FormularioProp
         name="fk_tipo_sitio"
         render={({ field }) => (
           <div className="w-full">
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Tipo de sitio</label>
-            <Combobox
+            <Select
+            label="Tipo Sitio"
               value={field.value}
-              onChange={(val) => {
-                field.onChange(val);
-                setOpenTipo(false);
-              }}
+              onChange={(e) => field.onChange(e.target.value)}
+              placeholder="Selecciona un tipo..."
             >
-              <div className="relative">
-                <Combobox.Input
-                  className="w-full border rounded-md p-2"
-                  displayValue={(id: number) =>
-                    tipos?.find((t) => t.id_tipo === id)?.nombre || ""
-                  }
-                  onClick={() => setOpenTipo(true)}
-                  onChange={(e) => {
-                    setQueryTipo(e.target.value);
-                    setOpenTipo(true);
-                  }}
-                  placeholder="Selecciona un tipo..."
-                />
-                {openTipo && (
-                  <Combobox.Options className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white border shadow">
-                    {filteredTipos?.length === 0 && (
-                      <div className="p-2 text-sm text-gray-500">No se encontraron tipos.</div>
-                    )}
-                    {filteredTipos?.map((tipo) => (
-                      <Combobox.Option
-                        key={tipo.id_tipo}
-                        value={tipo.id_tipo}
-                        className="cursor-pointer p-2 hover:bg-blue-100"
-                      >
-                        {tipo.nombre}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                )}
-              </div>
-              {errors.fk_tipo_sitio && (
-                <p className="text-sm text-red-500 mt-1">{errors.fk_tipo_sitio.message}</p>
+              {tipos?.length ? (
+                tipos.map((tipo) => (
+                  <SelectItem key={tipo.id_tipo} textValue={tipo.nombre}>
+                    {tipo.nombre}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>No hay tipos disponibles</SelectItem>
               )}
-            </Combobox>
+            </Select>
+            {errors.fk_tipo_sitio && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.fk_tipo_sitio.message}
+              </p>
+            )}
           </div>
         )}
       />

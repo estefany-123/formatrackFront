@@ -15,6 +15,7 @@ import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
 import Modall from "../molecules/modal";
 import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
+import Cookies from "universal-cookie";
 
 type NavProps = {
   en_proceso: string;
@@ -29,6 +30,7 @@ export function Nav({ children }: NavProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
   const navigate = useNavigate();
+  const cookies = new Cookies();
   const {
     notificaciones,
     isLoading,
@@ -111,7 +113,7 @@ export function Nav({ children }: NavProps) {
               <DropdownItem key="Profile" onPress={handleGoToPerfil}>
                 Perfil
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={()=>{cookies.remove("token");window.location.href='/'}}>
                 Cerrar Sesión
               </DropdownItem>
             </DropdownMenu>

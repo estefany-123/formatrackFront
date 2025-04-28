@@ -5,8 +5,12 @@ import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Programas/FormRegister";
 import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
-import { programa } from "@/schemas/programas";
+import { programaCreate } from "@/schemas/programas";
 import { usePrograma } from "@/hooks/programas/usePrograma";
+import { Pformacion } from "@/types/programaFormacion";
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
 
 const ProgramasTable = () => {
   const { programas, isLoading, isError, error, addPrograma, changeState } =
@@ -18,20 +22,25 @@ const ProgramasTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedPrograma, setSelectedPrograma] = useState<programa | null>(
+  const [selectedPrograma, setSelectedPrograma] = useState<Pformacion | null>(
     null
   );
 
+  const navigate = useNavigate();
+
+  const handleGoToFicha = () => {
+    navigate("/admin/fichas");
+  };
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedPrograma(null);
   };
 
-  const handleState = async (programa: programa) => {
-    await changeState(programa.id_programa as number);
+  const handleState = async (id_programa: number) => {
+    await changeState(id_programa);
   };
 
-  const handleAddPrograma = async (programa: programa) => {
+  const handleAddPrograma = async (programa: programaCreate) => {
     try {
       await addPrograma(programa);
       handleClose(); // Cerrar el modal después de darle agregar usuario
@@ -40,18 +49,18 @@ const ProgramasTable = () => {
     }
   };
 
-  const handleEdit = (programa: programa) => {
+  const handleEdit = (programa: Pformacion) => {
     setSelectedPrograma(programa);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<programa>[] = [
+  const columns: TableColumn<Pformacion>[] = [
     { key: "nombre", label: "Nombre" },
     {
       key: "created_at",
       label: "Fecha Creación",
-      render: (programa: programa) => (
+      render: (programa: Pformacion) => (
         <span>
           {programa.created_at
             ? new Date(programa.created_at).toLocaleDateString("es-ES", {
@@ -66,7 +75,7 @@ const ProgramasTable = () => {
     {
       key: "updated_at",
       label: "Fecha Actualizacion",
-      render: (programa: programa) => (
+      render: (programa: Pformacion) => (
         <span>
           {programa.updated_at
             ? new Date(programa.updated_at).toLocaleDateString("es-ES", {
@@ -78,7 +87,7 @@ const ProgramasTable = () => {
         </span>
       ),
     },
-    { key: "estado", label: "Estado" }
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {
@@ -90,30 +99,40 @@ const ProgramasTable = () => {
   }
 
   const usersWithKey = programas
-    ?.filter((programa) => programa?.id_programa !== undefined)
+    ?.filter(
+      (programa) =>
+        programa?.id_programa !== undefined &&
+        programa?.created_at &&
+        programa?.updated_at
+    )
     .map((programa) => ({
       ...programa,
       key: programa.id_programa
         ? programa.id_programa.toString()
         : crypto.randomUUID(),
+      id_programa: programa.id_programa || 0,
       estado: Boolean(programa.estado),
     }));
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Tabla Programas de Formación
-      </h1>
-
-      <Buton
-        text="Añadir Programa"
-        onPress={() => setIsOpen(true)}
-        type="button"
-        color="primary"
-        variant="solid"
-        className="mb-8"
-      />
-
+      <div className="flex pb-4 pt-4">
+        <Card className="w-full">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Gestionar Fichas</h1>
+              <div className="flex gap-2">
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToFicha}
+                >
+                  Ficha
+                </Button>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
       <Modall
         ModalTitle="Agregar Programa"
         isOpen={isOpen}
@@ -153,7 +172,16 @@ const ProgramasTable = () => {
           data={usersWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={handleState}
+          onDelete={(programa) => handleState(programa.id_programa)}
+          extraHeaderContent={
+            <Buton
+              text="Añadir Programa"
+              onPress={() => setIsOpen(true)}
+              type="button"
+              variant="solid"
+              className="text-white bg-blue-700"
+            />
+          }
         />
       )}
     </div>

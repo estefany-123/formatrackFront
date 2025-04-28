@@ -4,9 +4,11 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
-import { Unidad } from "@/schemas/Unidad";
 import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
 import { FormUpdate } from "@/components/organismos/UnidadesMedida/FormUpdate";
+import { Unidad } from "@/types/Unidad";
+import { Button, Card, CardBody } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
 
 export const UnidadTable = () => {
   const { unidades, isLoading, isError, error, addUnidad, changeState } =
@@ -20,6 +22,12 @@ export const UnidadTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUnidad, setSelectedUnidad] = useState<Unidad | null>(null);
 
+  const navigate = useNavigate()
+
+  const handleGoToElemento = () => {
+    navigate('/bodega/elementos')
+  }
+  
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedUnidad(null);
@@ -92,23 +100,29 @@ export const UnidadTable = () => {
     .map((unidad) => ({
       ...unidad,
       key: unidad.id_unidad ? unidad.id_unidad.toString() : crypto.randomUUID(),
-      id_unidad:unidad.id_unidad || 0,
+      id_unidad: unidad.id_unidad || 0,
       estado: Boolean(unidad.estado),
     }));
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Unidades Registradas
-      </h1>
-
-      <Buton
-        text="Nueva unidad"
-        onPress={() => setIsOpen(true)}
-        type="button"
-        variant="solid"
-        className="relative top-12 text-white bg-blue-700"
-      />
+      <div className="flex pb-4 pt-4">
+        <Card className="w-full">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Gestionar Unidades</h1>
+              <div className="flex gap-2">
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToElemento}
+                >
+                  Elementos
+                </Button>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
 
       <Modall
         ModalTitle="Registrar Nueva Unidad"
@@ -150,6 +164,15 @@ export const UnidadTable = () => {
           columns={columns}
           onEdit={handleEdit}
           onDelete={handleState}
+          extraHeaderContent={
+            <Buton
+              text="Nueva unidad"
+              onPress={() => setIsOpen(true)}
+              type="button"
+              variant="solid"
+              className="text-white bg-blue-700"
+            />
+          }
         />
       )}
     </div>
