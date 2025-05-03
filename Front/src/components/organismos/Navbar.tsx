@@ -14,7 +14,7 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
 import Modall from "../molecules/modal";
-import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
+// import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
 import Cookies from "universal-cookie";
 
 type NavProps = {
@@ -31,14 +31,14 @@ export function Nav({ children }: NavProps) {
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
   const navigate = useNavigate();
   const cookies = new Cookies();
-  const {
-    notificaciones,
-    isLoading,
-    aceptarMovimiento,
-    cancelarMovimiento,
-    aceptarSolicitud,
-    cancelarSolicitud,
-  } = useNotificaciones();
+  // const {
+  //   notificaciones,
+  //   isLoading,
+  //   aceptarMovimiento,
+  //   cancelarMovimiento,
+  //   aceptarSolicitud,
+  //   cancelarSolicitud,
+  // } = useNotificaciones();
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -122,12 +122,12 @@ export function Nav({ children }: NavProps) {
         <div>{children}</div>
       </Navbar>
 
-      <Modall
+      {/*<Modall
         ModalTitle="Notificaciones"
         isOpen={isModalOpen}
         onOpenChange={handleCloseModal}
       >
-        <div className="space-y-4">
+         <div className="space-y-4">
           {isLoading ? (
             <p>Cargando notificaciones...</p>
           ) : !notificaciones || notificaciones.length === 0 ? (
@@ -184,7 +184,7 @@ export function Nav({ children }: NavProps) {
             ))
           )}
         </div>
-      </Modall>
+      </Modall> */}
     </>
   );
 }

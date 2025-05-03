@@ -2,8 +2,9 @@
 import { Form } from "@heroui/form"
 import { Centro, CentroSchema } from "@/schemas/Centro";
 import { Input, Select, SelectItem } from "@heroui/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMunicipio } from "@/hooks/Municipio/useMunicipio";
 
 type FormularioProps = {
 
@@ -14,37 +15,71 @@ type FormularioProps = {
 
 export default function FormCentros({ addData, onClose, id }: FormularioProps) {
 
-    const {register, handleSubmit, formState : { errors }, setValue } = useForm({
-        resolver : zodResolver(CentroSchema)
+    const { municipios, isLoading: loadingMuni, isError: errormuni } = useMunicipio();
+
+    const { control, register, handleSubmit, formState: { errors }, setValue } = useForm<Centro>({
+        resolver: zodResolver(CentroSchema)
     });
 
-    const onSubmit = async (formData : Centro) => {
-        console.log(formData);
-        await addData(formData);
-        onClose();
-    }
+    const onSubmit = async (data: Centro) => {
+        console.log(data);
+        try {
+            await addData(data);
+            onClose();
+
+        } catch (error) {
+            console.error("Error al guardar:", error);
+        }
+    };
 
     return (
         <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
-            
-            <Input {...register("nombre")} label="Nombre" placeholder="Nombre" type="text"/>
-            {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
 
-            <Select
-                onChange={(e)=>  setValue("estado", e.target.value === 'true' ? true : false)}
-                aria-labelledby="estado"
-                labelPlacement="outside"
-                placeholder="Estado"
-            >
-                <SelectItem key="true">Activo</SelectItem>
-                <SelectItem key="false" >Inactivo</SelectItem>
-            </Select>
-            {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
+            <Input
+                {...register("nombre")}
+                label="Nombre"
+                placeholder="Nombre"
+                type="text"
+                isInvalid={!!errors.nombre} //color
+                errorMessage={errors.nombre?.message}
+            />
 
-            {/* <Inpu label="Estado" placeholder="Estado" type="checkbox" name="estado" value={formData.estado.toString()} onChange={(e) => setFormData({ ...formData, estado: e.target.checked })} /> */}
 
-            <Input onChange={(e) =>setValue("fk_municipio",parseInt(e.target.value))} label="Municipio" placeholder="municipio" type="number"/>
-            {errors.fk_municipio && <p className="text-red-500">{errors.fk_municipio.message}</p>}
+            <Controller
+                control={control}
+                name="estado"
+                render={({ field }) => (
+                    <Select
+                        label="Estado"
+                        placeholder="Selecciona estado"
+                        {...field}
+                        value={field.value ? "true" : "false"}
+                        onChange={(e) => field.onChange(e.target.value === "true")}
+                        isInvalid={!!errors.estado}
+                        errorMessage={errors.estado?.message}
+                    >
+                        <SelectItem key="true">Activo</SelectItem>
+                        <SelectItem key="false">Inactivo</SelectItem>
+                    </Select>
+                )}
+            />
+
+            {!loadingMuni && !errormuni && municipios && (
+                <Select
+                    aria-label="Municipios"
+                    placeholder="Selecciona un municipio"
+                    onChange={(e) => { setValue("fk_municipio", parseInt(e.target.value)) }}
+                    isInvalid={!!errors.fk_municipio}
+                    errorMessage={errors.fk_municipio?.message}
+                >
+                    {municipios.map((municipios) => (
+                        <SelectItem key={municipios.id_municipio}>
+                            {municipios.nombre}
+                        </SelectItem>
+                    ))}
+                </Select>
+            )}
+
         </Form>
     )
 }

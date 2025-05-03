@@ -21,6 +21,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<FichaCreate>({
     resolver: zodResolver(fichaCreateSchema), // Usamos el resolver con el esquema de Ficha
     mode: "onChange",
+    defaultValues:{
+    }
   });
 
   const { programas } = usePrograma();
