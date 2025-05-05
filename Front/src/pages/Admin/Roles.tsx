@@ -4,12 +4,11 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useRol } from "@/hooks/Roles/useRol";
-import { RolCreate } from "@/schemas/Rol";
 import Formulario from "@/components/organismos/Roles/FormRegister";
 import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
 import { Button } from "@heroui/button";
-import { addToast, Card, CardBody } from "@heroui/react";
+import {Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
 export const RolTable = () => {
@@ -23,11 +22,11 @@ export const RolTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedRol, setSelectedRol] = useState<Rol | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToUsuario = () => {
-    navigate('/admin/usuarios')
-  }
+    navigate("/admin/usuarios");
+  };
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedRol(null);
@@ -37,10 +36,10 @@ export const RolTable = () => {
     await changeState(id_rol);
   };
 
-  const handleAddRol = async (rol: RolCreate) => {
+  const handleAddRol = async (data: Rol) => {
     try {
-      await addRol(rol);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      await addRol(data);
+      handleClose();
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
     }
@@ -48,7 +47,7 @@ export const RolTable = () => {
 
   const handleEdit = (rol: Rol) => {
     if (!rol || !rol.id_rol) {
-      return; // Prevent null or invalid roles
+      return; 
     }
     setSelectedRol(rol);
     setIsOpenUpdate(true);
@@ -111,13 +110,18 @@ export const RolTable = () => {
 
   return (
     <div className="p-4">
-<div className="flex pb-4 pt-4">
+      <div className="flex pb-4 pt-4">
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Roles</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToUsuario}>Usuarios</Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToUsuario}
+                >
+                  Usuarios
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -136,14 +140,7 @@ export const RolTable = () => {
         <Button
           type="submit"
           form="rol-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-          onPress={() =>
-            addToast({
-              title: "Registro Exitoso",
-              description: "Rol Registrado exitosamente",
-              color: "success",
-            })
-          }
+          className="bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
         </Button>

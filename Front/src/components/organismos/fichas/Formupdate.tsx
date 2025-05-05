@@ -4,6 +4,8 @@ import { fichaUpdateSchema, fichaUpdate } from "@/schemas/fichas";
 import { Form } from "@heroui/form";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@heroui/button";
+import { addToast } from "@heroui/react";
 
 type FormuProps = {
   fichas: (fichaUpdate & { key: string })[];
@@ -12,7 +14,12 @@ type FormuProps = {
   onclose: () => void;
 };
 
-export const FormUpdateFicha = ({ fichas, fichaId, id, onclose }: FormuProps) => {
+export const FormUpdateFicha = ({
+  fichas,
+  fichaId,
+  id,
+  onclose,
+}: FormuProps) => {
   const { updateFicha, getFichaById } = useFichas();
 
   const foundFicha = getFichaById(fichaId, fichas) as fichaUpdate;
@@ -20,15 +27,15 @@ export const FormUpdateFicha = ({ fichas, fichaId, id, onclose }: FormuProps) =>
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<fichaUpdate>({
     resolver: zodResolver(fichaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_ficha: foundFicha.id_ficha ?? 0,
+      id_ficha: foundFicha.id_ficha,
       codigo_ficha: foundFicha.codigo_ficha,
       estado: foundFicha.estado,
-      fk_programa: foundFicha.fk_programa
+      fk_programa: foundFicha.fk_programa,
     },
   });
 
@@ -37,25 +44,41 @@ export const FormUpdateFicha = ({ fichas, fichaId, id, onclose }: FormuProps) =>
     try {
       await updateFicha(data.id_ficha, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Ficha actualizada correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al actualizar la ficha:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
-    <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      id={id}
+      className="w-full space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         label="Código Ficha"
         placeholder="Ingrese el código de ficha"
-        {...register("codigo_ficha")}
+        {...register("codigo_ficha",{valueAsNumber:true})}
         isInvalid={!!errors.codigo_ficha}
         errorMessage={errors.codigo_ficha?.message}
       />
 
-      {/* Botón submit de tipo "submit" */}
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-        Guardar Cambios
-      </button>
+      <div className="justify-center pl-10">
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
+        >
+          Guardar
+        </Button>
+      </div>
     </Form>
   );
 };

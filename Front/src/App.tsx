@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./layouts/layout";
 import Home from "./pages/Home/Home";
 import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
-import { useAuth } from "./providers/AuthProvider";
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
 import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
 import { Inventario } from "./pages/Bodega/Inventarios";
@@ -26,13 +25,13 @@ import { MovimientoTable } from "./pages/Bodega/Movimientos";
 import { TipoMovimientoTable } from "./pages/Bodega/TiposMovimiento";
 import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
 import CategoriasTable from "./pages/Admin/categorias";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
-  const { authenticated } = useAuth();
 
   return (
     <Routes>
-      {authenticated && (
+      <Route element={<ProtectedRoute/>}>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="perfil" element={<Perfil />} />
@@ -67,8 +66,8 @@ function App() {
           />
           <Route path="solicitudes" element={<SolicitudTable />} />
         </Route>
-      )}
-      <Route path="/" element={<Login />} />
+        </Route>
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 }

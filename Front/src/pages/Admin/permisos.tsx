@@ -4,10 +4,10 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/permisos/FormRegister";
 import { useState } from "react";
-import Formupdate from "@/components/organismos/permisos/Formupdate";
-// import { Chip } from "@heroui/chip"
 import { Permisos } from "@/types/permisos";
 import { usePermisos } from "@/hooks/permisos/usePermisos";
+import { FormUpdate } from "@/components/organismos/permisos/Formupdate";
+import { Button } from "@heroui/button";
 
 const PermisoTable = () => {
   const { permiso, isLoading, isError, error, addPermiso } = usePermisos();
@@ -82,13 +82,15 @@ const PermisoTable = () => {
           addData={handleAddUser}
           onClose={handleClose}
         />
-        <button
+      <div className="justify-center pt-2">
+        <Button
           type="submit"
           form="permiso-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
-        </button>
+        </Button>
+      </div>
       </Modall>
 
       <Modall
@@ -97,9 +99,9 @@ const PermisoTable = () => {
         onOpenChange={handleCloseUpdate}
       >
         {selectedPermisos && (
-          <Formupdate
-            permiso={PermisoWithKey ?? []}
-            permsoId={selectedPermisos.id_permiso as number}
+          <FormUpdate
+            permisos={PermisoWithKey ?? []}
+            permisoId={selectedPermisos.id_permiso as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

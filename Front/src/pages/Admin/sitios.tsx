@@ -23,11 +23,11 @@ const SitiosTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedSitio, setSelectedSitio] = useState<Sitios | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToTipo = () => {
-    navigate('/admin/tiposSitio')
-  }
+    navigate("/admin/tiposSitio");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);

@@ -5,6 +5,7 @@ import { Input } from "@heroui/input";
 import { TipoUpdate, TipoUpdateSchema } from "@/schemas/TipoMovimiento";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { addToast } from "@heroui/react";
 
 type Props = {
   tipos: (TipoUpdate & { id_tipo?: number })[];
@@ -26,7 +27,7 @@ export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
     resolver: zodResolver(TipoUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_tipo: foundRol.id_tipo ?? 0,
+      id_tipo: foundRol.id_tipo,
       nombre: foundRol.nombre,
       estado: foundRol.estado,
     },
@@ -38,6 +39,13 @@ export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
     try {
       await updateTipoMovimiento(data.id_tipo, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Tipo Movimiento actualizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar el tipo de movimiento : ", error);
     }
@@ -56,17 +64,17 @@ export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
         placeholder="Nombre"
         {...register("nombre")}
         isInvalid={!!errors.nombre}
-        errorMessage= {errors.nombre?.message}
+        errorMessage={errors.nombre?.message}
       />
       <div className="justify-center pl-10">
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-80 bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
         </Button>
       </div>
     </Form>
   );
-}
+};

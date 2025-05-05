@@ -4,11 +4,11 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/areas/FormRegister";
 import { useState } from "react";
-import Formupdate from "@/components/organismos/areas/Formupdate";
 import { Area } from "@/types/area";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { FormUpdate } from "@/components/organismos/areas/Formupdate";
 
 const AreaTable = () => {
   const { areas, isLoading, isError, error, addArea, changeState } = useAreas();
@@ -56,7 +56,6 @@ const AreaTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Area>[] = [
     { key: "nombre", label: "Nombre" },
-    { key: "estado", label: "Estado" },
     {
       key: "created_at",
       label: "Fecha Creación",
@@ -87,6 +86,7 @@ const AreaTable = () => {
         </span>
       ),
     },
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {
@@ -117,8 +117,18 @@ const AreaTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Areas</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToSede}>Gestionar Sedes</Button>
-                <Button className="text-white bg-blue-700" onPress={handleGoToUsuario}>Gestionar Usuarios</Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToSede}
+                >
+                  Gestionar Sedes
+                </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToUsuario}
+                >
+                  Gestionar Usuarios
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -130,26 +140,28 @@ const AreaTable = () => {
         onOpenChange={handleClose}
       >
         <Formulario
-          id="user-form"
+          id="area-form"
           addData={handleAddArea}
           onClose={handleClose}
         />
-        <button
-          type="submit"
-          form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="area-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Area"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
         {selectedArea && (
-          <Formupdate
+          <FormUpdate
             areas={areasWithKey ?? []}
             areaId={selectedArea.id_area as number}
             id="FormUpdate"

@@ -12,56 +12,22 @@ export const SolicitudUpdateSchema = z.object({
     required_error: "Cantidad es requerida y debe ser entero",
   }),
 
-  estado: z.boolean({required_error:"Estado es requerido"}),
+  estado: z.boolean({ required_error: "Estado es requerido" }).optional(),
 
-  aceptada: z.boolean(),
+  aceptada: z.boolean().optional(),
 
-  pendiente: z.boolean(),
+  pendiente: z.boolean().optional(),
 
-  rechazada: z.boolean(),
+  rechazada: z.boolean().optional(),
 
-  fk_sitio: z.number({ message: "Sitio es requerido" }),
+  fk_sitio: z.number({ message: "Sitio es requerido" }).optional(),
 
-  fk_usuario: z.number({ message: "Usuario es requerido" }),
+  fk_usuario: z.number({ message: "Usuario es requerido" }).optional(),
 
-  fk_inventario: z.number({ message: "Elemento del Inventario es requerido" }),
-
+  fk_inventario: z.number({ message: "Elemento del Inventario es requerido" }).optional(),
 });
 
 export type SolicitudUpdate = z.infer<typeof SolicitudUpdateSchema>;
-
-export const SolicitudSchema = z.object({
-  id_solicitud: z.number().optional(),
-
-  descripcion: z
-    .string()
-    .min(1, { message: "Descripcion es  requerida" })
-    .min(2, { message: "Debe contener como mimimo 2 caracteres" }),
-
-  cantidad: z.number({
-    required_error: "Cantidad es requerida y debe ser entero",
-  }),
-
-  estado: z.boolean({required_error:"Estado es requerido"}),
-
-  aceptada: z.boolean(),
-
-  pendiente: z.boolean(),
-
-  rechazada: z.boolean(),
-
-  created_at: z.string().default("").optional(),
-
-  updated_at: z.string().default("").optional(),
-
-  fk_sitio: z.number({ message: "Sitio es requerido" }),
-
-  fk_usuario: z.number({ message: "Usuario es requerido" }),
-
-  fk_inventario: z.number({ message: "Elemento del Inventario es requerido" }),
-
-});
-export type Solicitud = z.infer<typeof SolicitudSchema>;
 
 export const SolicitudCreateSchema = z.object({
   descripcion: z
@@ -73,13 +39,13 @@ export const SolicitudCreateSchema = z.object({
     required_error: "Cantidad es requerida y debe ser entero",
   }),
 
-  estado: z.boolean({required_error:"Estado es requerido"}),
+  estado: z.boolean().default(true).optional(),
 
-  aceptada: z.boolean(),
+  aceptada: z.boolean().default(false).optional(),
 
-  pendiente: z.boolean(),
+  pendiente: z.boolean().default(true).optional(),
 
-  rechazada: z.boolean(),
+  rechazada: z.boolean().default(false).optional(),
 
   fk_sitio: z.number({ message: "Sitio es requerido" }),
 

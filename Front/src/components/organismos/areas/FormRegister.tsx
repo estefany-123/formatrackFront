@@ -2,13 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { AreaSchema, Area } from "@/schemas/Area";
-import { Select, SelectItem } from "@heroui/react";
+import { AreaCreate, AreaCreateSchema } from "@/schemas/Area";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { useSede } from "@/hooks/sedes/useSedes";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 
 type FormularioProps = {
-  addData: (area: Area) => Promise<void>;
+  addData: (area: AreaCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -19,23 +19,30 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Area>({
-    resolver: zodResolver(AreaSchema),
+  } = useForm<AreaCreate>({
+    resolver: zodResolver(AreaCreateSchema),
     mode: "onChange",
   });
 
   const { sede } = useSede();
   const { users } = useUsuario();
 
-  const onSubmit = async (data: Area) => {
+  const onSubmit = async (data: AreaCreate) => {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Area agregada correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
@@ -61,29 +68,31 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
       <Controller
         control={control}
         name="fk_sede"
         render={({ field }) => (
           <div className="w-full">
-            <label className="text-sm text-gray-700 font-medium mb-1 block">
-              Sede
-            </label>
             <Select
+              label="Sede"
               {...field}
+              value={field.value ?? ""}
+              onChange={(e) => field.onChange(Number(e.target.value))}
               className="w-full"
               placeholder="Selecciona una sede..."
               aria-label="Seleccionar Sede"
+              isInvalid={!!errors.fk_sede}
+              errorMessage={errors.fk_sede?.message}
             >
-      
               {sede?.length ? (
                 sede.map((s) => (
                   <SelectItem key={s.id_sede} textValue={s.nombre}>
@@ -94,11 +103,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 <SelectItem isDisabled>No hay sedes disponibles</SelectItem>
               )}
             </Select>
-            {errors.fk_sede && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_sede.message}
-              </p>
-            )}
           </div>
         )}
       />
@@ -109,11 +113,15 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         render={({ field }) => (
           <div className="w-full">
             <Select
-            label="Usuario"
+              label="Usuario"
               {...field}
+              value={field.value ?? ""}
+              onChange={(e) => field.onChange(Number(e.target.value))}
               className="w-full"
               placeholder="Selecciona un usuario..."
               aria-label="Seleccionar Usuario"
+              isInvalid={!!errors.fk_usuario}
+              errorMessage={errors.fk_usuario?.message}
             >
               {/* Asegúrate de que users no sea undefined */}
               {users?.length ? (
@@ -126,11 +134,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 <SelectItem isDisabled>No hay usuarios disponibles</SelectItem>
               )}
             </Select>
-            {errors.fk_usuario && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_usuario.message}
-              </p>
-            )}
           </div>
         )}
       />

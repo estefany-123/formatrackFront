@@ -4,15 +4,13 @@ import { postArea } from "@/axios/Areas/postArea";
 import { putArea } from "@/axios/Areas/putArea";
 import { Area } from "@/types/area";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addToast } from "@heroui/react";
 
 export function useAreas() {
   const queryClient = useQueryClient();
 
-
   const { data, isLoading, isError, error } = useQuery<Area[]>({
     queryKey: ["areas"],
-    queryFn:getArea,
+    queryFn: getArea,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -24,12 +22,7 @@ export function useAreas() {
       queryClient.invalidateQueries({
         queryKey: ["areas"],
       });
-
-    addToast({
-      title: "Producto eliminado",
-      description: "El producto se eliminó correctamente.",
-      color: "success",
-    })    },
+    },
 
     onError: (error) => {
       console.log("Error al cargar el area", error);
@@ -44,7 +37,7 @@ export function useAreas() {
   };
 
   const updateAreaMutation = useMutation({
-    mutationFn:({id, data}:{id:number, data:Area}) =>putArea(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Area }) => putArea(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["areas"],
@@ -57,7 +50,7 @@ export function useAreas() {
   });
 
   const changeStateMutation = useMutation({
-    mutationFn:deleteArea,
+    mutationFn: deleteArea,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["areas"],
@@ -73,7 +66,7 @@ export function useAreas() {
     return addUserMutation.mutateAsync(area);
   };
 
-  const updateArea = async (id: number, data:Area) => {
+  const updateArea = async (id: number, data: Area) => {
     return updateAreaMutation.mutateAsync({ id, data });
   };
 

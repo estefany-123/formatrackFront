@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { useTipoSitio } from "@/hooks/TipoSitio/useTipoSitio";
 import { sitioCreate, sitioCreateSchema } from "@/schemas/sitios";
@@ -35,11 +35,18 @@ export default function FormularioSitio({
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Sitio agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar sitio:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
@@ -83,13 +90,14 @@ export default function FormularioSitio({
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
       <Controller
         control={control}
@@ -97,10 +105,12 @@ export default function FormularioSitio({
         render={({ field }) => (
           <div className="w-full mb-4">
             <Select
-            label="Area"
-              value={field.value}
-              onChange={(e) => field.onChange(e.target.value)}
+              label="Area"
+              value={field.value ?? 0}
+              onChange={(e) => field.onChange(Number(e.target.value))}
               placeholder="Selecciona un área..."
+              isInvalid={!!errors.fk_area}
+              errorMessage={errors.fk_area?.message}
             >
               {areas?.length ? (
                 areas.map((area) => (
@@ -112,11 +122,6 @@ export default function FormularioSitio({
                 <SelectItem isDisabled>No hay áreas disponibles</SelectItem>
               )}
             </Select>
-            {errors.fk_area && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_area.message}
-              </p>
-            )}
           </div>
         )}
       />
@@ -127,10 +132,12 @@ export default function FormularioSitio({
         render={({ field }) => (
           <div className="w-full">
             <Select
-            label="Tipo Sitio"
-              value={field.value}
-              onChange={(e) => field.onChange(e.target.value)}
+              label="Tipo Sitio"
+              value={field.value ?? 0}
+              onChange={(e) => field.onChange(Number(e.target.value))}
               placeholder="Selecciona un tipo..."
+              isInvalid={!!errors.fk_tipo_sitio}
+              errorMessage={errors.fk_tipo_sitio?.message}
             >
               {tipos?.length ? (
                 tipos.map((tipo) => (
@@ -142,11 +149,6 @@ export default function FormularioSitio({
                 <SelectItem isDisabled>No hay tipos disponibles</SelectItem>
               )}
             </Select>
-            {errors.fk_tipo_sitio && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_tipo_sitio.message}
-              </p>
-            )}
           </div>
         )}
       />

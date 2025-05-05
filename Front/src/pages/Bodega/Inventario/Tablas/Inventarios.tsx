@@ -6,9 +6,9 @@ import { useState } from "react";
 import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { Inventario } from "@/types/Inventario";
-import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
 import { Elemento } from "@/types/Elemento";
 import { useElemento } from "@/hooks/Elementos/useElemento";
+import { Button } from "@heroui/button";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -33,14 +33,14 @@ export const InventariosTable = ({
   const handleClose = () => setIsOpen(false);
 
   //Modal actualizar
-  const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedInventario, setSelectedInventario] =
-    useState<Inventario | null>(null);
+  // const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
+  // const [selectedInventario, setSelectedInventario] =
+  //   useState<Inventario | null>(null);
 
-  const handleCloseUpdate = () => {
-    setIsOpenUpdate(false);
-    setSelectedInventario(null);
-  };
+  // const handleCloseUpdate = () => {
+  //   setIsOpenUpdate(false);
+  //   setSelectedInventario(null);
+  // };
 
   const handleState = async (id_inventario: number) => {
     await changeState(id_inventario);
@@ -55,10 +55,10 @@ export const InventariosTable = ({
     }
   };
 
-  const handleEdit = (inventario: Inventario) => {
-    setSelectedInventario(inventario);
-    setIsOpenUpdate(true);
-  };
+  // const handleEdit = (inventario: Inventario) => {
+  //   setSelectedInventario(inventario);
+  //   setIsOpenUpdate(true);
+  // };
 
   // Definir las columnas de la tabla
   const columns = (elementos: Elemento[]): TableColumn<Inventario>[] => [
@@ -172,35 +172,21 @@ export const InventariosTable = ({
           onClose={handleClose}
           idSitio={idSitio!}
         />
-        <button
+      <div className="justify-center pt-2">
+        <Button
           type="submit"
           form="inventario-form"
-          className="bg-blue-700 text-white p-2 rounded-md"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
-        </button>
-      </Modall>
-
-      <Modall
-        ModalTitle="Editar Elemento del Inventario"
-        isOpen={IsOpenUpdate}
-        onOpenChange={handleCloseUpdate}
-      >
-        {selectedInventario && (
-          <FormUpdate
-            inventarios={InventariosWithKey ?? []}
-            inventarioId={selectedInventario.id_inventario as number}
-            id="FormUpdate"
-            onclose={handleCloseUpdate}
-          />
-        )}
+        </Button>
+      </div>
       </Modall>
 
       {InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
           columns={columns(elementos ?? [])}
-          onEdit={handleEdit}
           onDelete={(inventario) => handleState(inventario.id_inventario)}
           extraHeaderContent={
             <Buton

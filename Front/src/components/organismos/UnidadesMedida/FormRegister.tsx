@@ -1,11 +1,11 @@
 import { Form } from "@heroui/form";
-import { Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Input, Select, SelectItem } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Unidad, UnidadSchema } from "@/schemas/Unidad";
+import { UnidadCreate, UnidadCreateSchema } from "@/schemas/Unidad";
 
 type FormularioProps = {
-  addData: (unidad: Unidad) => Promise<void>;
+  addData: (unidad: UnidadCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -16,22 +16,33 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Unidad>({
-    resolver: zodResolver(UnidadSchema),
+  } = useForm<UnidadCreate>({
+    resolver: zodResolver(UnidadCreateSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: Unidad) => {
+  const onSubmit = async (data: UnidadCreate) => {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Unidad agregada correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-
+  console.log("Errores", errors);
   return (
-    <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -40,23 +51,25 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-            <Controller
-                control={control}
-                name="estado"
-                render={({ field }) => (
-                    <Select
-                        label="Estado"
-                        placeholder="Selecciona estado"
-                        {...field} 
-                        value={field.value ? "true" : "false"}
-                        onChange={(e) => field.onChange(e.target.value === "true")} 
-                    >
-                        <SelectItem key="true">Activo</SelectItem>
-                        <SelectItem key="false">Inactivo</SelectItem>
-                    </Select>
-                )}
-            />
-            {errors.estado && <p className="text-red-500">{errors.estado?.message}</p>}
+      <Controller
+        control={control}
+        name="estado"
+        render={({ field }) => (
+          <Select
+            label="Estado"
+            placeholder="Seleccione un estado"
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
+          >
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
+        )}
+      />
+
     </Form>
   );
 }

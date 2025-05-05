@@ -6,6 +6,7 @@ import { useSolicitud } from "@/hooks/Solicitudes/useSolicitud";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { SolicitudUpdateSchema } from "@/schemas/Solicitud";
+import { addToast } from "@heroui/react";
 
 type Props = {
   solicitudes: SolicitudUpdate[];
@@ -17,7 +18,6 @@ type Props = {
 export const FormUpdate = ({ solicitudId, id, onclose }: Props) => {
   const { updateSolicitud, getSolicitudById } = useSolicitud();
 
-  // Obtener la solicitud a actualizar
   const foundSolicitud = getSolicitudById(solicitudId);
 
   const {
@@ -45,13 +45,24 @@ export const FormUpdate = ({ solicitudId, id, onclose }: Props) => {
     try {
       await updateSolicitud(data.id_solicitud, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Solicitud actualizada correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar la solicitud", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
-    <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      id={id}
+      className="w-full space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         label="Descripción"
         placeholder="Descripción"
@@ -72,7 +83,7 @@ export const FormUpdate = ({ solicitudId, id, onclose }: Props) => {
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-80 bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar Cambios
         </Button>

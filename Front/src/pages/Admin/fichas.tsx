@@ -3,13 +3,12 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/fichas/FormRegister";
-import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 import { useState } from "react";
-import { FichaCreate } from "@/schemas/fichas";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 
 const FichasTable = () => {
   const { fichas, isLoading, isError, error, addFicha, changeState } =
@@ -37,7 +36,7 @@ const FichasTable = () => {
     await changeState(id_ficha);
   };
 
-  const handleAddFicha = async (ficha: FichaCreate) => {
+  const handleAddFicha = async (ficha: Ficha) => {
     try {
       await addFicha(ficha);
       handleClose();
@@ -132,19 +131,15 @@ const FichasTable = () => {
           addData={handleAddFicha}
           onClose={handleClose}
         />
-        <button
-          type="button" // CAMBIO: ya no es "submit"
-          onClick={() =>
-            document
-              .getElementById("ficha-form")
-              ?.dispatchEvent(
-                new Event("submit", { bubbles: true, cancelable: true })
-              )
-          }
-          className="bg-blue-500 text-white p-2 rounded-md"
+      <div className="justify-center pt-2">
+        <Button
+          type="submit"
+          form="ficha-form"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
-        </button>
+        </Button>
+      </div>
       </Modall>
 
       <Modall

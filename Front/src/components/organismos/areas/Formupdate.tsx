@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AreaUpdateSchema, AreaUpdate } from "@/schemas/Area";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { Button } from "@heroui/button";
+import { addToast } from "@heroui/react";
 
 type FormuProps = {
   areas: AreaUpdate[];
@@ -12,7 +13,7 @@ type FormuProps = {
   onclose: () => void;
 };
 
-export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
+export const FormUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
   const { updateArea, getAreaById } = useAreas();
 
   const foundArea = getAreaById(areaId, areas) as AreaUpdate;
@@ -24,11 +25,13 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
   } = useForm<AreaUpdate>({
     resolver: zodResolver(AreaUpdateSchema),
     mode: "onChange",
-    defaultValues:{
-          id_area: foundArea.id_area,
-          nombre: foundArea.nombre,
-          estado: foundArea.estado,
-        }
+    defaultValues: {
+      id_area: foundArea.id_area,
+      nombre: foundArea.nombre,
+      estado: foundArea.estado,
+      fk_sede: foundArea.fk_sede,
+      fk_usuario: foundArea.fk_usuario
+    },
   });
 
   const onSubmit = async (data: AreaUpdate) => {
@@ -37,6 +40,13 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
     try {
       await updateArea(data.id_area, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Area actualizada correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al actualizar el área: ", error);
     }
@@ -44,7 +54,11 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
 
   console.log("Errores", errors);
   return (
-    <form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      id={id}
+      className="w-full space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -52,12 +66,15 @@ export const FormuUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <Button type="submit" isLoading={isSubmitting} className="bg-blue-500 text-white p-2 rounded-md">
-        Guardar Cambios
-      </Button>
-      
+      <div className="justify-center pl-10">
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
+        >
+          Guardar
+        </Button>
+      </div>
     </form>
   );
 };
-
-export default FormuUpdate;

@@ -5,6 +5,7 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { UnidadUpdate, UnidadUpdateSchema } from "@/schemas/Unidad";
+import { addToast } from "@heroui/react";
 
 type Props = {
   unidades: (UnidadUpdate & { id_unidad?: number })[];
@@ -18,7 +19,6 @@ export const FormUpdate = ({ unidades, unidadId, id, onclose }: Props) => {
 
   const foundUnidad = getUnidadById(unidadId, unidades) as UnidadUpdate;
 
-
   const {
     register,
     handleSubmit,
@@ -30,20 +30,26 @@ export const FormUpdate = ({ unidades, unidadId, id, onclose }: Props) => {
       id_unidad: foundUnidad.id_unidad ?? 0,
       nombre: foundUnidad.nombre,
       estado: foundUnidad.estado,
-
     },
   });
 
-    const onSubmit = async (data : UnidadUpdate) => {
-        console.log(data);
-        if(!data.id_unidad) return;
-        try {
-            await updateUnidad(data.id_unidad,data);
-            onclose();
-        }catch(error){
-            console.log("Error al actualizar la unidad : ",error)
-        }
-    };
+  const onSubmit = async (data: UnidadUpdate) => {
+    console.log(data);
+    if (!data.id_unidad) return;
+    try {
+      await updateUnidad(data.id_unidad, data);
+      onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Unidad actualizada correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
+    } catch (error) {
+      console.log("Error al actualizar la unidad : ", error);
+    }
+  };
 
   console.log("Errores", errors);
 
@@ -64,7 +70,7 @@ export const FormUpdate = ({ unidades, unidadId, id, onclose }: Props) => {
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-80 bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
         </Button>

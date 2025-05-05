@@ -1,4 +1,4 @@
-import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
+import Globaltable from "@/components/organismos/table.tsx";
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
@@ -9,6 +9,7 @@ import Formulario from "@/components/organismos/Elementos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Elementos/FormUpdate";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { ElementoCreate } from "@/schemas/Elemento";
 
 export const ElementosTable = () => {
   const { elementos, isLoading, isError, error, addElemento, changeState } =
@@ -24,17 +25,17 @@ export const ElementosTable = () => {
     null
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToUnidad = () => {
-    navigate('/bodega/unidades')
-  }
+    navigate("/bodega/unidades");
+  };
   const handleGoToCategoria = () => {
-    navigate('/bodega/categorias')
-  }
+    navigate("/bodega/categorias");
+  };
   const handleGoToCaracteristica = () => {
-    navigate('/bodega/caracteristicas')
-  }
+    navigate("/bodega/caracteristicas");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -45,12 +46,17 @@ export const ElementosTable = () => {
     await changeState(id_elemento);
   };
 
-  const handleAddElemento = async (elemento: Elemento) => {
+  const handleAddElemento = async (elemento: ElementoCreate):Promise<{id_elemento:number}>   => {
     try {
-      await addElemento(elemento);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      const response = await addElemento(elemento);
+      if (!response || !response.id_elemento) {
+        throw new Error("No se pudo agregar el elemento. La respuesta no contiene id_elemento.");
+      }
+      handleClose(); // Cierra el modal solo si se ha agregado correctamente
+      return { id_elemento: response.id_elemento };
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
+      throw new Error("Error al agregar el elemento: ");
     }
   };
 
@@ -81,7 +87,7 @@ export const ElementosTable = () => {
     { key: "descripcion", label: "Descripcion" },
     { key: "valor", label: "Valor" },
     {
-      key: "tipo_elemento",
+      key: "tipoElemento",
       label: "Tipo Elemento",
       render: (elementos: Elemento) => (
         <span>
@@ -187,13 +193,15 @@ export const ElementosTable = () => {
           addData={handleAddElemento}
           onClose={handleClose}
         />
-        <button
+      <div className="justify-center pt-2">
+        <Button
           type="submit"
           form="element-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
-        </button>
+        </Button>
+      </div>
       </Modall>
 
       <Modall

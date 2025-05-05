@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
-import { useCentro } from "@/hooks/Centros/useCentros";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { programaCreate, programaCreateSchema } from "@/schemas/programas";
+import { useAreas } from "@/hooks/areas/useAreas";
 
-type FormularioSedeProps = {
+type FormularioProps = {
   addData: (data: programaCreate) => Promise<void>;
   onClose: () => void;
   id: string;
@@ -16,7 +16,7 @@ export default function FormularioSede({
   addData,
   onClose,
   id,
-}: FormularioSedeProps) {
+}: FormularioProps) {
   const {
     control,
     register,
@@ -27,17 +27,24 @@ export default function FormularioSede({
     mode: "onChange",
   });
 
-  const { centros } = useCentro();
+  const { areas } = useAreas();
 
   const onSubmit = async (data: programaCreate) => {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Programa agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar el programa:", error);
     }
   };
-
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -63,13 +70,14 @@ export default function FormularioSede({
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
       <Controller
         control={control}
@@ -82,22 +90,17 @@ export default function FormularioSede({
               {...field}
               value={field.value ?? ""}
               onChange={(e) => field.onChange(Number(e.target.value))}
+              isInvalid={!!errors.fk_area}
+              errorMessage={errors.fk_area?.message}
             >
-              {centros?.length ? (
-                centros.map((centro) => (
-                  <SelectItem key={centro.id_centro}>
-                    {centro.nombre}
-                  </SelectItem>
+              {areas?.length ? (
+                areas.map((area) => (
+                  <SelectItem key={area.id_area}>{area.nombre}</SelectItem>
                 ))
               ) : (
                 <SelectItem isDisabled>No hay áreas disponibles</SelectItem>
               )}
             </Select>
-            {errors.fk_area && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_area.message}
-              </p>
-            )}
           </div>
         )}
       />

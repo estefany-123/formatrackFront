@@ -8,12 +8,11 @@ export interface ElementoPutData {
     perecedero: boolean;
     no_perecedero: boolean;
     estado: boolean;
-    imagen_elemento: string | File;
+    imagen_elemento?: string | File | undefined;
     created_at?: string;
     updated_at?: string;
     fk_unidad_medida: number;
     fk_categoria: number;
-    fk_caracteristica: number;
 }
 
 export async function putElemento(id:number, data:ElementoPutData):Promise<any> {
@@ -26,9 +25,9 @@ export async function putElemento(id:number, data:ElementoPutData):Promise<any> 
     formData.append('estado', data.estado.toString());
     formData.append('fk_unidad_medida', data.fk_unidad_medida.toString());
     formData.append('fk_categoria', data.fk_categoria.toString());
-    formData.append('fk_caracteristica', data.fk_caracteristica.toString());
-    formData.append('imagen_elemento', data.imagen_elemento); // aquí si es File
-
+    if (data.imagen_elemento) {
+        formData.append('imagen_elemento', data.imagen_elemento);
+    }
     const res = await axiosAPI.post(`elemento/${id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'

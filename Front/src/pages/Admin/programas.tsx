@@ -4,13 +4,12 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Programas/FormRegister";
 import { useState } from "react";
-import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
-import { programaCreate } from "@/schemas/programas";
 import { usePrograma } from "@/hooks/programas/usePrograma";
 import { Pformacion } from "@/types/programaFormacion";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
 
 const ProgramasTable = () => {
   const { programas, isLoading, isError, error, addPrograma, changeState } =
@@ -40,7 +39,7 @@ const ProgramasTable = () => {
     await changeState(id_programa);
   };
 
-  const handleAddPrograma = async (programa: programaCreate) => {
+  const handleAddPrograma = async (programa: Pformacion) => {
     try {
       await addPrograma(programa);
       handleClose(); // Cerrar el modal después de darle agregar usuario
@@ -139,17 +138,17 @@ const ProgramasTable = () => {
         onOpenChange={handleClose}
       >
         <Formulario
-          id="Programa-form"
+          id="programa-form"
           addData={handleAddPrograma}
           onClose={handleClose}
         />
-        <button
+        <Button
           type="submit"
-          form="Programa-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          form="programa-form"
+          className="bg-blue-700 text-white p-2 rounded-lg"
         >
           Guardar
-        </button>
+        </Button>
       </Modall>
 
       <Modall

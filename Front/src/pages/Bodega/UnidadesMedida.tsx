@@ -33,8 +33,8 @@ export const UnidadTable = () => {
     setSelectedUnidad(null);
   };
 
-  const handleState = async (unidad: Unidad) => {
-    await changeState(unidad.id_unidad as number);
+  const handleState = async (id_unidad:number) => {
+    await changeState(id_unidad);
   };
 
   const handleAddUnidad = async (unidad: Unidad) => {
@@ -47,6 +47,9 @@ export const UnidadTable = () => {
   };
 
   const handleEdit = (unidad: Unidad) => {
+    if (!unidad || !unidad.id_unidad) {
+      return; 
+    }
     setSelectedUnidad(unidad);
     setIsOpenUpdate(true);
   };
@@ -134,13 +137,13 @@ export const UnidadTable = () => {
           addData={handleAddUnidad}
           onClose={handleClose}
         />
-        <button
+        <Button
           type="submit"
           form="unidad-form"
-          className="bg-blue-700 text-white p-2 rounded-md"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
-        </button>
+        </Button>
       </Modall>
 
       <Modall
@@ -163,7 +166,7 @@ export const UnidadTable = () => {
           data={UnidadsWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={handleState}
+          onDelete={(unidad) => handleState(unidad.id_unidad)}
           extraHeaderContent={
             <Buton
               text="Nueva unidad"

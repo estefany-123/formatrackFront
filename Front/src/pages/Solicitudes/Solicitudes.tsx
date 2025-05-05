@@ -59,7 +59,11 @@ export const SolicitudTable = () => {
       render: (solicitud: Solicitud) => (
         <span>
           {solicitud.created_at
-            ? new Date(solicitud.created_at).toLocaleDateString("es-ES")
+            ? new Date(solicitud.created_at).toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -70,7 +74,11 @@ export const SolicitudTable = () => {
       render: (solicitud: Solicitud) => (
         <span>
           {solicitud.updated_at
-            ? new Date(solicitud.updated_at).toLocaleDateString("es-ES")
+            ? new Date(solicitud.updated_at).toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),

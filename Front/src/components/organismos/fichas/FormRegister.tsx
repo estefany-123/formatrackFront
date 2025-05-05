@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { usePrograma } from "@/hooks/programas/usePrograma";
 import { FichaCreate, fichaCreateSchema } from "@/schemas/fichas";
 
@@ -19,10 +19,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FichaCreate>({
-    resolver: zodResolver(fichaCreateSchema), // Usamos el resolver con el esquema de Ficha
+    resolver: zodResolver(fichaCreateSchema),
     mode: "onChange",
-    defaultValues:{
-    }
   });
 
   const { programas } = usePrograma();
@@ -31,26 +29,24 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Ficha agregada correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar la ficha:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
       onSubmit={handleSubmit(onSubmit)}
       className="w-full space-y-4"
     >
-      <Input
-        label="Nombre"
-        type="text"
-        placeholder="Nombre"
-        {...register("nombre")}
-        isInvalid={!!errors.nombre}
-        errorMessage={errors.nombre?.message}
-      />
-
       <Input
         label="Código de Ficha"
         type="text"
@@ -70,13 +66,14 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
 
       <Controller
         control={control}
@@ -89,6 +86,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               {...field}
               value={field.value ?? ""}
               onChange={(e) => field.onChange(Number(e.target.value))}
+              isInvalid={!!errors.fk_programa}
+              errorMessage={errors.fk_programa?.message}
             >
               {programas?.length ? (
                 programas.map((programa) => (
@@ -100,11 +99,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 <SelectItem isDisabled>No hay programas disponibles</SelectItem>
               )}
             </Select>
-            {errors.fk_programa && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_programa.message}
-              </p>
-            )}
           </div>
         )}
       />

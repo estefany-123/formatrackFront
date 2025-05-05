@@ -4,11 +4,11 @@ import Buton from "@/components/molecules/Buton";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Sedes/FormRegister";
 import { useState } from "react";
-import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
 import { useSede } from "@/hooks/sedes/useSedes";
 import { Button, Card, CardBody } from "@heroui/react";
 import { Sede } from "@/types/sedes";
 import { useNavigate } from "react-router-dom";
+import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
 
 const SedeTable = () => {
   const { sede, isLoading, isError, error, addSede, changeState } = useSede();
@@ -134,13 +134,15 @@ const SedeTable = () => {
           addData={handleAddSede}
           onClose={handleClose}
         />
-        <button
+      <div className="justify-center pt-2">
+        <Button
           type="submit"
           form="sede-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
-        </button>
+        </Button>
+      </div>
       </Modall>
 
       <Modall

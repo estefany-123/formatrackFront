@@ -2,13 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { useElemento } from "@/hooks/Elementos/useElemento";
-import { SolicitudCreate, SolicitudCreateSchema } from "@/schemas/Solicitud";
 import React from "react";
+import { SolicitudCreate, SolicitudCreateSchema } from "@/schemas/Solicitud";
 
 type FormularioProps = {
   addData: (solicitud: SolicitudCreate) => Promise<void>;
@@ -25,6 +25,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<SolicitudCreate>({
     resolver: zodResolver(SolicitudCreateSchema),
     mode: "onChange",
+    defaultValues:{
+      estado: true,
+      aceptada: false,
+      pendiente: true,
+      rechazada: false,
+    }
   });
 
   const { users, isLoading: loadingUsers, isError: errorUsers } = useUsuario();
@@ -53,11 +59,18 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       await addData(data);
       console.log("Solicitud guardada correctamente");
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Solicitud agregada correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al cargar la solicitud", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
@@ -82,7 +95,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         errorMessage={errors.cantidad?.message}
       />
 
-      {/* Usuario */}
       {!loadingUsers && !errorUsers && users && (
         <Controller
           control={control}
@@ -96,6 +108,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 aria-label="Seleccionar usuario"
                 className="w-full"
                 onChange={(e) => field.onChange(Number(e.target.value))}
+                isInvalid={!!errors.fk_usuario}
+                errorMessage={errors.fk_usuario?.message}
               >
                 {users.length ? (
                   users.map((usuario) => (
@@ -112,17 +126,11 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                   </SelectItem>
                 )}
               </Select>
-              {errors.fk_usuario && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.fk_usuario.message}
-                </p>
-              )}
             </div>
           )}
         />
       )}
 
-      {/* Sitio */}
       {!loadingSitios && !errorSitios && sitios && (
         <Controller
           control={control}
@@ -140,6 +148,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                   field.onChange(sitioId);
                   setSitioSeleccionado(sitioId);
                 }}
+                isInvalid={!!errors.fk_sitio}
+                errorMessage={errors.fk_sitio?.message}
               >
                 {sitios.length ? (
                   sitios.map((sitio) => (
@@ -151,17 +161,11 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                   <SelectItem isDisabled>No hay sitios disponibles</SelectItem>
                 )}
               </Select>
-              {errors.fk_sitio && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.fk_sitio.message}
-                </p>
-              )}
             </div>
           )}
         />
       )}
 
-      {/* Elemento del Inventario */}
       {!loadingInventarios &&
         !errorInventarios &&
         inventarios &&
@@ -181,6 +185,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                   aria-label="Seleccionar elemento del inventario"
                   className="w-full"
                   onChange={(e) => field.onChange(Number(e.target.value))}
+                  isInvalid={!!errors.fk_inventario}
+                  errorMessage={errors.fk_inventario?.message}
                 >
                   {inventarios.filter(
                     (inv) => inv.fk_sitio === sitioSeleccionado
@@ -210,11 +216,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                     </SelectItem>
                   )}
                 </Select>
-                {errors.fk_inventario && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.fk_inventario.message}
-                  </p>
-                )}
               </div>
             )}
           />

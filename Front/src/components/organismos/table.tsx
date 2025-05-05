@@ -28,7 +28,7 @@ export interface TableColumn<T> {
 interface TableProps<T extends { key: string; estado?: boolean }> {
   data: T[];
   columns: TableColumn<T>[];
-  onEdit: (item: T) => void;
+  onEdit?: (item: T) => void | boolean;
   onDelete?: (item: T) => void | undefined | Promise<void>;
   showEstado?: boolean;
   showActions?: boolean;
@@ -263,7 +263,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
 
                     {showActions && columnKey === "actions" && (
                       <div className="flex gap-2 justify-center">
-                        <button onClick={() => onEdit(item)}>
+                        <button onClick={() => onEdit?.(item)}>
                           <PencilIcon className="h-5 w-5 text-blue-500" />
                         </button>
                         {onDelete && (

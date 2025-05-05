@@ -1,21 +1,16 @@
-import { axiosAPI } from "@/axios/axiosAPI";
-import { postElemento } from "@/axios/Elementos/postElemento";
+import { ElementoPostData, postElemento } from "@/axios/Elementos/postElemento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Elemento } from "@/types/Elemento";
 import { putElemento } from "@/axios/Elementos/putElemento";
 import { deleteElemento } from "@/axios/Elementos/deleteElemento";
+import { getElemento } from "@/axios/Elementos/getElemento";
 
 export function useElemento() {
   const queryClient = useQueryClient();
 
-  const url = "elemento";
-
   const { data, isLoading, isError, error } = useQuery<Elemento[]>({
     queryKey: ["elementos"],
-    queryFn: async () => {
-      const res = await axiosAPI.get(url);
-      return res.data;
-    },
+    queryFn: getElemento,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -29,7 +24,7 @@ export function useElemento() {
       });
     },
     onError: (error) => {
-      console.log("Error al cargar el elemento", error);
+      console.error("Error al cargar el elemento", error);
     },
   });
 
@@ -67,8 +62,12 @@ export function useElemento() {
     },
   });
 
-  const addElemento = async (elemento: Elemento) => {
-    return addElementoMutation.mutateAsync(elemento);
+  const addElemento = async (elemento: Elemento): Promise<{ id_elemento: number }> => {
+    const response = await addElementoMutation.mutateAsync(elemento);
+    if (response && response.id_elemento) {
+      return { id_elemento: response.id_elemento };
+    }
+    throw new Error("Respuesta inesperada de la API");
   };
 
   const updateElemento = async (id: number, data:Elemento) => {

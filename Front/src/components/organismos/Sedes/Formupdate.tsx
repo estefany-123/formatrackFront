@@ -3,11 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
-import { Sede, sedeUpdate, sedeUpdateSchema } from "@/schemas/sedes";
+import { sedeUpdate, sedeUpdateSchema } from "@/schemas/sedes";
 import { useSede } from "@/hooks/sedes/useSedes";
+import { addToast } from "@heroui/react";
 
 type Props = {
-  sedes: ( sedeUpdate & { id_sede?: number })[];
+  sedes: (sedeUpdate & { id_sede?: number })[];
   sedeId: number;
   id: string;
   onclose: () => void;
@@ -16,7 +17,7 @@ type Props = {
 export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
   const { updateSede, getSedeById } = useSede();
 
-  const foundSede = getSedeById(sedeId, sedes) as Sede;
+  const foundSede = getSedeById(sedeId, sedes) as sedeUpdate;
 
   const {
     register,
@@ -26,11 +27,10 @@ export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
     resolver: zodResolver(sedeUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_sede: foundSede.id_sede ?? 0,
+      id_sede: foundSede.id_sede,
       nombre: foundSede.nombre,
       estado: foundSede.estado,
-      fk_centro:foundSede.fk_centro
-
+      fk_centro: foundSede.fk_centro,
     },
   });
 
@@ -40,6 +40,13 @@ export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
     try {
       await updateSede(data.id_sede, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Sede actualizada correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar la sede : ", error);
     }
@@ -58,13 +65,13 @@ export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
         placeholder="Nombre"
         {...register("nombre")}
         isInvalid={!!errors.nombre}
-        errorMessage= {errors.nombre?.message}
+        errorMessage={errors.nombre?.message}
       />
       <div className="justify-center pl-10">
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-80 bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
         </Button>

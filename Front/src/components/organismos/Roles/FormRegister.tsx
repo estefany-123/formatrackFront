@@ -1,5 +1,5 @@
 import { Form } from "@heroui/form";
-import { Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Input, Select, SelectItem } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RolCreate, RolCreateSchema } from "@/schemas/Rol";
@@ -23,13 +23,21 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
   const onSubmit = async (data: RolCreate) => {
     try {
+      console.log("DAtos enviados:", data);
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Rol agregado correctamente",
+        color:"success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
@@ -54,15 +62,14 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && (
-        <p className="text-red-500">{errors.estado?.message}</p>
-      )}
     </Form>
   );
 }
