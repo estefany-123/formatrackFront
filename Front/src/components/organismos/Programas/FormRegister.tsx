@@ -2,15 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
-import { Combobox } from "@headlessui/react";
-import { useState } from "react";
+import { addToast, Select, SelectItem } from "@heroui/react";
+import { programaCreate, programaCreateSchema } from "@/schemas/programas";
+import { useAreas } from "@/hooks/areas/useAreas";
 
-import { useCentro } from "@/hooks/Centros/useCentros";
-import { programa, programaSchema } from "@/schemas/programas";
-
-type FormularioSedeProps = {
-  addData: (data: programa) => Promise<void>;
+type FormularioProps = {
+  addData: (data: programaCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -19,37 +16,35 @@ export default function FormularioSede({
   addData,
   onClose,
   id,
-}: FormularioSedeProps) {
+}: FormularioProps) {
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<programa>({
-    resolver: zodResolver(programaSchema),
+  } = useForm<programaCreate>({
+    resolver: zodResolver(programaCreateSchema),
     mode: "onChange",
   });
 
-  const { centros } = useCentro();
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
+  const { areas } = useAreas();
 
-  const filteredCentros =
-    query === ""
-      ? centros
-      : centros?.filter((centro) =>
-          centro.nombre.toLowerCase().includes(query.toLowerCase())
-        );
-
-  const onSubmit = async (data: programa) => {
+  const onSubmit = async (data: programaCreate) => {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Programa agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar el programa:", error);
     }
   };
-
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -75,69 +70,37 @@ export default function FormularioSede({
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && (
-        <p className="text-red-500">{errors.estado.message}</p>
-      )}
 
       <Controller
         control={control}
         name="fk_area"
         render={({ field }) => (
           <div className="w-full">
-            <label className="text-sm text-gray-700 font-medium mb-1 block">
-              Area
-            </label>
-            <Combobox
-              value={field.value}
-              onChange={(val) => {
-                field.onChange(val);
-                setOpen(false);
-              }}
+            <Select
+              label="Área"
+              placeholder="Selecciona un área"
+              {...field}
+              value={field.value ?? ""}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+              isInvalid={!!errors.fk_area}
+              errorMessage={errors.fk_area?.message}
             >
-              <div className="relative">
-                <Combobox.Input
-                  className="w-full border rounded-md p-2"
-                  displayValue={(id: number) =>
-                    centros?.find((c) => c.id_centro === id)?.nombre || ""
-                  }
-                  onClick={() => setOpen(true)}
-                  onChange={(e) => {
-                    setQuery(e.target.value);
-                    setOpen(true);
-                  }}
-                  placeholder="Selecciona un area..."
-                />
-                {open && (
-                  <Combobox.Options className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white border shadow">
-                    {filteredCentros?.length === 0 && (
-                      <div className="p-2 text-sm text-gray-500">
-                        No se encontraron areas.
-                      </div>
-                    )}
-                    {filteredCentros?.map((centro) => (
-                      <Combobox.Option
-                        key={centro.id_centro}
-                        value={centro.id_centro}
-                        className="cursor-pointer p-2 hover:bg-blue-100"
-                      >
-                        {centro.nombre}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                )}
-              </div>
-            </Combobox>
-            {errors.fk_area && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fk_area.message}
-              </p>
-            )}
+              {areas?.length ? (
+                areas.map((area) => (
+                  <SelectItem key={area.id_area}>{area.nombre}</SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>No hay áreas disponibles</SelectItem>
+              )}
+            </Select>
           </div>
         )}
       />

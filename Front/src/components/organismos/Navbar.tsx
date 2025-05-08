@@ -14,8 +14,8 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
 import Modall from "../molecules/modal";
-import Cookies from "universal-cookie";
 // import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
+import Cookies from "universal-cookie";
 
 type NavProps = {
   en_proceso: string;

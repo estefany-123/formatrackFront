@@ -1,23 +1,7 @@
 import { z } from "zod";
 
 export const SolicitudUpdateSchema = z.object({
-  id_unidad: z.number(),
-
-  descripcion: z
-    .string()
-    .min(1, { message: "Descripcion es  requerida" })
-    .min(2, { message: "Debe contener como mimimo 2 caracteres" }),
-
-  cantidad: z.number({
-    required_error: "Cantidad es requerida y debe ser entero",
-  })
-
-});
-
-export type SolicitudUpdate = z.infer<typeof SolicitudUpdateSchema>;
-
-export const SolicitudSchema = z.object({
-  id_solicitud: z.number().optional(),
+  id_solicitud: z.number(),
 
   descripcion: z
     .string()
@@ -28,23 +12,46 @@ export const SolicitudSchema = z.object({
     required_error: "Cantidad es requerida y debe ser entero",
   }),
 
-  estado: z.boolean({required_error:"Estado es requerido"}),
+  estado: z.boolean({ required_error: "Estado es requerido" }).optional(),
 
-  aceptada: z.boolean(),
+  aceptada: z.boolean().optional(),
 
-  pendiente: z.boolean(),
+  pendiente: z.boolean().optional(),
 
-  rechazada: z.boolean(),
+  rechazada: z.boolean().optional(),
 
-  created_at: z.string().default("").optional(),
+  fk_sitio: z.number({ message: "Sitio es requerido" }).optional(),
 
-  updated_at: z.string().default("").optional(),
+  fk_usuario: z.number({ message: "Usuario es requerido" }).optional(),
 
-  fk_sitio: z.number({ message: "Elemento es requerido" }),
+  fk_inventario: z.number({ message: "Elemento del Inventario es requerido" }).optional(),
+});
 
-  fk_usuario: z.number({ message: "Elemento es requerido" }),
+export type SolicitudUpdate = z.infer<typeof SolicitudUpdateSchema>;
 
-  fk_inventario: z.number({ message: "Elemento es requerido" }),
+export const SolicitudCreateSchema = z.object({
+  descripcion: z
+    .string()
+    .min(1, { message: "Descripcion es  requerida" })
+    .min(2, { message: "Debe contener como mimimo 2 caracteres" }),
+
+  cantidad: z.number({
+    required_error: "Cantidad es requerida y debe ser entero",
+  }),
+
+  estado: z.boolean().default(true).optional(),
+
+  aceptada: z.boolean().default(false).optional(),
+
+  pendiente: z.boolean().default(true).optional(),
+
+  rechazada: z.boolean().default(false).optional(),
+
+  fk_sitio: z.number({ message: "Sitio es requerido" }),
+
+  fk_usuario: z.number({ message: "Usario es requerido" }),
+
+  fk_inventario: z.number({ message: "Elemento del Inventario es requerido" }),
 
 });
-export type Solicitud = z.infer<typeof SolicitudSchema>;
+export type SolicitudCreate = z.infer<typeof SolicitudCreateSchema>;

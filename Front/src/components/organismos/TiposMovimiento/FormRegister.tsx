@@ -1,11 +1,11 @@
 import { Form } from "@heroui/form";
-import { Input, Select, SelectItem } from "@heroui/react";
-import { Tipo, TipoSchema } from "@/schemas/TipoMovimiento";
+import { addToast, Input, Select, SelectItem } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TipoCreate, TipoCreateSchema } from "@/schemas/TipoMovimiento";
 
 type FormularioProps = {
-  addData: (tipo: Tipo) => Promise<void>;
+  addData: (tipo: TipoCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
@@ -16,22 +16,33 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Tipo>({
-    resolver: zodResolver(TipoSchema),
+  } = useForm<TipoCreate>({
+    resolver: zodResolver(TipoCreateSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: Tipo) => {
+  const onSubmit = async (data: TipoCreate) => {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Tipo Movimiento agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
-    <Form id={id} onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -40,23 +51,24 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-            <Controller
-                control={control}
-                name="estado"
-                render={({ field }) => (
-                    <Select
-                        label="Estado"
-                        placeholder="Selecciona estado"
-                        {...field} 
-                        value={field.value ? "true" : "false"}
-                        onChange={(e) => field.onChange(e.target.value === "true")} 
-                    >
-                        <SelectItem key="true">Activo</SelectItem>
-                        <SelectItem key="false">Inactivo</SelectItem>
-                    </Select>
-                )}
-            />
-            {errors.estado && <p className="text-red-500">{errors.estado?.message}</p>}
+      <Controller
+        control={control}
+        name="estado"
+        render={({ field }) => (
+          <Select
+            label="Estado"
+            placeholder="Selecciona estado"
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
+          >
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
+        )}
+      />
     </Form>
   );
 }

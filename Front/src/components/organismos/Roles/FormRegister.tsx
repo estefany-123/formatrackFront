@@ -1,11 +1,11 @@
 import { Form } from "@heroui/form";
-import { Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Input, Select, SelectItem } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Rol, RolSchema } from "@/schemas/Rol";
+import { RolCreate, RolCreateSchema } from "@/schemas/Rol";
 
 type FormularioProps = {
-  addData: (rol: Rol) => Promise<void>;
+  addData: (rol: RolCreate) => Promise<any>;
   onClose: () => void;
   id: string;
 };
@@ -16,20 +16,28 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Rol>({
-    resolver: zodResolver(RolSchema),
+  } = useForm<RolCreate>({
+    resolver: zodResolver(RolCreateSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: Rol) => {
+  const onSubmit = async (data: RolCreate) => {
     try {
+      console.log("DAtos enviados:", data);
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Rol agregado correctamente",
+        color:"success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
@@ -54,15 +62,14 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-      {errors.estado && (
-        <p className="text-red-500">{errors.estado?.message}</p>
-      )}
     </Form>
   );
 }

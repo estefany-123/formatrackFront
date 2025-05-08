@@ -1,30 +1,27 @@
-import { axiosAPI } from "@/axios/axiosAPI";
-import { Tipo } from "@/schemas/TipoMovimiento";
+import { deleteTipo } from "@/axios/TiposMovimiento/deleteTipo";
+import { getTipo } from "@/axios/TiposMovimiento/getTipo";
+import { postTipo } from "@/axios/TiposMovimiento/postTipo";
+import { putTipo } from "@/axios/TiposMovimiento/putTipo";
+import { TipoMovimiento } from "@/types/TipoMovimiento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useTipoMovimiento() {
   const queryClient = useQueryClient();
 
-  const url = "tipoMovimiento";
-
-  const { data, isLoading, isError, error } = useQuery<Tipo[]>({
+  const { data, isLoading, isError, error } = useQuery<TipoMovimiento[]>({
     queryKey: ["tipos"],
-    queryFn: async () => {
-      const res = await axiosAPI.get(url);
-      return res.data;
-    },
+    queryFn: getTipo,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
   });
 
   const addTipoMutation = useMutation({
-    mutationFn: async (newTipo: Tipo) => {
-      await axiosAPI.post<Tipo>(url, newTipo);
-      return newTipo;
-    },
-    onSuccess: (tipo) => {
-      console.log(tipo);
-      queryClient.setQueryData<Tipo[]>(["tipos"], (oldData) =>
-        oldData ? [...oldData, tipo] : [tipo]
-      );
+    mutationFn: postTipo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tipos"],
+      });
     },
     onError: (error) => {
       console.log("Error al cargar el tipo de movimiento", error);
@@ -33,33 +30,17 @@ export function useTipoMovimiento() {
 
   const getTipoMovimientoById = (
     id: number,
-    tipos: Tipo[] | undefined = data
-  ): Tipo | null => {
+    tipos: TipoMovimiento[] | undefined = data
+  ): TipoMovimiento | null => {
     return tipos?.find((tipo) => tipo.id_tipo === id) || null;
   };
 
   const updateTipoMutation = useMutation({
-    mutationFn: async ({
-      id,
-      update,
-    }: {
-      id: number;
-      update: Partial<Tipo>;
-    }) => {
-      await axiosAPI.put<Tipo>(`${url}/${id}`, update);
-      return { id, update };
-    },
-    onSuccess: ({ id, update }) => {
-      console.log("dato 1: ", id, " dato 2: ", update);
-      queryClient.setQueryData<Tipo[]>(["tipos"], (oldData) =>
-        oldData
-          ? oldData.map((tipo) =>
-              tipo.id_tipo === id
-                ? { ...tipo, ...update }
-                : tipo
-            )
-          : []
-      );
+    mutationFn: ({ id, data }: { id: number; data: TipoMovimiento }) => putTipo(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tipos"],
+      });
     },
 
     onError: (error) => {
@@ -68,21 +49,12 @@ export function useTipoMovimiento() {
   });
 
   const changeStateMutation = useMutation({
-    mutationFn: async (id_tipo: number) => {
-      await axiosAPI.put<Tipo>(`tipoMovimiento/cambiarEstado/${id_tipo}`);
-      return id_tipo;
-    },
+    mutationFn: deleteTipo,
 
-    onSuccess: (id_tipo: number) => {
-      queryClient.setQueryData<Tipo[]>(["tipos"], (oldData) =>
-        oldData
-          ? oldData.map((tipo: Tipo) =>
-              tipo.id_tipo == id_tipo
-                ? { ...tipo, estado: !tipo.estado }
-                : tipo
-            )
-          : []
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tipos"],
+      });
     },
 
     onError: (error) => {
@@ -90,12 +62,12 @@ export function useTipoMovimiento() {
     },
   });
 
-  const addTipoMovimiento = async (tipoMovimiento: Tipo) => {
+  const addTipoMovimiento = async (tipoMovimiento: TipoMovimiento) => {
     return addTipoMutation.mutateAsync(tipoMovimiento);
   };
 
-  const updateTipoMovimiento = async (id: number, update: Partial<Tipo>) => {
-    return updateTipoMutation.mutateAsync({ id, update });
+  const updateTipoMovimiento = async (id: number, data: TipoMovimiento) => {
+    return updateTipoMutation.mutateAsync({ id, data });
   };
 
   const changeState = async (id_tipo: number) => {

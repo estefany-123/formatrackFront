@@ -5,6 +5,7 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { sitio, sitioUpdate, sitioUpdateSchema } from "@/schemas/sitios";
 import { useSitios } from "@/hooks/sitios/useSitios";
+import { addToast } from "@heroui/react";
 
 type Props = {
   sitios: (sitioUpdate & { id_sitio?: number })[];
@@ -29,10 +30,10 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
       id_sitio: foundSitio.id_sitio ?? 0,
       nombre: foundSitio.nombre,
       persona_encargada: foundSitio.persona_encargada,
-      ubicacion:foundSitio.ubicacion,
-      estado:foundSitio.estado,
-      fk_tipo_sitio:foundSitio.fk_tipo_sitio,
-      fk_area:foundSitio.fk_area
+      ubicacion: foundSitio.ubicacion,
+      estado: foundSitio.estado,
+      fk_tipo_sitio: foundSitio.fk_tipo_sitio,
+      fk_area: foundSitio.fk_area,
     },
   });
 
@@ -42,6 +43,13 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
     try {
       await updateSitio(data.id_sitio, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Sitio actualizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar la sede : ", error);
     }
@@ -86,7 +94,7 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-80 bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
         </Button>

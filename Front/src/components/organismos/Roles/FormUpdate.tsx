@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
+import { addToast } from "@heroui/react";
 
 type Props = {
   roles: (RolUpdate & { id_rol?: number })[];
@@ -26,7 +27,7 @@ export const FormUpdate = ({ roles, rolId, id, onclose }: Props) => {
     resolver: zodResolver(RolUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_rol: foundRol.id_rol ?? 0,
+      id_rol: foundRol.id_rol,
       nombre: foundRol.nombre,
       estado: foundRol.estado,
     },
@@ -38,6 +39,13 @@ export const FormUpdate = ({ roles, rolId, id, onclose }: Props) => {
     try {
       await updateRol(data.id_rol, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Rol actualizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar el rol : ", error);
     }
@@ -56,13 +64,13 @@ export const FormUpdate = ({ roles, rolId, id, onclose }: Props) => {
         placeholder="Nombre"
         {...register("nombre")}
         isInvalid={!!errors.nombre}
-        errorMessage= {errors.nombre?.message}
+        errorMessage={errors.nombre?.message}
       />
       <div className="justify-center pl-10">
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-80 bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
         >
           Guardar
         </Button>
