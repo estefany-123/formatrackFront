@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useMovimiento } from "@/hooks/Movimientos/useMovimiento";
@@ -24,14 +24,14 @@ export const MovimientoTable = () => {
   const [selectedMovimiento, setSelectedMovimiento] =
     useState<Movimiento | null>(null);
 
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const handleGoToTipo = () => {
-      navigate('/bodega/tipos')
-    }
-    const handleGoToSitio = () => {
-      navigate('/admin/sitios')
-    }
+  const handleGoToTipo = () => {
+    navigate("/bodega/tipos");
+  };
+  const handleGoToSitio = () => {
+    navigate("/admin/sitios");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -143,7 +143,7 @@ export const MovimientoTable = () => {
       key: movimiento.id_movimiento
         ? movimiento.id_movimiento.toString()
         : crypto.randomUUID(),
-        id_movimiento: movimiento.id_movimiento || 0
+      id_movimiento: movimiento.id_movimiento || 0,
     }));
 
   return (
@@ -164,7 +164,7 @@ export const MovimientoTable = () => {
                   className="text-white bg-blue-700"
                   onPress={handleGoToSitio}
                 >
-                  Gestionar Sitios 
+                  Gestionar Sitios
                 </Button>
               </div>
             </div>
@@ -181,15 +181,15 @@ export const MovimientoTable = () => {
           addData={handleAddMovimiento}
           onClose={handleClose}
         />
-      <div className="justify-center pt-2">
-        <Button
-          type="submit"
-          form="movimiento-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="movimiento-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
@@ -214,13 +214,7 @@ export const MovimientoTable = () => {
           onEdit={handleEdit}
           showEstado={false}
           extraHeaderContent={
-            <Buton
-              text="Nuevo Movimiento"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nuevo Movimiento" onPress={() => setIsOpen(true)} />
           }
         />
       )}

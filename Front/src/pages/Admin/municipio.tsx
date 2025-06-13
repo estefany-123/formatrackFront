@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import FormMunicipios from "@/components/organismos/Municipio/FormMunicipios";
 import { useState } from "react";
@@ -24,7 +24,7 @@ const MunicipiosTable = () => {
     null
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToCentro = () => {
     navigate("/admin/centros");
@@ -87,7 +87,12 @@ const MunicipiosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Municipios</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToCentro}>Centros </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToCentro}
+                >
+                  Centros{" "}
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -135,13 +140,7 @@ const MunicipiosTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton
-              text="Añadir Municipio"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir Municipio" onPress={() => setIsOpen(true)} />
           }
         />
       )}

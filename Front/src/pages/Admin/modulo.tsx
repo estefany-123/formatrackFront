@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import FormModulos from "@/components/organismos/Modulos/FormModulos";
 import { useState } from "react";
@@ -114,13 +114,7 @@ const ModulosTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton
-            text="Añadir Modulo"
-            onPress={() => setIsOpen(true)}
-            type="button"
-            variant="solid"
-            className="text-white bg-blue-700"
-          />
+            <Buton text="Añadir Modulo" onPress={() => setIsOpen(true)} />
           }
         />
       )}

@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Sedes/FormRegister";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useSede } from "@/hooks/sedes/useSedes";
 import { Button, Card, CardBody } from "@heroui/react";
 import { Sede } from "@/types/sedes";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
+import { FormUpdate } from "@/components/organismos/Sedes/FormUpdate";
 
 const SedeTable = () => {
   const { sede, isLoading, isError, error, addSede, changeState } = useSede();
@@ -21,7 +21,7 @@ const SedeTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedSede, setSelectedSede] = useState<Sede | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToCentro = () => {
     navigate("/admin/centros");
@@ -116,8 +116,18 @@ const SedeTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Sedes</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToArea}>Areas</Button>
-                <Button className="text-white bg-blue-700" onPress={handleGoToCentro}>Gestionar Centros </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToArea}
+                >
+                  Areas
+                </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToCentro}
+                >
+                  Gestionar Centros{" "}
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -134,15 +144,15 @@ const SedeTable = () => {
           addData={handleAddSede}
           onClose={handleClose}
         />
-      <div className="justify-center pt-2">
-        <Button
-          type="submit"
-          form="sede-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="sede-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
@@ -167,13 +177,7 @@ const SedeTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton
-              text="Añadir sede"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir sede" onPress={() => setIsOpen(true)} />
           }
         />
       )}

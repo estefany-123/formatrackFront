@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Programas/FormRegister";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import { Pformacion } from "@/types/programaFormacion";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
+import { FormUpdate } from "@/components/organismos/Programas/FormUpdate";
 
 const ProgramasTable = () => {
   const { programas, isLoading, isError, error, addPrograma, changeState } =
@@ -173,13 +173,7 @@ const ProgramasTable = () => {
           onEdit={handleEdit}
           onDelete={(programa) => handleState(programa.id_programa)}
           extraHeaderContent={
-            <Buton
-              text="Añadir Programa"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir Programa" onPress={() => setIsOpen(true)} />
           }
         />
       )}

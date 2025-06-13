@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Solicitudes/FormUpdate";
@@ -25,11 +25,11 @@ export const SolicitudTable = () => {
     null
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToSitio = () => {
-    navigate('/admin/sitios')
-  }
+    navigate("/admin/sitios");
+  };
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedSolicitud(null);
@@ -60,10 +60,10 @@ export const SolicitudTable = () => {
         <span>
           {solicitud.created_at
             ? new Date(solicitud.created_at).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
             : "N/A"}
         </span>
       ),
@@ -75,10 +75,10 @@ export const SolicitudTable = () => {
         <span>
           {solicitud.updated_at
             ? new Date(solicitud.updated_at).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
             : "N/A"}
         </span>
       ),
@@ -136,11 +136,11 @@ export const SolicitudTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Solicitudes</h1>
               <div className="flex gap-2">
-              <Button
+                <Button
                   className="text-white bg-blue-700"
                   onPress={handleGoToSitio}
                 >
-                  Gestionar Sitios 
+                  Gestionar Sitios
                 </Button>
               </div>
             </div>
@@ -189,13 +189,7 @@ export const SolicitudTable = () => {
           showActions={true}
           showEstado={false}
           extraHeaderContent={
-            <Buton
-              text="Nuevo solicitud"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nuevo solicitud" onPress={() => setIsOpen(true)} />
           }
         />
       )}

@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import FormTipos from "@/components/organismos/TiposSitio/FormTipos";
 import { useState } from "react";
@@ -23,11 +23,11 @@ const TipoSitioTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUser, setSelectedUser] = useState<TipoSitio | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToSitio = () => {
-    navigate('/admin/sitios')
-  }
+    navigate("/admin/sitios");
+  };
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedUser(null);
@@ -139,9 +139,6 @@ const TipoSitioTable = () => {
             <Buton
               text="Añadir Tipo de sitio"
               onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
             />
           }
         />

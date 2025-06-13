@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useRol } from "@/hooks/Roles/useRol";
@@ -8,7 +8,7 @@ import Formulario from "@/components/organismos/Roles/FormRegister";
 import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
 import { Button } from "@heroui/button";
-import {Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
 export const RolTable = () => {
@@ -47,7 +47,7 @@ export const RolTable = () => {
 
   const handleEdit = (rol: Rol) => {
     if (!rol || !rol.id_rol) {
-      return; 
+      return;
     }
     setSelectedRol(rol);
     setIsOpenUpdate(true);
@@ -168,13 +168,7 @@ export const RolTable = () => {
           onEdit={handleEdit}
           onDelete={(rol) => handleState(rol.id_rol)}
           extraHeaderContent={
-            <Buton
-              text="Nuevo rol"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nuevo rol" onPress={() => setIsOpen(true)} />
           }
         />
       )}
