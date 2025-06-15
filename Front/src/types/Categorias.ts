@@ -3,3 +3,8 @@ export type Categoria = {
     nombre : string,
     estado : boolean
 }
+
+export type UpCategoria = {
+    id_categoria : number,
+    nombre : string
+}

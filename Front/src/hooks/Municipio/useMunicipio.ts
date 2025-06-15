@@ -1,31 +1,27 @@
-import { axiosAPI } from '@/axios/axiosAPI';
-import { Municipio } from '@/schemas/Municipio'
+import { Municipio,UpdMunicipio } from '@/types/Municipio'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getMunicipio } from '@/axios/Municipio/getMunicipio';
+import { postMunicipio } from '@/axios/Municipio/postMunicipio';
+import { UpMunicipio } from '@/axios/Municipio/putMunicipio';
+import { StateMunicipio } from '@/axios/Municipio/putStateMunicipio';
 
 export function useMunicipio() {
 
     const queryClient = useQueryClient();
 
-    const url = 'municipios';
-
     const { data, isLoading, isError, error } = useQuery<Municipio[]>({
         queryKey: ["municipio"],
-        queryFn: async () => {
-            const res = await axiosAPI.get(url);
-            return res.data;
-        }
+        queryFn: getMunicipio,
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10
     });
 
     const addMunicipioMutation = useMutation({
-        mutationFn: async(newMunicipio: Municipio) => {
-            await axiosAPI.post<Municipio>(url, newMunicipio)
-            return newMunicipio
-        },
-        onSuccess: (municipio) => {
-            console.log(municipio);
-            queryClient.setQueryData<Municipio[]>(["municipio"], (oldData) =>
-                oldData ? [...oldData,municipio] : [municipio]
-            );
+        mutationFn: postMunicipio,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["municipio"],
+            });
         },
         onError: (error) => {
             console.log("Error al cargar el municipio", error);
@@ -37,20 +33,12 @@ export function useMunicipio() {
     }
 
     const updateMunicipioMutation = useMutation({
-        mutationFn: async({ id, update } : { id: number; update: Partial<Municipio> }) => {
-            await axiosAPI.put<Municipio>(`${url}/${id}`, update);
-            return {id, update}
-        },
-        onSuccess: ({ id, update }) => {
-            console.log("dato 1: ",id," dato 2: ",update);
-            queryClient.setQueryData<Municipio[]>(["municipio"], (oldData) =>
-                oldData
-                    ? oldData.map((municipio) =>
-                        municipio.id_municipio === id ? { ...municipio, ...update } : municipio
-                    )
-                    : []
-            );
-        },
+        mutationFn: ({id, data}:{id:number, data:UpdMunicipio}) =>UpMunicipio(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["municipio"],
+            });
+          },
 
         onError: (error) => {
             console.error("Error al actualizar:", error);
@@ -58,22 +46,13 @@ export function useMunicipio() {
     });
 
     const changeStateMutation = useMutation({
-        mutationFn: async (id_municipio: number) => {
-            await axiosAPI.put<Municipio>(`municipios/estado/${id_municipio}`);
-            return id_municipio
-        },
+        mutationFn: StateMunicipio,
 
-        onSuccess: (id_municipio: number) => {
-            queryClient.setQueryData<Municipio[]>(["municipio"], (oldData) =>
-                oldData
-                    ? oldData.map((municipio: Municipio) =>
-                        municipio.id_municipio == id_municipio
-                            ? { ...municipio, estado: !municipio.estado }
-                            : municipio
-                    )
-                    : []
-            );
-        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["municipio"],
+            });
+          },
 
         onError: (error) => {
             console.error("Error al actualizar estado:", error);
@@ -84,8 +63,8 @@ export function useMunicipio() {
         return addMunicipioMutation.mutateAsync(municipio);
     };
 
-    const updateMunicipio = async (id: number, update: Partial<Municipio>) => {
-        return updateMunicipioMutation.mutateAsync({ id, update });
+    const updateMunicipio = async (id: number, data: UpdMunicipio) => {
+        return updateMunicipioMutation.mutateAsync({ id, data });
     };
 
     const changeState = async (id_municipio: number) => {

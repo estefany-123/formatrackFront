@@ -1,78 +1,58 @@
-import { axiosAPI } from '@/axios/axiosAPI';
-import { Modulo } from '@/schemas/Modulos'
+import { Modulo, UpModulo } from '@/types/Modulo'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getModulo } from '@/axios/Modulos/getModulos';
+import { postModulo } from '@/axios/Modulos/postModulo';
+import { putModulo } from '@/axios/Modulos/putModulo';
+import { StateModulo } from '@/axios/Modulos/putStateModulo';
 
 export function useModulo() {
 
     const queryClient = useQueryClient();
 
-    const url = 'modulos';
-
     const { data, isLoading, isError, error } = useQuery<Modulo[]>({
         queryKey: ["modulos"],
-        queryFn: async () => {
-            const res = await axiosAPI.get(url);
-            return res.data;
-        }
+        queryFn: getModulo,
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10
     });
 
     const addModuloMutation = useMutation({
-        mutationFn: async(newModulo: Modulo) => {
-            await axiosAPI.post<Modulo>(url, newModulo)
-            return newModulo
-        },
-        onSuccess: (modulo) => {
-            console.log(modulo);
-            queryClient.setQueryData<Modulo[]>(["modulos"], (oldData) =>
-                oldData ? [...oldData,modulo] : [modulo]
-            );
+        mutationFn: postModulo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["modulos"],
+            });
         },
         onError: (error) => {
             console.log("Error al cargar el modulo", error);
         }
     });
 
-    const getModuloById = (id: number, modulos : Modulo[] | undefined = data ): Modulo | null => {
+    const getModuloById = (id: number, modulos: Modulo[] | undefined = data): Modulo | null => {
         return modulos?.find((modulo) => modulo.id_modulo === id) || null;
     }
 
+
     const updateModuloMutation = useMutation({
-        mutationFn: async({ id, update } : { id: number; update: Partial<Modulo> }) => {
-            await axiosAPI.put<Modulo>(`${url}/${id}`, update);
-            return {id, update}
-        },
-        onSuccess: ({ id, update }) => {
-            console.log("dato 1: ",id," dato 2: ",update);
-            queryClient.setQueryData<Modulo[]>(["modulos"], (oldData) =>
-                oldData
-                    ? oldData.map((modulo) =>
-                        modulo.id_modulo === id ? { ...modulo, ...update } : modulo
-                    )
-                    : []
-            );
+        mutationFn: ({ id, data }: { id: number, data: UpModulo }) => putModulo(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["modulos"],
+            });
         },
 
         onError: (error) => {
             console.error("Error al actualizar:", error);
-        }
+        },
     });
 
-    const changeStateMutation = useMutation({
-        mutationFn: async (id_modulo: number) => {
-            await axiosAPI.put<Modulo>(`modulos/estado/${id_modulo}`);
-            return id_modulo
-        },
 
-        onSuccess: (id_modulo: number) => {
-            queryClient.setQueryData<Modulo[]>(["modulos"], (oldData) =>
-                oldData
-                    ? oldData.map((modulo: Modulo) =>
-                        modulo.id_modulo == id_modulo
-                            ? { ...modulo, estado: !modulo.estado }
-                            : modulo
-                    )
-                    : []
-            );
+    const changeStateMutation = useMutation({
+        mutationFn: StateModulo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["modulos"],
+            });
         },
 
         onError: (error) => {
@@ -84,8 +64,8 @@ export function useModulo() {
         return addModuloMutation.mutateAsync(modulo);
     };
 
-    const updateModulo = async (id: number, update: Partial<Modulo>) => {
-        return updateModuloMutation.mutateAsync({ id, update });
+    const updateModulo = async (id: number, data: UpModulo) => {
+        return updateModuloMutation.mutateAsync({ id, data });
     };
 
     const changeState = async (id_modulo: number) => {
