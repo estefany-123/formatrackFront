@@ -1,91 +1,75 @@
-import { axiosAPI } from '@/axios/axiosAPI';
-import { Centro } from '@/schemas/Centro'
+import { Centro, PutCentro } from '@/types/Centro'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getCentro } from '@/axios/Centros/getCentros';
+import { postCentros } from '@/axios/Centros/postCentro';
+import { updateCentro } from '@/axios/Centros/putCentro';
+import { StateCentro } from '@/axios/Centros/putStateCentro';
 
 export function useCentro() {
 
     const queryClient = useQueryClient();
 
-    const url = 'centros';
 
     const { data, isLoading, isError, error } = useQuery<Centro[]>({
         queryKey: ["centros"],
-        queryFn: async () => {
-            const res = await axiosAPI.get(url);
-            return res.data;
-        }
+        queryFn: getCentro,
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10
     });
 
     const addCentroMutation = useMutation({
-        mutationFn: async(newCentro: Centro) => {
-            await axiosAPI.post<Centro>(url, newCentro)
-            return newCentro
+        mutationFn: postCentros,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["centros"],
+            });
         },
-        onSuccess: (centros) => {
-            
-            queryClient.setQueryData<Centro[]>(["centros"], (oldData) =>
-                oldData ? [...oldData,centros] : [centros]
-            );
-            
-        },
+
         onError: (error) => {
             console.log("Error al cargar el centro", error);
-        }
+        },
     });
 
-    const getCentroById = (id: number, centro : Centro[] | undefined = data ): Centro | null => {
+
+    const getCentroById = (id: number, centro: Centro[] | undefined = data): Centro | null => {
         return centro?.find((centro) => centro.id_centro === id) || null;
     }
 
     const updateCentroMutation = useMutation({
-        mutationFn: async({ id, update } : { id: number; update: Partial<Centro> }) => {
-            await axiosAPI.put<Centro>(`${url}/${id}`, update);
-            return {id, update}
-        },
-        onSuccess: ({ id, update }) => {
-            queryClient.setQueryData<Centro[]>(["centros"], (oldData) =>
-                oldData
-                    ? oldData.map((centro) =>
-                        centro.id_centro === id ? { ...centro, ...update } : centro
-                    )
-                    : []
-            );
-        },
-
-        onError: (error) => {
-            console.error("Error al actualizar:", error);
-        }
+       mutationFn:({id, data}:{id:number, data:PutCentro}) =>updateCentro(id, data),
+              onSuccess: () => {
+                queryClient.invalidateQueries({
+                  queryKey: ["centros"],
+                });
+              },
+          
+              onError: (error) => {
+                console.error("Error al actualizar:", error);
+              },
     });
 
-    const changeStateMutation = useMutation({
-        mutationFn: async (id_centro: number) => {
-            await axiosAPI.put<Centro>(`centros/estado/${id_centro}`);
-            return id_centro
-        },
 
-        onSuccess: (id_centro: number) => {
-            queryClient.setQueryData<Centro[]>(["centros"], (oldData) =>
-                oldData
-                    ? oldData.map((centro: Centro) =>
-                        centro.id_centro == id_centro
-                            ? { ...centro, estado: !centro.estado }
-                            : centro
-                    )
-                    : []
-            );
-        },
+     const changeStateMutation = useMutation({
+            mutationFn:StateCentro,
+            onSuccess: () => {
+              queryClient.invalidateQueries({
+                queryKey: ["centros"],
+              });
+            },
+        
+            onError: (error) => {
+              console.error("Error al actualizar estado:", error);
+            },
+          });
 
-        onError: (error) => {
-            console.error("Error al actualizar estado:", error);
-        },
-    });
+
 
     const addCentro = async (centro: Centro) => {
         return addCentroMutation.mutateAsync(centro);
     };
 
-    const updateCentro = async (id: number, update: Partial<Centro>) => {
-        return updateCentroMutation.mutateAsync({ id, update });
+    const UpCentro = async (id: number, data:PutCentro ) => {
+        return updateCentroMutation.mutateAsync({ id, data });
     };
 
     const changeState = async (id_centro: number) => {
@@ -100,6 +84,6 @@ export function useCentro() {
         addCentro,
         changeState,
         getCentroById,
-        updateCentro
+        UpCentro
     }
 }

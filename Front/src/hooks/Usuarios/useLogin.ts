@@ -18,7 +18,8 @@ export default function useLogin(){
 
     async function login(data : Credenciales){
         try{
-            const response : {data : {token : string}} = await axiosAPI.post('/usuarios/login',data);
+            
+            const response : {data : {token : string}} = await axiosAPI.post('/auth/login',data);
             const token = response.data.token;
             cookies.set("token",token);
             //Auth

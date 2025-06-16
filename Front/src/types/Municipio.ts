@@ -4,3 +4,8 @@ export type Municipio = {
     departamento : string,
     estado : boolean
 }
+
+export type UpdMunicipio = {
+    id_municipio : number,
+    nombre : string
+}
