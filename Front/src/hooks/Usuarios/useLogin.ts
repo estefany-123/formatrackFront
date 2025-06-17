@@ -19,8 +19,8 @@ export default function useLogin(){
     async function login(data : Credenciales){
         try{
             
-            const response : {data : {token : string}} = await axiosAPI.post('/auth/login',data);
-            const token = response.data.token;
+            const response : {data : {access_token : string}} = await axiosAPI.post('/auth/login',data);
+            const token = response.data.access_token;
             cookies.set("token",token);
             //Auth
             const {nombre,apellido} : {nombre : string, apellido : string}= jwtDecode(token);
@@ -39,6 +39,16 @@ export default function useLogin(){
         }
     }
 
-    return{login,isError,error};
+    async function logout(){
+        try{
+            cookies.remove("token");
+            navigate('/login');
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    return{login,isError,error,logout};
 }
 

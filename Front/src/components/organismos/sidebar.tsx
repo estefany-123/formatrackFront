@@ -23,21 +23,32 @@ const menuItems = [
     name: "Admin",
     icon: UserIcon,
     href: "#",
-    subMenu: [{ name: "Usuarios", icon: UserIcon, href: "/admin/usuarios" },
+    subMenu: [
+      { name: "Usuarios", icon: UserIcon, href: "/admin/usuarios" },
       { name: "Fichas", icon: TagIcon, href: "/admin/fichas" },
       { name: "Areas", icon: GlobeAmericasIcon, href: "/admin/areas" },
-      { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" }
-
+      { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" },
     ],
   },
 
-  { name: "Bodega", icon: ArchiveBoxIcon, href: "#",
+  {
+    name: "Bodega",
+    icon: ArchiveBoxIcon,
+    href: "#",
     subMenu: [
-      {name:"Elementos", icon:CubeIcon, href:"/bodega/elementos" },
-      {name:"Movimientos", icon:ArrowsRightLeftIcon, href:"/bodega/movimientos" },
-      {name:"Inventario", icon:ClipboardDocumentListIcon, href:"bodega/inventario/areas" },
+      { name: "Elementos", icon: CubeIcon, href: "/bodega/elementos" },
+      {
+        name: "Movimientos",
+        icon: ArrowsRightLeftIcon,
+        href: "/bodega/movimientos",
+      },
+      {
+        name: "Inventario",
+        icon: ClipboardDocumentListIcon,
+        href: "bodega/inventario/areas",
+      },
     ],
-   },
+  },
 
   { name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes" },
 

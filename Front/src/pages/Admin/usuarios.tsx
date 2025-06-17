@@ -32,9 +32,9 @@ const UsersTable = () => {
     setSelectedUser(null);
   };
 
-  const handleState = async (user: User) => {
-    await changeState(user.id_usuario as number);
-  };
+    const handleState = async (user: User) => {
+        await changeState(user.idUsuario as number);
+    }
 
   const handleAddUser = async (user: User) => {
     try {
@@ -69,12 +69,10 @@ const UsersTable = () => {
     return <span>Error: {error?.message}</span>;
   }
 
-  const usersWithKey = users
-    ?.filter((user) => user?.id_usuario !== undefined)
-    .map((user) => ({
-      ...user,
-      key: user.id_usuario ? user.id_usuario.toString() : crypto.randomUUID(),
-      estado: Boolean(user.estado),
+    const usersWithKey = users?.filter(user => user?.idUsuario !== undefined).map((user) => ({
+        ...user,
+        key: user.idUsuario ? user.idUsuario.toString() : crypto.randomUUID(),
+        estado: Boolean(user.estado)
     }));
 
   return (
@@ -115,20 +113,12 @@ const UsersTable = () => {
         </button>
       </Modall>
 
-      <Modall
-        ModalTitle="Editar Usuario"
-        isOpen={IsOpenUpdate}
-        onOpenChange={handleCloseUpdate}
-      >
-        {selectedUser && (
-          <FormUpdate
-            Users={usersWithKey ?? []}
-            userId={selectedUser.id_usuario as number}
-            id="FormUpdate"
-            onclose={handleCloseUpdate}
-          />
-        )}
-      </Modall>
+            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+                {selectedUser && (
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.idUsuario as number} id="FormUpdate" onclose={handleCloseUpdate} />
+                )}
+
+            </Modall>
 
       {usersWithKey && (
         <Globaltable
