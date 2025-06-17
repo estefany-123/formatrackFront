@@ -1,4 +1,35 @@
 import { useState } from "react";
+import {
+  HomeIcon,
+  UserIcon,
+  CubeIcon,
+  EnvelopeIcon,
+  DocumentChartBarIcon,
+  ChartBarIcon,
+  Bars3Icon,
+  ArrowsRightLeftIcon,
+  BuildingOfficeIcon,
+  ClipboardDocumentListIcon,
+  ArchiveBoxIcon,
+  GlobeAmericasIcon,
+  TagIcon,
+} from "@heroicons/react/24/outline";
+import { Link, useLocation } from "react-router-dom";
+
+const menuItems = [
+  { name: "Inicio", icon: HomeIcon, href: "/" },
+
+  {
+    name: "Admin",
+    icon: UserIcon,
+    href: "#",
+    subMenu: [{ name: "Usuarios", icon: UserIcon, href: "/admin/usuarios" },
+      { name: "Fichas", icon: TagIcon, href: "/admin/fichas" },
+      { name: "Areas", icon: GlobeAmericasIcon, href: "/admin/areas" },
+      { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" }
+
+    ],
+  },
 import { HomeIcon, UserIcon, Cog6ToothIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
@@ -9,46 +40,95 @@ export const menuItems = [
 
   { name: "Admin", icon: UserIcon, href: "/admin" },
 
-  { name: "Bodega", icon: CubeIcon, href: "/bodega" },
+  { name: "Bodega", icon: ArchiveBoxIcon, href: "#",
+    subMenu: [
+      {name:"Elementos", icon:CubeIcon, href:"/bodega/elementos" },
+      {name:"Movimientos", icon:ArrowsRightLeftIcon, href:"/bodega/movimientos" },
+      {name:"Inventario", icon:ClipboardDocumentListIcon, href:"bodega/inventario/areas" },
+    ],
+   },
 
-  { name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes"},
+  { name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes" },
 
-  { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes"},
+  { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes" },
 
   { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
-
-  { name: "Verificaciones", icon: ClipboardDocumentCheckIcon, href:"/verificaciones" },
-
-  { name: "Configuración", icon: Cog6ToothIcon, href: "/configuraciones" },
 ];
 
 export default function Sidebar() {
-  const [active, setActive] = useState(menuItems[0].name);
-  const {nombre} = useAuth();
+  const [openItems, setOpenItems] = useState<string[]>([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
   const {logout} = useLogin()
 
+  const toggleItem = (name: string) => {
+    setOpenItems((prev) =>
+      prev.includes(name)
+        ? prev.filter((item) => item !== name)
+        : [...prev, name]
+    );
+  };
+
   return (
-    <aside className="h-screen w-64 bg-gray-900 text-white flex flex-col p-4">
-      <h1 className="text-xl font-bold">Mi App</h1>
-      {nombre && <p className="text-center my-4 flex items-center justify-center gap-2">{nombre} <ArrowRightStartOnRectangleIcon onClick={logout} height={24} className="hover:text-red-500 cursor-pointer transition"/> </p>}
-      <nav className="space-y-2">
+    <aside
+      className={`h-screen ${
+        collapsed ? "w-15" : "w-64"
+      } bg-blue-950 text-white dark:bg-zinc-800 dark:text-white flex flex-col transition-all duration-300`}
+    >
+      <div className="flex items-center justify-between p-4">
+        {!collapsed && (
+          <h1 className="text-xl font-bold flex items-center">
+            <img
+              className="w-12"
+              src="/src/assets/Formatrack.png"
+              alt="Formatrack"
+            />
+            Formatrack
+          </h1>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="bg-blue-950 text-white dark:bg-zinc-800 dark:text-white"
+        >
+          <Bars3Icon className="w-5 h-5" />
+        </button>
+      </div>
+      <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
         {menuItems.map((item) => (
-          <Link
-            key={item.name}
-            to={item.href}
-            onClick={() => setActive(item.name)}
-            className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${active === item.name ? "bg-gray-700 text-white" : "hover:bg-gray-800 text-gray-300"
+          <div key={item.name}>
+            <Link
+              to={item.href}
+              onClick={() => toggleItem(item.name)}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
+                location.pathname === item.href
+                  ? "bg-blue-600 text-white"
+                  : "hover:bg-blue-600 text-black-300"
               }`}
-          >
-            <item.icon className="w-6 h-6" />
-            {item.name}
-          </Link>
+            >
+              <item.icon className="w-6 h-6" />
+              {!collapsed && <span>{item.name}</span>}
+            </Link>
+            {item.subMenu && openItems.includes(item.name) && (
+              <div className="pl-6">
+                {item.subMenu.map((subItem) => (
+                  <Link
+                    key={subItem.name}
+                    to={subItem.href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
+                      location.pathname === subItem.href
+                        ? "bg-blue-600 text-white"
+                        : "hover:bg-blue-600 text-black-300"
+                    }`}
+                  >
+                    <subItem.icon className="w-6 h-6" />
+                    {!collapsed && <span>{subItem.name}</span>}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </nav>
     </aside>
-
   );
 }
-
-
-

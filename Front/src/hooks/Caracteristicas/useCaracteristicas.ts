@@ -54,7 +54,7 @@ export function useCaracteristica() {
 
    
     return {
-        categorias: data,
+        caracteristicas: data,
         isLoading,
         isError,
         error,

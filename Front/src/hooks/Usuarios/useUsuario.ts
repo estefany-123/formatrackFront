@@ -86,9 +86,6 @@ export function useUsuario() {
         return addUserMutation.mutateAsync(usuario);
     };
 
-    const login = async (documento : number, password : string) => {
-        return loginMutation.mutateAsync({documento,password})
-    }
 
     const updateUser = async (id: number, data: putUser) => {
         return updateUserMutation.mutateAsync({ id, data });
@@ -104,7 +101,6 @@ export function useUsuario() {
         isError,
         error,
         addUser,
-        login,
         changeState,
         getUserById,
         updateUser

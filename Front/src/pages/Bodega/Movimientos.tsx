@@ -1,12 +1,15 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useMovimiento } from "@/hooks/Movimientos/useMovimiento";
 import { Movimiento } from "@/types/Movimiento";
 import Formulario from "@/components/organismos/Movimientos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Movimientos/FormUpdate";
+import { Chip } from "@heroui/chip";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, CardBody } from "@heroui/react";
 
 export const MovimientoTable = () => {
   const { movimientos, isLoading, isError, error, addMovimiento } =
@@ -18,30 +21,34 @@ export const MovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedMovimiento, setSelectedMovimiento] = useState<Movimiento | null>(
-    null
-  );
+  const [selectedMovimiento, setSelectedMovimiento] =
+    useState<Movimiento | null>(null);
+
+  const navigate = useNavigate();
+
+  const handleGoToTipo = () => {
+    navigate("/bodega/tipos");
+  };
+  const handleGoToSitio = () => {
+    navigate("/admin/sitios");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedMovimiento(null);
   };
 
-  // const handleState = async (elemento: Movimiento) => {
-  //   await changeState(elemento.id_movimiento);
-  // };
-
-  const handleAddMovimiento = async (elemento: Movimiento) => {
+  const handleAddMovimiento = async (movimiento: Movimiento) => {
     try {
-      await addMovimiento(elemento);
+      await addMovimiento(movimiento);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
     }
   };
 
-  const handleEdit = (elemento: Movimiento) => {
-    setSelectedMovimiento(elemento);
+  const handleEdit = (movimiento: Movimiento) => {
+    setSelectedMovimiento(movimiento);
     setIsOpenUpdate(true);
   };
 
@@ -51,8 +58,74 @@ export const MovimientoTable = () => {
     { key: "cantidad", label: "Cantidad" },
     { key: "hora_ingreso", label: "Ingreso" },
     { key: "hora_salida", label: "Salida" },
-    { key: "created_at", label: "Fecha Creacion" },
-    { key: "updated_at", label: "Fecha Actualizacion" },
+    {
+      key: "tipo_bien",
+      label: "Tipo Movimiento",
+      render: (movimiento: Movimiento) => (
+        <span>
+          {movimiento.devolutivo
+            ? "Devolutivo"
+            : movimiento.no_devolutivo
+              ? "No Devolutivo"
+              : "No especificado"}
+        </span>
+      ),
+    },
+    {
+      key: "created_at",
+      label: "Fecha Creación",
+      render: (movimiento: Movimiento) => (
+        <span>
+          {movimiento.created_at
+            ? new Date(movimiento.created_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "updated_at",
+      label: "Fecha Actualización",
+      render: (movimiento: Movimiento) => (
+        <span>
+          {movimiento.updated_at
+            ? new Date(movimiento.updated_at).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "estado",
+      label: "Estado",
+      render: (item) => {
+        if (item.aceptado)
+          return (
+            <Chip color="success" variant="flat">
+              Aceptado
+            </Chip>
+          );
+        if (item.cancelado)
+          return (
+            <Chip color="danger" variant="flat">
+              Cancelado
+            </Chip>
+          );
+        if (item.en_proceso)
+          return (
+            <Chip color="warning" variant="flat">
+              Pendiente
+            </Chip>
+          );
+        return <Chip color="default">Sin estado</Chip>;
+      },
+    },
   ];
 
   if (isLoading) {
@@ -64,58 +137,70 @@ export const MovimientoTable = () => {
   }
 
   const MovimientoWithKey = movimientos
-    ?.filter((elemento) => elemento?.id_movimiento !== undefined)
-    .map((elemento) => ({
-      ...elemento,
-      key: elemento.id_movimiento
-        ? elemento.id_movimiento.toString()
+    ?.filter((movimiento) => movimiento?.id_movimiento !== undefined)
+    .map((movimiento) => ({
+      ...movimiento,
+      key: movimiento.id_movimiento
+        ? movimiento.id_movimiento.toString()
         : crypto.randomUUID(),
-
+      id_movimiento: movimiento.id_movimiento || 0,
     }));
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Movimiento Registrados
-      </h1>
-
-      <Buton
-        text="Nuevo elemento"
-        onPress={() => setIsOpen(true)}
-        type="button"
-        color="primary"
-        variant="solid"
-        className="mb-8"
-      />
-
+      <div className="flex pb-4 pt-4">
+        <Card className="w-full">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Gestionar Movimientos</h1>
+              <div className="flex gap-2">
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToTipo}
+                >
+                  Gestionar Tipos Movimiento
+                </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToSitio}
+                >
+                  Gestionar Sitios
+                </Button>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
       <Modall
         ModalTitle="Registrar Nuevo Movimiento"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <Formulario
-          id="element-form"
+          id="movimiento-form"
           addData={handleAddMovimiento}
           onClose={handleClose}
         />
-        <button
-          type="submit"
-          form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="movimiento-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Movimiento"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
         {selectedMovimiento && (
           <FormUpdate
             movimientos={MovimientoWithKey ?? []}
-            movimientoId={selectedMovimiento.id_movimiento}
+            movimientoId={selectedMovimiento.id_movimiento as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -126,8 +211,11 @@ export const MovimientoTable = () => {
         <Globaltable
           data={MovimientoWithKey}
           columns={columns}
-        onEdit={handleEdit}
-        onDelete={()=> {}}
+          onEdit={handleEdit}
+          showEstado={false}
+          extraHeaderContent={
+            <Buton text="Nuevo Movimiento" onPress={() => setIsOpen(true)} />
+          }
         />
       )}
     </div>

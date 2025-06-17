@@ -1,108 +1,225 @@
-import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
 import { Form } from "@heroui/form";
-import Inpu from "@/components/molecules/input";
-// import { Select, SelectItem } from "@heroui/react";
-import { Solicitud } from "@/types/Solicitud";
+import { Input } from "@heroui/input";
+import { addToast, Select, SelectItem } from "@heroui/react";
+import { useUsuario } from "@/hooks/Usuarios/useUsuario";
+import { useSitios } from "@/hooks/sitios/useSitios";
+import { useInventario } from "@/hooks/Inventarios/useInventario";
+import { useElemento } from "@/hooks/Elementos/useElemento";
+import React from "react";
+import { SolicitudCreate, SolicitudCreateSchema } from "@/schemas/Solicitud";
 
 type FormularioProps = {
-  addData: (solicitud: Solicitud) => Promise<void>;
+  addData: (solicitud: SolicitudCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
 
 export default function Formulario({ addData, onClose, id }: FormularioProps) {
-  const [formData, setFormData] = React.useState<Solicitud>({
-    id_solicitud: 0,
-    descripcion: "",
-    cantidad: 0,
-    aceptada: true,
-    pendiente: false,
-    rechazada: false,
-    created_at:'',
-    updated_at:'',
-    fk_usuario: 0,
-    fk_inventario: 0,
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SolicitudCreate>({
+    resolver: zodResolver(SolicitudCreateSchema),
+    mode: "onChange",
+    defaultValues:{
+      estado: true,
+      aceptada: false,
+      pendiente: true,
+      rechazada: false,
+    }
   });
 
-  const onSubmit = async (e: React.FormEvent) => {
-    //preguntar si esta bien no usar el e: React.FormEvent
-    //y aqui el preventdefault
-    e.preventDefault();
+  const { users, isLoading: loadingUsers, isError: errorUsers } = useUsuario();
+  const {
+    sitios,
+    isLoading: loadingSitios,
+    isError: errorSitios,
+  } = useSitios();
+  const {
+    inventarios,
+    isLoading: loadingInventarios,
+    isError: errorInventarios,
+  } = useInventario();
+  const {
+    elementos,
+    isLoading: loadingElementos,
+    isError: errorElementos,
+  } = useElemento();
+
+  const [sitioSeleccionado, setSitioSeleccionado] = React.useState<
+    number | null
+  >(null);
+
+  const onSubmit = async (data: SolicitudCreate) => {
     try {
-      console.log("Enviando formulario con datos:", formData);
-      await addData(formData);
-      console.log("Solicitud guardado correctamente");
-      setFormData({
-        id_solicitud: 0,
-        descripcion: "",
-        cantidad: 0,
-        aceptada: true,
-        pendiente: false,
-        rechazada: false,
-        created_at:'',
-        updated_at:'',
-        fk_usuario: 0,
-        fk_inventario: 0,
-      });
+      await addData(data);
+      console.log("Solicitud guardada correctamente");
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Solicitud agregada correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al cargar la solicitud", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
-    <Form id={id} onSubmit={onSubmit} className="w-full space-y-4">
-      <Inpu
-        label="Descripcion"
-        placeholder="Descripcion"
+    <Form
+      id={id}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
+      <Input
+        label="Descripción"
         type="text"
-        name="descripcion"
-        value={formData.descripcion}
-        onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+        placeholder="Descripción"
+        {...register("descripcion")}
+        isInvalid={!!errors.descripcion}
+        errorMessage={errors.descripcion?.message}
       />
-      <Inpu
+
+      <Input
         label="Cantidad"
+        type="text"
         placeholder="Cantidad"
-        type="number"
-        name="cantidad"
-        onChange={(e) =>
-          setFormData({ ...formData, cantidad: Number(e.target.value) })
-        }
+        {...register("cantidad", { valueAsNumber: true })}
+        isInvalid={!!errors.cantidad}
+        errorMessage={errors.cantidad?.message}
       />
 
-      {/* <Select
-        aria-labelledby="estado"
-        labelPlacement="outside"
-        name="estado"
-        placeholder="Estado"
-        onChange={(e) =>
-          setFormData({ ...formData, estado: e.target.value === "true" })
-        } // Convierte a booleano
-      >
-        <SelectItem key="true">Activo</SelectItem>
-        <SelectItem key="false">Inactivo</SelectItem>
-      </Select> */}
+      {!loadingUsers && !errorUsers && users && (
+        <Controller
+          control={control}
+          name="fk_usuario"
+          render={({ field }) => (
+            <div className="w-full">
+              <Select
+                {...field}
+                label="Usuario"
+                placeholder="Selecciona un usuario"
+                aria-label="Seleccionar usuario"
+                className="w-full"
+                onChange={(e) => field.onChange(Number(e.target.value))}
+                isInvalid={!!errors.fk_usuario}
+                errorMessage={errors.fk_usuario?.message}
+              >
+                {users.length ? (
+                  users.map((usuario) => (
+                    <SelectItem
+                      key={usuario.id_usuario}
+                      textValue={usuario.nombre}
+                    >
+                      {usuario.nombre}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem isDisabled>
+                    No hay usuarios disponibles
+                  </SelectItem>
+                )}
+              </Select>
+            </div>
+          )}
+        />
+      )}
 
-      <Inpu
-        label="Usuario"
-        placeholder="Usuario"
-        type="number"
-        name="fk_usuario"
-        value={formData.fk_usuario.toString()}
-        onChange={(e) =>
-          setFormData({ ...formData, fk_usuario: Number(e.target.value) })
-        }
-      />
-      <Inpu
-        label="Inventario"
-        placeholder="Inventario"
-        type="number"
-        name="fk_inventario"
-        value={formData.fk_inventario.toString()}
-        onChange={(e) =>
-          setFormData({ ...formData, fk_inventario: Number(e.target.value) })
-        }
-      />
+      {!loadingSitios && !errorSitios && sitios && (
+        <Controller
+          control={control}
+          name="fk_sitio"
+          render={({ field }) => (
+            <div className="w-full">
+              <Select
+                {...field}
+                label="Sitio"
+                placeholder="Selecciona un sitio"
+                aria-label="Seleccionar sitio"
+                className="w-full"
+                onChange={(e) => {
+                  const sitioId = Number(e.target.value);
+                  field.onChange(sitioId);
+                  setSitioSeleccionado(sitioId);
+                }}
+                isInvalid={!!errors.fk_sitio}
+                errorMessage={errors.fk_sitio?.message}
+              >
+                {sitios.length ? (
+                  sitios.map((sitio) => (
+                    <SelectItem key={sitio.id_sitio} textValue={sitio.nombre}>
+                      {sitio.nombre}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem isDisabled>No hay sitios disponibles</SelectItem>
+                )}
+              </Select>
+            </div>
+          )}
+        />
+      )}
+
+      {!loadingInventarios &&
+        !errorInventarios &&
+        inventarios &&
+        !loadingElementos &&
+        !errorElementos &&
+        elementos &&
+        sitioSeleccionado && (
+          <Controller
+            control={control}
+            name="fk_inventario"
+            render={({ field }) => (
+              <div className="w-full">
+                <Select
+                  {...field}
+                  label="Elemento del Inventario"
+                  placeholder="Selecciona un elemento del inventario"
+                  aria-label="Seleccionar elemento del inventario"
+                  className="w-full"
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  isInvalid={!!errors.fk_inventario}
+                  errorMessage={errors.fk_inventario?.message}
+                >
+                  {inventarios.filter(
+                    (inv) => inv.fk_sitio === sitioSeleccionado
+                  ).length ? (
+                    inventarios
+                      .filter((inv) => inv.fk_sitio === sitioSeleccionado)
+                      .map((inventario) => {
+                        const elemento = elementos.find(
+                          (e) => e.id_elemento === inventario.fk_elemento
+                        );
+                        return (
+                          <SelectItem
+                            key={inventario.id_inventario}
+                            textValue={
+                              elemento?.nombre || "Elemento no disponible"
+                            }
+                          >
+                            {elemento
+                              ? elemento.nombre
+                              : "Elemento no disponible"}
+                          </SelectItem>
+                        );
+                      })
+                  ) : (
+                    <SelectItem isDisabled>
+                      No hay elementos disponibles
+                    </SelectItem>
+                  )}
+                </Select>
+              </div>
+            )}
+          />
+        )}
     </Form>
   );
 }

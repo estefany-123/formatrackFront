@@ -1,81 +1,126 @@
-import React, { useState, useEffect } from "react";
-import { Form } from "@heroui/form"
-import Inpu from "@/components/molecules/input";
-import { Elemento } from "@/types/Elemento";
+import { Input } from "@heroui/input";
+import { useForm } from "react-hook-form";
+import { Form } from "@heroui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@heroui/button";
+import { addToast } from "@heroui/react";
+import { ElementoUpdateSchema, ElementoUpdate } from "@/schemas/Elemento";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 
-
-
 type Props = {
-    elementos: Elemento[] ;
-    elementoId: number;
-    id: string
-    onclose: () => void;
+  elementos: ElementoUpdate[];
+  elementoId: number;
+  id: string;
+  onclose: () => void;
+};
 
-}
+export const FormUpdate = ({
+  elementos,
+  elementoId,
+  id,
+  onclose,
+}: Props) => {
+  const { updateElemento, getElementoById } = useElemento();
 
-export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
-    const [formData, setFormData] = useState<Partial<Elemento>>({
-        id_elemento: 0,
-        nombre: "",
-        valor: 0,
-        perecedero: true,
-        no_perecedero: false,
-        estado: true,
-        imagen_elemento: "",
-        fk_unidad_medida: 0,
-        fk_categoria: 0,
-        fk_caracteristica: 0,
-    });
+  const foundElemento = getElementoById(elementoId, elementos) as ElementoUpdate;
 
-    const {updateElemento, getElementoById} = useElemento()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ElementoUpdate>({
+    resolver: zodResolver(ElementoUpdateSchema),
+    mode: "onChange",
+    defaultValues: foundElemento,
+  });
 
-    useEffect(() => { // se ejecuta cuando algo se cambie en un usuario, obtiene el id y modifica el FormData
-        const foundElemento = getElementoById(elementoId);
+  const imagen = watch("imagen_elemento");
 
-        if (foundElemento) {
-            setFormData(foundElemento);
-        }
-
-    }, [elementos, elementoId]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { //se ejecuta cuando el usuario cambia algo en un campo
-        const { name, value, type, checked } = e.target;
-
-        setFormData((prev : Partial<Elemento>) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
-
-
-    const handleSubmit = async (e : React.FormEvent) => {
-
-        e.preventDefault();
-        if (!formData.id_elemento) {
-            return <p className="text-center text-gray-500">Usuario no encontrado</p>;
-        }
-        
-        try {
-            await updateElemento(formData.id_elemento, formData);
-            onclose();
-        } catch (error) {
-            console.log("Error al actualizar el Elemento", error);
-        }
+  const onSubmit = async (data: ElementoUpdate) => {
+    if (!data.id_elemento) return;
+    try {
+      await updateElemento(data.id_elemento, data);
+      onclose();
+      addToast({
+        title: "Elemento actualizado",
+        description: "Los datos del elemento fueron actualizados correctamente.",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
+    } catch (error) {
+      console.error("Error al actualizar el Elemento", error);
     }
+  };
+  console.log("Errores", errors)
+  return (
+    <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <Input
+        label="Nombre"
+        placeholder="Nombre del elemento"
+        {...register("nombre")}
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
+      />
 
+      <Input
+        label="Descripción"
+        placeholder="Descripción del elemento"
+        {...register("descripcion")}
+        isInvalid={!!errors.descripcion}
+        errorMessage={errors.descripcion?.message}
+      />
 
+      <Input
+        label="Valor"
+        placeholder="Valor del elemento"
+        type="number"
+        {...register("valor")}
+        isInvalid={!!errors.valor}
+        errorMessage={errors.valor?.message}
+      />
 
+      {imagen && typeof imagen === "string" && (
+        <div className="flex justify-center">
+          <img
+            src={`http://localhost:3000/img/${imagen}`}
+            alt="Imagen actual"
+            className="w-40 h-40 object-cover rounded-lg mb-4"
+          />
+        </div>
+      )}
 
-    return (
-        <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit}>
-            <Inpu label="Nombre" placeholder="Nombre" type="text" name="nombre" value={formData.nombre ?? ''} onChange={handleChange} />
-            <Inpu label="Valor" placeholder="Valor" type="number" name="valor" value={String(formData.valor) ?? ''} onChange={handleChange} />
+      {imagen instanceof File && (
+        <div className="flex justify-center">
+          <img
+            src={URL.createObjectURL(imagen)}
+            alt="Nueva imagen"
+            className="w-40 h-40 object-cover rounded-lg mb-4"
+          />
+        </div>
+      )}
 
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-                Guardar Cambios
-            </button>
-        </Form>
-    )
+      <Input
+        label="Imagen"
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) setValue("imagen_elemento", file);
+        }}
+      />
 
-}
+      <div className="justify-center pl-10">
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
+        >
+          Guardar
+        </Button>
+      </div>
+    </Form>
+  );
+};
