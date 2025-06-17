@@ -5,15 +5,10 @@ const ProtectedRoute = () => {
   const { authenticated } = useAuth();
 
   if (authenticated === undefined) {
-    return <div>Cargando...</div>;
-  }
-
-  if (!authenticated) {
     return <Navigate to="/login" replace />;
-  }else{
-    return <Outlet />;
   }
 
+    return <Outlet />;
 
 };
 

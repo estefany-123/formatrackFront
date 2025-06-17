@@ -47,18 +47,6 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
-  //Logica para obtener modulos
-
-  const [modulos,setModulos] = useState<modulo[]>([])
-
-  useEffect(()=>{
-    const cookies = new Cookies();
-    const token = cookies.get("token");
-    const decodedToken : {modulos : modulo[]} = jwtDecode(token);
-    setModulos(decodedToken.modulos);
-  },[])
-
-
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
@@ -96,10 +84,7 @@ export default function Sidebar() {
         </button>
       </div>
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-        {modulos && modulos.map((modulo : {nombre : string}) => {
-          const item = menuItems[modulo.nombre];
-          
-          return(
+        {menuItems.map((item) => (
           <div key={item.name}>
             <Link
               to={item.href}
@@ -132,7 +117,7 @@ export default function Sidebar() {
               </div>
             )}
           </div>
-        )})}
+        ))}
       </nav>
     </aside>
   );
