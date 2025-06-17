@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { HomeIcon, UserIcon, Cog6ToothIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, UserIcon, Cog6ToothIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
+import useLogin from "@/hooks/Usuarios/useLogin";
 
 export const menuItems = [
   { name: "Inicio", icon: HomeIcon, href: "Home" },
@@ -24,11 +25,12 @@ export const menuItems = [
 export default function Sidebar() {
   const [active, setActive] = useState(menuItems[0].name);
   const {nombre} = useAuth();
+  const {logout} = useLogin()
 
   return (
     <aside className="h-screen w-64 bg-gray-900 text-white flex flex-col p-4">
       <h1 className="text-xl font-bold">Mi App</h1>
-      {nombre && <p className="text-center my-4">{nombre}</p>}
+      {nombre && <p className="text-center my-4 flex items-center justify-center gap-2">{nombre} <ArrowRightStartOnRectangleIcon onClick={logout} height={24} className="hover:text-red-500 cursor-pointer transition"/> </p>}
       <nav className="space-y-2">
         {menuItems.map((item) => (
           <Link

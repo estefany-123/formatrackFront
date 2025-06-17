@@ -1,6 +1,6 @@
 
 export type User = {
-    id_usuario: number;
+    idUsuario: number;
     documento: number;
     nombre: string;
     apellido: string;
