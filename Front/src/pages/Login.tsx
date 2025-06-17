@@ -16,7 +16,7 @@ function Login({ }: Props) {
   return (
     <div className="flex ">
       <div className='w-1/2  bg-blue-400 h-9/10 h-dvh'>
-        <img src="src\assets\login.png" alt="Formatrack" className="w-4/5 h-4/5 m-10 " />
+        <img src="src\assets\Formatrack.png" alt="Formatrack" className="w-4/5 h-4/5 m-10 " />
       </div>
 
       <div className="w-1/2 flex items-center">

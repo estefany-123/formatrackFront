@@ -5,12 +5,9 @@ import {StateUsuario} from '@/axios/Usuarios/putStateUsuario';
 import { updateUsuario } from '@/axios/Usuarios/putUsuario';
 import { User,putUser } from '@/types/Usuario'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-<<<<<<< HEAD
-=======
 import { LoginCrede, LoginRes } from '@/types/Usuario';
 import Cookies from "js-cookie";
 import { axiosAPI } from '@/axios/axiosAPI';
->>>>>>> 02334b39a1e9d88c5a6604141580dd00baac155a
 
 export function useUsuario() {
 
@@ -39,8 +36,6 @@ export function useUsuario() {
         },
       });
 
-<<<<<<< HEAD
-=======
     const loginMutation = useMutation({
         mutationFn : async (credenciales : LoginCrede ) : Promise<LoginRes> => {
             const response = await axiosAPI.post<LoginRes>(`usuarios/login`,credenciales)
@@ -54,7 +49,6 @@ export function useUsuario() {
             console.log("Error iniciando sesion:",error)
         }
     });
->>>>>>> 02334b39a1e9d88c5a6604141580dd00baac155a
 
 
 
