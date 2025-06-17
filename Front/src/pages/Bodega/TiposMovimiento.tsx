@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
@@ -23,11 +23,11 @@ export const TipoMovimientoTable = () => {
   const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
     useState<TipoMovimiento | null>(null);
 
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const handleGoToElemento = () => {
-      navigate('/bodega/movimientos')
-    }
+  const handleGoToElemento = () => {
+    navigate("/bodega/movimientos");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -166,13 +166,7 @@ export const TipoMovimientoTable = () => {
           onEdit={handleEdit}
           onDelete={(tipo) => handleState(tipo.id_tipo)}
           extraHeaderContent={
-            <Buton
-              text="Nuevo tipo"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nuevo tipo" onPress={() => setIsOpen(true)} />
           }
         />
       )}

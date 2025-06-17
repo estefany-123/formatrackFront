@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/fichas/FormRegister";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
+import { FormUpdateFicha } from "@/components/organismos/fichas/FormUpdate";
 
 const FichasTable = () => {
   const { fichas, isLoading, isError, error, addFicha, changeState } =
@@ -21,11 +21,11 @@ const FichasTable = () => {
   // Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedFicha, setSelectedFicha] = useState<Ficha | null>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToPrograma = () => {
-    navigate('/admin/programas')
-  }
+    navigate("/admin/programas");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -114,7 +114,12 @@ const FichasTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Fichas</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToPrograma}>Gestionar Programas</Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToPrograma}
+                >
+                  Gestionar Programas
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -131,15 +136,15 @@ const FichasTable = () => {
           addData={handleAddFicha}
           onClose={handleClose}
         />
-      <div className="justify-center pt-2">
-        <Button
-          type="submit"
-          form="ficha-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="ficha-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
@@ -164,13 +169,7 @@ const FichasTable = () => {
           onEdit={handleEdit}
           onDelete={(ficha) => handleState(ficha.id_ficha)}
           extraHeaderContent={
-            <Buton
-              text="Añadir Ficha"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir Ficha" onPress={() => setIsOpen(true)} />
           }
         />
       )}

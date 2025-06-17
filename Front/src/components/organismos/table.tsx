@@ -144,22 +144,21 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
 
   return (
     <>
-      <div className="flex justify-between items-center flex-wrap gap-4 mt-4 mb-4">
+      <div className="flex justify-between items-center flex-wrap gap-4 mt-4 mb-4 ">
         {extraHeaderContent}
         <div className="flex">
           <Input
-            className="mr-4 h-3 mt-1"
+            className="mr-4 mt-1"
             isClearable
             label="Buscar"
-            placeholder="Tipo de Busqueda..."
             radius="lg"
             value={searchTerm}
             onValueChange={setSearchTerm}
             startContent={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
-          <div className="flex items-center">
-          <h1 className="whitespace-nowrap">Buscar por fecha</h1>
+          <div className="flex items-center text-center">
             <Input
+              label="Fecha Inicio"
               type="date"
               value={startDate || ""}
               onChange={(e) => setStartDate(e.target.value)}
@@ -167,6 +166,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
             />
             <span>–</span>
             <Input
+              label="Fecha Fin"
               type="date"
               value={endDate || ""}
               onChange={(e) => setEndDate(e.target.value)}

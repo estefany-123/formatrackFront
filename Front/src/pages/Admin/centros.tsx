@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import FormCentros from "@/components/organismos/Centros/FormCentros";
 import { useState } from "react";
@@ -22,7 +22,7 @@ const CentrosTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Centro | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToMunicipio = () => {
     navigate("/admin/municipios");
@@ -90,8 +90,18 @@ const CentrosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Centros</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToSede}>Sedes</Button>
-                <Button className="text-white bg-blue-700" onPress={handleGoToMunicipio}>Gestionar Municipios </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToSede}
+                >
+                  Sedes
+                </Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToMunicipio}
+                >
+                  Gestionar Municipios{" "}
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -139,13 +149,7 @@ const CentrosTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton
-            text="Añadir Centro"
-            onPress={() => setIsOpen(true)}
-            type="button"
-            variant="solid"
-            className="text-white bg-blue-700"
-          />
+            <Buton text="Añadir Centro" onPress={() => setIsOpen(true)} />
           }
         />
       )}

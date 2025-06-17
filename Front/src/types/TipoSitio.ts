@@ -3,3 +3,8 @@ export type TipoSitio = {
     nombre : string,
     estado : boolean
 }
+
+export type UpTipoSitio = {
+    id_tipo :number,
+    nombre : string
+}

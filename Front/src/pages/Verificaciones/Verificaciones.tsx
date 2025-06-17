@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useVerificacion } from "@/hooks/Verificaciones/useVerificacion";
@@ -10,19 +10,18 @@ import { FormUpdate } from "@/components/organismos/Verificaciones/FormUpdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
 
 export const VerificacionTable = () => {
-  const { verificaciones, isLoading, isError, error, addVerificacion,  } =
+  const { verificaciones, isLoading, isError, error, addVerificacion } =
     useVerificacion();
 
-    const {sitios: sitios} = useSitios()
+  const { sitios: sitios } = useSitios();
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedVerificacion, setSelectedVerificacion] = useState<Verificacion | null>(
-    null
-  );
+  const [selectedVerificacion, setSelectedVerificacion] =
+    useState<Verificacion | null>(null);
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -49,25 +48,32 @@ export const VerificacionTable = () => {
     { key: "persona_asignada", label: "Solicitante" },
     { key: "hora_ingreso", label: "Ingreso" },
     { key: "hora_salida", label: "Salida" },
-    { key: "fk_sitio", label: "Sitio",       
+    {
+      key: "fk_sitio",
+      label: "Sitio",
       render: (verifiacion: Verificacion) => {
-            const sitio = sitios?.find(
-              (si) => si.id_sitio === verifiacion.fk_sitio
-            );
-            return <span>{sitio?.nombre ?? "No encontrado"}</span>;
-          },},
+        const sitio = sitios?.find(
+          (si) => si.id_sitio === verifiacion.fk_sitio
+        );
+        return <span>{sitio?.nombre ?? "No encontrado"}</span>;
+      },
+    },
     {
       key: "created_at",
       label: "Fecha Verificacion",
       render: (verificacion: Verificacion) => (
-        <span>{new Date(verificacion.created_at).toLocaleDateString("es-ES")}</span>
+        <span>
+          {new Date(verificacion.created_at).toLocaleDateString("es-ES")}
+        </span>
       ),
     },
     {
       key: "updated_at",
       label: "Fecha Actualización",
       render: (verificacion: Verificacion) => (
-        <span>{new Date(verificacion.updated_at).toLocaleDateString("es-ES")}</span>
+        <span>
+          {new Date(verificacion.updated_at).toLocaleDateString("es-ES")}
+        </span>
       ),
     },
   ];

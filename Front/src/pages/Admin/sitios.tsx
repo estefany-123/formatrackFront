@@ -1,10 +1,10 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Sitios/FormRegister";
 import { useState } from "react";
-import { FormUpdate } from "@/components/organismos/Sitios/Formupdate";
+import { FormUpdate } from "@/components/organismos/Sitios/FormUpdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { Sitios } from "@/types/sitios";
 import { Button } from "@heroui/button";
@@ -167,13 +167,7 @@ const SitiosTable = () => {
           onEdit={handleEdit}
           onDelete={(sitio) => handleState(sitio.id_sitio)}
           extraHeaderContent={
-            <Buton
-              text="Añadir sitio"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir sitio" onPress={() => setIsOpen(true)} />
           }
         />
       )}

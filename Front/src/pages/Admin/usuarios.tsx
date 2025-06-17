@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import FormRegister from "@/components/organismos/Usuarios/FormRegister";
 import { useState } from "react";
@@ -85,7 +85,12 @@ const UsersTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Usuarios</h1>
               <div className="flex gap-2">
-                <Button className="text-white bg-blue-700" onPress={handleGoToRol}>Gestionar Roles</Button>
+                <Button
+                  className="text-white bg-blue-700"
+                  onPress={handleGoToRol}
+                >
+                  Gestionar Roles
+                </Button>
               </div>
             </div>
           </CardBody>
@@ -132,13 +137,7 @@ const UsersTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton
-              text="Añadir Usuario"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} />
           }
         />
       )}

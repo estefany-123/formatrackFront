@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/areas/FormRegister";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { Area } from "@/types/area";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/areas/Formupdate";
+import { FormUpdate } from "@/components/organismos/areas/FormUpdate";
 
 const AreaTable = () => {
   const { areas, isLoading, isError, error, addArea, changeState } = useAreas();
@@ -177,13 +177,7 @@ const AreaTable = () => {
           onEdit={handleEdit}
           onDelete={(area) => handleState(area.id_area)}
           extraHeaderContent={
-            <Buton
-              text="Añadir Area"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir Area" onPress={() => setIsOpen(true)} />
           }
         />
       )}

@@ -11,7 +11,7 @@ type propsBut = {
 }
 
 
-export default function Buton({text,type,className,color,variant,onPress}:propsBut){
+export default function Buton({text,type="button",className="text-white bg-blue-700",color,variant="solid",onPress}:propsBut){
     return(
         <Button onPress={onPress} className={className} type={type} color={color} variant={variant}>
             {text}

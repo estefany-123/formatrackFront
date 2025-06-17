@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import FormCategorias from "@/components/organismos/Categorias/FormCategorias";
 import { useState } from "react";
@@ -24,11 +24,11 @@ const CategoriasTable = () => {
     null
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToElemento = () => {
-    navigate('/bodega/elementos')
-  }
+    navigate("/bodega/elementos");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -138,13 +138,7 @@ const CategoriasTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton
-              text="Añadir Categoria"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir Categoria" onPress={() => setIsOpen(true)} />
           }
         />
       )}

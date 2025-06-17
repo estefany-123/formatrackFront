@@ -76,7 +76,8 @@ export const LoginSchema = z.object({
         .number({ message: "Documento es requerido y debe ser un numero" })
         .min(10, { message: "Longitud minima de 10" }),
     password: z
-        .string({ required_error: "Contraseña es requerido" }),
+        .string()
+        .min(1,{message: "Contraseña es requerido" }),
 })
 
 

@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMunicipio } from "@/hooks/Municipio/useMunicipio";
 
+
 type FormularioProps = {
   addData: (centros: Centro) => Promise<void>;
   onClose: () => void;

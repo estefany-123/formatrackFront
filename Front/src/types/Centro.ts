@@ -4,3 +4,8 @@ export type Centro = {
     estado : boolean,
     fk_municipio : number
 }
+
+export type PutCentro = {
+    id_centro : number,
+    nombre : string
+}

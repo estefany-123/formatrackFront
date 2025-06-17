@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import Formulario from "@/components/organismos/Inventarios/FormRegister";
@@ -172,15 +172,15 @@ export const InventariosTable = ({
           onClose={handleClose}
           idSitio={idSitio!}
         />
-      <div className="justify-center pt-2">
-        <Button
-          type="submit"
-          form="inventario-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="inventario-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       {InventariosWithKey && (
@@ -189,13 +189,7 @@ export const InventariosTable = ({
           columns={columns(elementos ?? [])}
           onDelete={(inventario) => handleState(inventario.id_inventario)}
           extraHeaderContent={
-            <Buton
-              text="Nuevo inventario"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
           }
         />
       )}

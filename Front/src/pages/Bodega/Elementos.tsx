@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx";
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useElemento } from "@/hooks/Elementos/useElemento";
@@ -46,11 +46,15 @@ export const ElementosTable = () => {
     await changeState(id_elemento);
   };
 
-  const handleAddElemento = async (elemento: ElementoCreate):Promise<{id_elemento:number}>   => {
+  const handleAddElemento = async (
+    elemento: ElementoCreate
+  ): Promise<{ id_elemento: number }> => {
     try {
       const response = await addElemento(elemento);
       if (!response || !response.id_elemento) {
-        throw new Error("No se pudo agregar el elemento. La respuesta no contiene id_elemento.");
+        throw new Error(
+          "No se pudo agregar el elemento. La respuesta no contiene id_elemento."
+        );
       }
       handleClose(); // Cierra el modal solo si se ha agregado correctamente
       return { id_elemento: response.id_elemento };
@@ -193,15 +197,15 @@ export const ElementosTable = () => {
           addData={handleAddElemento}
           onClose={handleClose}
         />
-      <div className="justify-center pt-2">
-        <Button
-          type="submit"
-          form="element-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="element-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
@@ -226,13 +230,7 @@ export const ElementosTable = () => {
           onEdit={handleEdit}
           onDelete={(elemento) => handleState(elemento.id_elemento)}
           extraHeaderContent={
-            <Buton
-              text="Nuevo elemento"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nuevo elemento" onPress={() => setIsOpen(true)} />
           }
         />
       )}

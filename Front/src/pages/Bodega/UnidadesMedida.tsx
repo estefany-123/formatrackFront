@@ -1,6 +1,6 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
@@ -22,18 +22,18 @@ export const UnidadTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUnidad, setSelectedUnidad] = useState<Unidad | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoToElemento = () => {
-    navigate('/bodega/elementos')
-  }
-  
+    navigate("/bodega/elementos");
+  };
+
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedUnidad(null);
   };
 
-  const handleState = async (id_unidad:number) => {
+  const handleState = async (id_unidad: number) => {
     await changeState(id_unidad);
   };
 
@@ -48,7 +48,7 @@ export const UnidadTable = () => {
 
   const handleEdit = (unidad: Unidad) => {
     if (!unidad || !unidad.id_unidad) {
-      return; 
+      return;
     }
     setSelectedUnidad(unidad);
     setIsOpenUpdate(true);
@@ -168,13 +168,7 @@ export const UnidadTable = () => {
           onEdit={handleEdit}
           onDelete={(unidad) => handleState(unidad.id_unidad)}
           extraHeaderContent={
-            <Buton
-              text="Nueva unidad"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Nueva unidad" onPress={() => setIsOpen(true)} />
           }
         />
       )}

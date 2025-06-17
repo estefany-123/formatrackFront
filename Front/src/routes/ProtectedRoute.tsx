@@ -1,10 +1,12 @@
-import { useAuth } from "../providers/AuthProvider";
+import Cookies from "universal-cookie";
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = () => {
-  const { authenticated } = useAuth();
+const cookies = new Cookies()
 
-  if (authenticated === undefined) {
+const ProtectedRoute = () => {
+  const token = cookies.get("token");
+
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 

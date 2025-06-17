@@ -6,3 +6,10 @@ export type Ruta ={
     estado : boolean,
     fk_modulo : number
 }
+
+export type UpRuta ={
+    id_ruta : number,
+    nombre : string,
+    descripcion : string,
+    url_destino : string
+}

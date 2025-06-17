@@ -1,12 +1,12 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
-import Buton from "@/components/molecules/Buton";
+import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/permisos/FormRegister";
 import { useState } from "react";
 import { Permisos } from "@/types/permisos";
 import { usePermisos } from "@/hooks/permisos/usePermisos";
-import { FormUpdate } from "@/components/organismos/permisos/Formupdate";
+import { FormUpdate } from "@/components/organismos/permisos/FormUpdate";
 import { Button } from "@heroui/button";
 
 const PermisoTable = () => {
@@ -82,15 +82,15 @@ const PermisoTable = () => {
           addData={handleAddUser}
           onClose={handleClose}
         />
-      <div className="justify-center pt-2">
-        <Button
-          type="submit"
-          form="permiso-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+        <div className="justify-center pt-2">
+          <Button
+            type="submit"
+            form="permiso-form"
+            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          >
+            Guardar
+          </Button>
+        </div>
       </Modall>
 
       <Modall
@@ -115,13 +115,7 @@ const PermisoTable = () => {
           onEdit={handleEdit}
           onDelete={() => {}}
           extraHeaderContent={
-            <Buton
-              text="Añadir permiso"
-              onPress={() => setIsOpen(true)}
-              type="button"
-              variant="solid"
-              className="text-white bg-blue-700"
-            />
+            <Buton text="Añadir permiso" onPress={() => setIsOpen(true)} />
           }
         />
       )}
