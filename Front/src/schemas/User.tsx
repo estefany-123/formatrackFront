@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const UserUpdateSchema = z.object({
-    id_usuario: z
+    idUsuario: z
         .number(),
     nombre: z
         .string()
@@ -29,9 +29,9 @@ export const UserUpdateSchema = z.object({
 export type UserUpdate = z.infer<typeof UserUpdateSchema>
 
 export const UserSchema = z.object({
-    id_usuario: z
-        .number()
-        .optional(),
+    idUsuario: z
+        .number(),
+        
     documento: z
         .number({ message: "Documento es requerido y debe ser un numero" })
         .min(10, { message: "Longitud minima de 10" }),
