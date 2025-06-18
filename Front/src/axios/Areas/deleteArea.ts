@@ -1,6 +1,6 @@
 import { axiosAPI } from "../axiosAPI";
 
-export async function deleteArea(id_area: number): Promise<any> {
-  await axiosAPI.put(`areas/estado/${id_area}`);
-  return id_area;
+export async function deleteArea(idArea: number): Promise<any> {
+  await axiosAPI.patch(`areas/state/${idArea}`);
+  return idArea;
 }

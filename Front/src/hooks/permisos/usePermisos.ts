@@ -32,7 +32,7 @@ export function usePermisos() {
     id: number,
     permisos: Permisos[] | undefined = data
   ): Permisos | null => {
-    return permisos?.find((permiso) => permiso.id_permiso === id) || null;
+    return permisos?.find((permiso) => permiso.idPermiso === id) || null;
   };
 
   const updatePermisoMutation = useMutation({

@@ -8,7 +8,7 @@ import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdateFicha } from "@/components/organismos/fichas/FormUpdate";
+import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 
 const FichasTable = () => {
   const { fichas, isLoading, isError, error, addFicha, changeState } =
@@ -32,8 +32,8 @@ const FichasTable = () => {
     setSelectedFicha(null);
   };
 
-  const handleState = async (id_ficha: number) => {
-    await changeState(id_ficha);
+  const handleState = async (idFicha: number) => {
+    await changeState(idFicha);
   };
 
   const handleAddFicha = async (ficha: Ficha) => {
@@ -52,14 +52,14 @@ const FichasTable = () => {
 
   // Definir las columnas de la tabla
   const columns: TableColumn<Ficha>[] = [
-    { key: "codigo_ficha", label: "Codigo ficha" },
+    { key: "codigoFicha", label: "Codigo ficha" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha CReacion",
       render: (ficha: Ficha) => (
         <span>
-          {ficha.created_at
-            ? new Date(ficha.created_at).toLocaleDateString("es-ES", {
+          {ficha.createdAt
+            ? new Date(ficha.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -69,12 +69,12 @@ const FichasTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (ficha: Ficha) => (
         <span>
-          {ficha.updated_at
-            ? new Date(ficha.updated_at).toLocaleDateString("es-ES", {
+          {ficha.updatedAt
+            ? new Date(ficha.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -97,12 +97,12 @@ const FichasTable = () => {
   const fichasWithKey = fichas
     ?.filter(
       (ficha) =>
-        ficha?.id_ficha !== undefined && ficha?.created_at && ficha?.updated_at
+        ficha?.idFicha !== undefined && ficha?.createdAt && ficha?.updatedAt
     )
     .map((ficha) => ({
       ...ficha,
-      key: ficha.id_ficha ? ficha.id_ficha.toString() : crypto.randomUUID(),
-      id_ficha: ficha.id_ficha || 0,
+      key: ficha.idFicha ? ficha.idFicha.toString() : crypto.randomUUID(),
+      idFicha: ficha.idFicha || 0,
       estado: Boolean(ficha.estado),
     }));
 
@@ -155,7 +155,7 @@ const FichasTable = () => {
         {selectedFicha && (
           <FormUpdateFicha
             fichas={fichasWithKey ?? []}
-            fichaId={selectedFicha.id_ficha as number}
+            fichaId={selectedFicha.idFicha as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -167,7 +167,7 @@ const FichasTable = () => {
           data={fichasWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(ficha) => handleState(ficha.id_ficha)}
+          onDelete={(ficha) => handleState(ficha.idFicha)}
           extraHeaderContent={
             <Buton text="Añadir Ficha" onPress={() => setIsOpen(true)} />
           }

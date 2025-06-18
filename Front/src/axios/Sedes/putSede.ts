@@ -1,15 +1,12 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface SedePutData {
-    id_sede?: number;
-    nombre: string;
-    estado: boolean;
-    created_at?:string;
-    updated_at?:string;
-    fk_centro: number;
+    nombre: string
+
+
 }
 
-export async function putSede(id:number, data:SedePutData):Promise<any> {
-    const res = await axiosAPI.put(`sede/${id}`, data);
+export async function putSede(idSede:number, data:SedePutData):Promise<any> {
+    const res = await axiosAPI.patch(`sedes/${idSede}`, data);
     return res.data
 }

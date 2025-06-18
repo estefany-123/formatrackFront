@@ -1,13 +1,13 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface PermisoPutData {
-    id_permiso?: number;
+    idPermiso?: number;
     permiso: string;
-    created_at?: string;
-    updated_at?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export async function putPermiso(id:number, data:PermisoPutData):Promise<any> {
-    const res = await axiosAPI.put(`permisos/${id}`, data);
+    const res = await axiosAPI.patch(`permisos/${id}`, data);
     return res.data
 }

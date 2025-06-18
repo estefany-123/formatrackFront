@@ -1,18 +1,14 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface SitioPutData {
-    id_sitio?: number;
+    idSitio?: number;
     nombre: string;
-    persona_encargada: string;
-    ubicacion: string;
-    estado: boolean;
-    created_at?:string;
-    updated_at?:string;
-    fk_tipo_sitio: number;
-    fk_area: number;
+    personaEncargada?: string;
+    ubicacion?: string;
+
 }
 
 export async function putSitio(id:number, data:SitioPutData):Promise<any> {
-    const res = await axiosAPI.put(`sitio/${id}`, data);
+    const res = await axiosAPI.patch(`sitios/${id}`, data);
     return res.data
 }

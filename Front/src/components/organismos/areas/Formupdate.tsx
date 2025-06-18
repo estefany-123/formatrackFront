@@ -26,19 +26,16 @@ export const FormUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
     resolver: zodResolver(AreaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_area: foundArea.id_area,
       nombre: foundArea.nombre,
-      estado: foundArea.estado,
-      fk_sede: foundArea.fk_sede,
-      fk_usuario: foundArea.fk_usuario
+      idArea: foundArea.idArea,
     },
   });
 
   const onSubmit = async (data: AreaUpdate) => {
     console.log("Enviando datos:", data);
-    if (!data.id_area) return;
+    if (!data.idArea) return;
     try {
-      await updateArea(data.id_area, data);
+      await updateArea(data.idArea, { nombre: data.nombre });
       onclose();
       addToast({
         title: "Actualizacion Exitosa",

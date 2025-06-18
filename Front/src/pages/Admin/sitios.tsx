@@ -4,7 +4,7 @@ import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Sitios/FormRegister";
 import { useState } from "react";
-import { FormUpdate } from "@/components/organismos/Sitios/FormUpdate";
+import { FormUpdate } from "@/components/organismos/Sitios/Formupdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { Sitios } from "@/types/sitios";
 import { Button } from "@heroui/button";
@@ -34,8 +34,8 @@ const SitiosTable = () => {
     setSelectedSitio(null);
   };
 
-  const handleState = async (id_sitio: number) => {
-    await changeState(id_sitio);
+  const handleState = async (idSitio: number) => {
+    await changeState(idSitio);
   };
 
   const handleAddSitio = async (sitio: Sitios) => {
@@ -55,15 +55,15 @@ const SitiosTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Sitios>[] = [
     { key: "nombre", label: "Nombre" },
-    { key: "persona_encargada", label: "persona_encargada" },
+    { key: "personaEncargada", label: "personaEncargada" },
     { key: "ubicacion", label: "ubicacion" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha CReacion",
       render: (sitio: Sitios) => (
         <span>
-          {sitio.created_at
-            ? new Date(sitio.created_at).toLocaleDateString("es-ES", {
+          {sitio.createdAt
+            ? new Date(sitio.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -73,12 +73,12 @@ const SitiosTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (sitio: Sitios) => (
         <span>
-          {sitio.updated_at
-            ? new Date(sitio.updated_at).toLocaleDateString("es-ES", {
+          {sitio.updatedAt
+            ? new Date(sitio.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -99,11 +99,11 @@ const SitiosTable = () => {
   }
 
   const sitiosWithKey = sitios
-    ?.filter((sitio) => sitio?.id_sitio !== undefined)
+    ?.filter((sitio) => sitio?.idSitio !== undefined)
     .map((sitio) => ({
       ...sitio,
-      key: sitio.id_sitio ? sitio.id_sitio.toString() : crypto.randomUUID(),
-      id_sitio: sitio.id_sitio || 0,
+      key: sitio.idSitio ? sitio.idSitio.toString() : crypto.randomUUID(),
+      idSitio: sitio.idSitio || 0,
       estado: Boolean(sitio.estado),
     }));
 
@@ -153,7 +153,7 @@ const SitiosTable = () => {
         {selectedSitio && (
           <FormUpdate
             sitios={sitiosWithKey ?? []}
-            sitioId={selectedSitio.id_sitio as number}
+            sitioId={selectedSitio.idSitio as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -165,7 +165,7 @@ const SitiosTable = () => {
           data={sitiosWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(sitio) => handleState(sitio.id_sitio)}
+          onDelete={(sitio) => handleState(sitio.idSitio)}
           extraHeaderContent={
             <Buton text="Añadir sitio" onPress={() => setIsOpen(true)} />
           }

@@ -33,11 +33,13 @@ export function useAreas() {
     id: number,
     areas: Area[] | undefined = data
   ): Area | null => {
-    return areas?.find((area) => area.id_area === id) || null;
+    return areas?.find((area) => area.idArea === id) || null;
   };
 
   const updateAreaMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Area }) => putArea(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Area }) => {
+      const {idArea, ...resto}=data;
+      return putArea(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["areas"],
@@ -70,8 +72,8 @@ export function useAreas() {
     return updateAreaMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (id_area: number) => {
-    return changeStateMutation.mutateAsync(id_area);
+  const changeState = async (idArea: number) => {
+    return changeStateMutation.mutateAsync(idArea);
   };
 
   return {

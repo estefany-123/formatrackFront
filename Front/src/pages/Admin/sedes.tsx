@@ -8,7 +8,7 @@ import { useSede } from "@/hooks/sedes/useSedes";
 import { Button, Card, CardBody } from "@heroui/react";
 import { Sede } from "@/types/sedes";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/Sedes/FormUpdate";
+import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
 
 const SedeTable = () => {
   const { sede, isLoading, isError, error, addSede, changeState } = useSede();
@@ -36,14 +36,14 @@ const SedeTable = () => {
   };
 
   const handleState = async (sede: Sede) => {
-    const id_sede = sede.id_sede ?? 0;
-    await changeState(id_sede);
+    const idSede = sede.idSede ?? 0;
+    await changeState(idSede);
   };
 
   const handleAddSede = async (sede: Sede) => {
     try {
-      const id_sede = sede.id_sede ?? 0;
-      await addSede({ ...sede, id_sede });
+      const idSede = sede.idSede ?? 0;
+      await addSede({ ...sede, idSede });
       handleClose();
     } catch (error) {
       console.error("Error al agregar la sede:", error);
@@ -59,12 +59,12 @@ const SedeTable = () => {
   const columns: TableColumn<Sede>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha CReacion",
       render: (sede: Sede) => (
         <span>
-          {sede.created_at
-            ? new Date(sede.created_at).toLocaleDateString("es-ES", {
+          {sede.createdAt
+            ? new Date(sede.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -74,12 +74,12 @@ const SedeTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (sede: Sede) => (
         <span>
-          {sede.updated_at
-            ? new Date(sede.updated_at).toLocaleDateString("es-ES", {
+          {sede.updatedAt
+            ? new Date(sede.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -100,11 +100,11 @@ const SedeTable = () => {
   }
 
   const sedeWithKey = sede
-    ?.filter((sede) => sede?.id_sede !== undefined)
+    ?.filter((sede) => sede?.idSede !== undefined)
     .map((sede) => ({
       ...sede,
-      key: sede.id_sede ? sede.id_sede.toString() : crypto.randomUUID(),
-      id_sede: sede.id_sede || 0,
+      key: sede.idSede ? sede.idSede.toString() : crypto.randomUUID(),
+      idSede: sede.idSede || 0,
       estado: Boolean(sede.estado),
     }));
 
@@ -163,7 +163,7 @@ const SedeTable = () => {
         {selectedSede && (
           <FormUpdate
             sedes={sedeWithKey ?? []}
-            sedeId={selectedSede.id_sede as number}
+            sedeId={selectedSede.idSede as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

@@ -32,11 +32,13 @@ export function useSitios() {
     id: number,
     sitios: Sitios[] | undefined = data
   ): Sitios | null => {
-    return sitios?.find((sitio) => sitio.id_sitio === id) || null;
+    return sitios?.find((sitio) => sitio.idSitio === id) || null;
   };
 
   const updateSitioMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Sitios }) => putSitio(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Sitios }) => {
+      const {idSitio, ...resto}=data;
+      return putSitio(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["sitios"],
@@ -70,8 +72,8 @@ export function useSitios() {
     return updateSitioMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (id_sitio: number) => {
-    return changeStateMutation.mutateAsync(id_sitio);
+  const changeState = async (idSitio: number) => {
+    return changeStateMutation.mutateAsync(idSitio);
   };
 
   return {

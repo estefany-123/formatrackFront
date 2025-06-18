@@ -40,7 +40,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       console.error("Error al guardar la ficha:", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -51,9 +51,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         label="Código de Ficha"
         type="text"
         placeholder="Código de Ficha"
-        {...register("codigo_ficha", { valueAsNumber: true })}
-        isInvalid={!!errors.codigo_ficha}
-        errorMessage={errors.codigo_ficha?.message}
+        {...register("codigoFicha", { valueAsNumber: true })}
+        isInvalid={!!errors.codigoFicha}
+        errorMessage={errors.codigoFicha?.message}
       />
 
       <Controller
@@ -77,7 +77,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
       <Controller
         control={control}
-        name="fk_programa"
+        name="fkPrograma"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -86,12 +86,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               {...field}
               value={field.value ?? ""}
               onChange={(e) => field.onChange(Number(e.target.value))}
-              isInvalid={!!errors.fk_programa}
-              errorMessage={errors.fk_programa?.message}
+              isInvalid={!!errors.fkPrograma}
+              errorMessage={errors.fkPrograma?.message}
             >
               {programas?.length ? (
                 programas.map((programa) => (
-                  <SelectItem key={programa.id_programa}>
+                  <SelectItem key={programa.idPrograma}>
                     {programa.nombre}
                   </SelectItem>
                 ))

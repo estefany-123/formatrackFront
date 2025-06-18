@@ -82,7 +82,7 @@ export default function FormularioSede({
 
       <Controller
         control={control}
-        name="fk_centro"
+        name="fkCentro"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -93,8 +93,8 @@ export default function FormularioSede({
               className="w-full"
               placeholder="Selecciona un centro..."
               aria-label="Seleccionar Centro"
-              isInvalid={!!errors.fk_centro}
-              errorMessage={errors.fk_centro?.message}
+              isInvalid={!!errors.fkCentro}
+              errorMessage={errors.fkCentro?.message}
             >
               {centros?.length ? (
                 centros.map((centro) => (
