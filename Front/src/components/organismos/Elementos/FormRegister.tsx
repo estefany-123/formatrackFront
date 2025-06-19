@@ -10,7 +10,7 @@ import { ElementoCreate, ElementoCreateSchema } from "@/schemas/Elemento";
 import { CaracteristicaCreateSchema } from "@/schemas/Caracteristica";
 
 type FormularioProps = {
-  addData: (elemento: ElementoCreate) => Promise<{ id_elemento: number }>;
+  addData: (elemento: ElementoCreate) => Promise<{ idElemento: number }>;
   onClose: () => void;
   id: string;
 };
@@ -30,47 +30,19 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
   const { unidades } = useUnidad();
   const { categorias } = useCategoria();
-  const { addCaracteristica } = useCaracteristica();
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<
-    number | null
-  >(null);
-  const [caracteristica, setCaracteristica] = useState({
-    nombre: "",
-    codigo: "",
-  });
-  const [caracteristicaErrors, setCaracteristicaErrors] = useState<{
-    nombre?: string;
-    codigo?: string;
-  }>({});
+  const { caracteristicas } = useCaracteristica();
+  
   const tipoElemento = watch("tipoElemento");
 
   const onSubmit = async (data: ElementoCreate) => {
-    setCaracteristicaErrors({});
     try {
-      if (caracteristica.nombre || caracteristica.codigo) {
-        const result = CaracteristicaCreateSchema.safeParse(caracteristica);
-        if (!result.success) {
-          const fieldErrors = result.error.flatten().fieldErrors;
-          setCaracteristicaErrors({
-            nombre: fieldErrors.nombre?.[0],
-            codigo: fieldErrors.codigo?.[0],
-          });
-          return;
-        }
-      }
-      const { id_elemento } = await addData({
+      const { idElemento } = await addData({
         ...data,
         estado: data.estado,
-        tipoElemento: data.tipoElemento as "perecedero" | "no_perecedero",
+        tipoElemento: data.tipoElemento as "perecedero" | "noPerecedero",
       });
 
-      console.log("Elemento creado:", id_elemento);
-      if (caracteristica.nombre && caracteristica.codigo) {
-        await addCaracteristica({
-          ...caracteristica,
-          fk_elemento: id_elemento,
-        });
-      }
+
       onClose();
       addToast({
         title: "Registro Exitoso",
@@ -104,14 +76,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         isInvalid={!!errors.descripcion}
         errorMessage={errors.descripcion?.message}
       />
-      <Input
-        label="Valor"
-        type="number"
-        placeholder="Valor"
-        {...register("valor", { valueAsNumber: true })}
-        isInvalid={!!errors.valor}
-        errorMessage={errors.valor?.message}
-      />
 
       <Controller
         control={control}
@@ -126,7 +90,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               const value = e.target.value;
               field.onChange(value);
               setValue("perecedero", value === "perecedero");
-              setValue("no_perecedero", value === "no_perecedero");
+              setValue("noPerecedero", value === "noPerecedero");
             }}
             isInvalid={!!errors.tipoElemento}
             errorMessage={errors.tipoElemento?.message}
@@ -140,14 +104,14 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       {tipoElemento === "perecedero" && (
         <Controller
           control={control}
-          name="fecha_vencimiento"
+          name="fechaVencimiento"
           render={({ field }) => (
             <Input
               type="date"
               label="Fecha de Vencimiento"
               {...field}
-              isInvalid={!!errors.fecha_vencimiento}
-              errorMessage={errors.fecha_vencimiento?.message}
+              isInvalid={!!errors.fechaVencimiento}
+              errorMessage={errors.fechaVencimiento?.message}
             />
           )}
         />
@@ -157,9 +121,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         label="Fecha Permanencia"
         type="date"
         placeholder="Ingrese la fecha"
-        {...register("fecha_uso")}
-        isInvalid={!!errors.fecha_uso}
-        errorMessage={errors.fecha_uso?.message}
+        {...register("fechaUso")}
+        isInvalid={!!errors.fechaUso}
+        errorMessage={errors.fechaUso?.message}
       />
 
       <Controller
@@ -187,13 +151,13 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         accept="image/*"
         onChange={(e) => {
           const file = e.target.files?.[0] ?? undefined;
-          setValue("imagen_elemento", file);
+          setValue("imagenElemento", file);
         }}
       />
 
       <Controller
         control={control}
-        name="fk_unidad_medida"
+        name="fkUnidadMedida"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -203,12 +167,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               placeholder="Selecciona una unidad de medida..."
               aria-label="Seleccionar Unidad de Medida"
               onChange={(e) => field.onChange(Number(e.target.value))}
-              isInvalid={!!errors.fk_unidad_medida}
-              errorMessage={errors.fk_unidad_medida?.message}
+              isInvalid={!!errors.fkUnidadMedida}
+              errorMessage={errors.fkUnidadMedida?.message}
             >
               {unidades?.length ? (
                 unidades.map((unidad) => (
-                  <SelectItem key={unidad.id_unidad} textValue={unidad.nombre}>
+                  <SelectItem key={unidad.idUnidad} textValue={unidad.nombre}>
                     {unidad.nombre}
                   </SelectItem>
                 ))
@@ -222,7 +186,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
       <Controller
         control={control}
-        name="fk_categoria"
+        name="fkCategoria"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -234,10 +198,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               onChange={(e) => {
                 const value = Number(e.target.value);
                 field.onChange(value);
-                setCategoriaSeleccionada(value);
               }}
-              isInvalid={!!errors.fk_categoria}
-              errorMessage={errors.fk_categoria?.message}
+              isInvalid={!!errors.fkCategoria}
+              errorMessage={errors.fkCategoria?.message}
             >
               {categorias?.length ? (
                 categorias.map((cat) => (
@@ -254,37 +217,40 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           </div>
         )}
       />
-      {categoriaSeleccionada && (
-        <>
-          <h3>Características</h3>
-          <Input
-            label="Nombre"
-            placeholder="Ingrese el nombre de la característica"
-            value={caracteristica.nombre}
-            onChange={(e) =>
-              setCaracteristica((prev) => ({
-                ...prev,
-                nombre: e.target.value,
-              }))
-            }
-            isInvalid={!!caracteristicaErrors.nombre}
-            errorMessage={caracteristicaErrors.nombre}
-          />
-          <Input
-            label="Código"
-            placeholder="Ingrese el código"
-            value={caracteristica.codigo}
-            onChange={(e) =>
-              setCaracteristica((prev) => ({
-                ...prev,
-                codigo: e.target.value,
-              }))
-            }
-            isInvalid={!!caracteristicaErrors.codigo}
-            errorMessage={caracteristicaErrors.codigo}
-          />
-        </>
-      )}
+      <Controller
+        control={control}
+        name="fkCaracteristica"
+        render={({ field }) => (
+          <div className="w-full">
+            <Select
+              label="Caracteristica"
+              {...field}
+              className="w-full"
+              placeholder="Selecciona una caracteristica..."
+              aria-label="Seleccionar Caracteristica"
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                field.onChange(value);
+              }}
+              isInvalid={!!errors.fkCaracteristica}
+              errorMessage={errors.fkCaracteristica?.message}
+            >
+              {caracteristicas?.length ? (
+                caracteristicas.map((cat) => (
+                  <SelectItem key={cat.idCaracteristica} textValue={cat.nombre}>
+                    {cat.nombre}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>
+                  No hay categorías disponibles
+                </SelectItem>
+              )}
+            </Select>
+          </div>
+        )}
+      />
+      
     </Form>
   );
 }

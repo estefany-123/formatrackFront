@@ -32,7 +32,7 @@ export function useElemento() {
     id: number,
     elementos: Elemento[] | undefined = data
   ): Elemento | null => {
-    return elementos?.find((elemento) => elemento.id_elemento === id) || null;
+    return elementos?.find((elemento) => elemento.idElemento === id) || null;
   };
 
   const updateElementoMutation = useMutation({
@@ -62,10 +62,10 @@ export function useElemento() {
     },
   });
 
-  const addElemento = async (elemento: Elemento): Promise<{ id_elemento: number }> => {
+  const addElemento = async (elemento: Elemento): Promise<{ idElemento: number }> => {
     const response = await addElementoMutation.mutateAsync(elemento);
-    if (response && response.id_elemento) {
-      return { id_elemento: response.id_elemento };
+    if (response && response.idElemento) {
+      return { idElemento: response.idElemento };
     }
     throw new Error("Respuesta inesperada de la API");
   };
@@ -74,8 +74,8 @@ export function useElemento() {
     return updateElementoMutation.mutateAsync({ id, data});
   };
 
-  const changeState = async (id_elemento: number) => {
-    return changeStateMutation.mutateAsync(id_elemento);
+  const changeState = async (idElemento: number) => {
+    return changeStateMutation.mutateAsync(idElemento);
   };
 
   return {

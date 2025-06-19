@@ -8,7 +8,6 @@ import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { Inventario } from "@/types/Inventario";
 import { Elemento } from "@/types/Elemento";
 import { useElemento } from "@/hooks/Elementos/useElemento";
-import { Button } from "@heroui/button";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -33,14 +32,14 @@ export const InventariosTable = ({
   const handleClose = () => setIsOpen(false);
 
   //Modal actualizar
-  // const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  // const [selectedInventario, setSelectedInventario] =
-  //   useState<Inventario | null>(null);
+  const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
+  const [selectedInventario, setSelectedInventario] =
+    useState<Inventario | null>(null);
 
-  // const handleCloseUpdate = () => {
-  //   setIsOpenUpdate(false);
-  //   setSelectedInventario(null);
-  // };
+  const handleCloseUpdate = () => {
+    setIsOpenUpdate(false);
+    setSelectedInventario(null);
+  };
 
   const handleState = async (id_inventario: number) => {
     await changeState(id_inventario);
@@ -55,10 +54,10 @@ export const InventariosTable = ({
     }
   };
 
-  // const handleEdit = (inventario: Inventario) => {
-  //   setSelectedInventario(inventario);
-  //   setIsOpenUpdate(true);
-  // };
+  const handleEdit = (inventario: Inventario) => {
+    setSelectedInventario(inventario);
+    setIsOpenUpdate(true);
+  };
 
   // Definir las columnas de la tabla
   const columns = (elementos: Elemento[]): TableColumn<Inventario>[] => [
@@ -67,7 +66,7 @@ export const InventariosTable = ({
       label: "Elemento",
       render: (inventario: Inventario) => {
         const elemento = elementos.find(
-          (el) => el.id_elemento === inventario.fk_elemento
+          (el) => el.idElemento === inventario.fk_elemento
         );
         return <span>{elemento?.nombre ?? "No encontrado"}</span>;
       },
@@ -77,7 +76,7 @@ export const InventariosTable = ({
       label: "Imagen",
       render: (inventario: Inventario) => {
         const elemento = elementos.find(
-          (el) => el.id_elemento === inventario.fk_elemento
+          (el) => el.idElemento === inventario.fk_elemento
         );
 
         const imagen = elemento?.imagen_elemento;
@@ -173,13 +172,11 @@ export const InventariosTable = ({
           idSitio={idSitio!}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
             type="submit"
             form="inventario-form"
             className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+          />
         </div>
       </Modall>
 

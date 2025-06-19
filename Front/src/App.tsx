@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./layouts/layout";
 import Home from "./pages/Home/Home";
-import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
 import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
 import { Inventario } from "./pages/Bodega/Inventarios";
@@ -64,7 +63,6 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
-          <Route path="solicitudes" element={<SolicitudTable />} />
         </Route>
         </Route>
       <Route path="/login" element={<Login />} />

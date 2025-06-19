@@ -32,11 +32,13 @@ export function useTipoMovimiento() {
     id: number,
     tipos: TipoMovimiento[] | undefined = data
   ): TipoMovimiento | null => {
-    return tipos?.find((tipo) => tipo.id_tipo === id) || null;
+    return tipos?.find((tipo) => tipo.idTipo === id) || null;
   };
 
   const updateTipoMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: TipoMovimiento }) => putTipo(id, data),
+    mutationFn: ({ id, data }: { id: number; data: TipoMovimiento }) =>{
+      const {idTipo, ...resto} = data;
+      return putTipo(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["tipos"],
@@ -70,8 +72,8 @@ export function useTipoMovimiento() {
     return updateTipoMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (id_tipo: number) => {
-    return changeStateMutation.mutateAsync(id_tipo);
+  const changeState = async (idTipo: number) => {
+    return changeStateMutation.mutateAsync(idTipo);
   };
 
   return {

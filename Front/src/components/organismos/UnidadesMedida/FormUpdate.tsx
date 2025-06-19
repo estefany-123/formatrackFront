@@ -2,13 +2,13 @@ import { Form } from "@heroui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { UnidadUpdate, UnidadUpdateSchema } from "@/schemas/Unidad";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
-  unidades: (UnidadUpdate & { id_unidad?: number })[];
+  unidades: (UnidadUpdate & { idUnidad?: number })[];
   unidadId: number;
   id: string;
   onclose: () => void;
@@ -27,17 +27,16 @@ export const FormUpdate = ({ unidades, unidadId, id, onclose }: Props) => {
     resolver: zodResolver(UnidadUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_unidad: foundUnidad.id_unidad ?? 0,
+      idUnidad: foundUnidad.idUnidad ?? 0,
       nombre: foundUnidad.nombre,
-      estado: foundUnidad.estado,
     },
   });
 
   const onSubmit = async (data: UnidadUpdate) => {
     console.log(data);
-    if (!data.id_unidad) return;
+    if (!data.idUnidad) return;
     try {
-      await updateUnidad(data.id_unidad, data);
+      await updateUnidad(data.idUnidad, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -67,13 +66,12 @@ export const FormUpdate = ({ unidades, unidadId, id, onclose }: Props) => {
         errorMessage={errors.nombre?.message}
       />
       <div className="justify-center pl-10">
-        <Button
+        <Buton
+          text="Guardar"
           type="submit"
           isLoading={isSubmitting}
           className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+        />
       </div>
     </Form>
   );

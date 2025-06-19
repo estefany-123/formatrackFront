@@ -34,8 +34,8 @@ export const TipoMovimientoTable = () => {
     setSelectedTipoMovimiento(null);
   };
 
-  const handleState = async (id_tipo: number) => {
-    await changeState(id_tipo);
+  const handleState = async (idTipo: number) => {
+    await changeState(idTipo);
   };
 
   const handleAddTipoMovimiento = async (tipo: TipoMovimiento) => {
@@ -56,12 +56,12 @@ export const TipoMovimientoTable = () => {
   const columns: TableColumn<TipoMovimiento>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha Creación",
       render: (tipo: TipoMovimiento) => (
         <span>
-          {tipo.created_at
-            ? new Date(tipo.created_at).toLocaleDateString("es-ES", {
+          {tipo.createdAt
+            ? new Date(tipo.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -71,12 +71,12 @@ export const TipoMovimientoTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (tipo: TipoMovimiento) => (
         <span>
-          {tipo.updated_at
-            ? new Date(tipo.updated_at).toLocaleDateString("es-ES", {
+          {tipo.updatedAt
+            ? new Date(tipo.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -97,11 +97,11 @@ export const TipoMovimientoTable = () => {
   }
 
   const TipoMovimientosWithKey = tipos
-    ?.filter((tipo) => tipo?.id_tipo !== undefined)
+    ?.filter((tipo) => tipo?.idTipo !== undefined)
     .map((tipo) => ({
       ...tipo,
-      key: tipo.id_tipo ? tipo.id_tipo.toString() : crypto.randomUUID(),
-      id_tipo: tipo.id_tipo || 0,
+      key: tipo.idTipo ? tipo.idTipo.toString() : crypto.randomUUID(),
+      idTipo: tipo.idTipo || 0,
       estado: Boolean(tipo.estado),
     }));
 
@@ -152,7 +152,7 @@ export const TipoMovimientoTable = () => {
         {selectedTipoMovimiento && (
           <FormUpdate
             tipos={TipoMovimientosWithKey ?? []}
-            tipoId={selectedTipoMovimiento.id_tipo as number}
+            tipoId={selectedTipoMovimiento.idTipo as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -164,7 +164,7 @@ export const TipoMovimientoTable = () => {
           data={TipoMovimientosWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(tipo) => handleState(tipo.id_tipo)}
+          onDelete={(tipo) => handleState(tipo.idTipo)}
           extraHeaderContent={
             <Buton text="Nuevo tipo" onPress={() => setIsOpen(true)} />
           }

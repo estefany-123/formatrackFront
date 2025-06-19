@@ -32,8 +32,8 @@ export const RolTable = () => {
     setSelectedRol(null);
   };
 
-  const handleState = async (id_rol: number) => {
-    await changeState(id_rol);
+  const handleState = async (idRol: number) => {
+    await changeState(idRol);
   };
 
   const handleAddRol = async (data: Rol) => {
@@ -46,7 +46,7 @@ export const RolTable = () => {
   };
 
   const handleEdit = (rol: Rol) => {
-    if (!rol || !rol.id_rol) {
+    if (!rol || !rol.idRol) {
       return;
     }
     setSelectedRol(rol);
@@ -57,12 +57,12 @@ export const RolTable = () => {
   const columns: TableColumn<Rol>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha CReacion",
       render: (rol: Rol) => (
         <span>
-          {rol.created_at
-            ? new Date(rol.created_at).toLocaleDateString("es-ES", {
+          {rol.createdAt
+            ? new Date(rol.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -72,12 +72,12 @@ export const RolTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (rol: Rol) => (
         <span>
-          {rol.updated_at
-            ? new Date(rol.updated_at).toLocaleDateString("es-ES", {
+          {rol.updatedAt
+            ? new Date(rol.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -99,12 +99,12 @@ export const RolTable = () => {
 
   const rolesWithKey = roles
     ?.filter(
-      (rol) => rol?.id_rol !== undefined && rol?.created_at && rol?.updated_at
+      (rol) => rol?.idRol !== undefined && rol?.createdAt && rol?.updatedAt
     )
     .map((rol) => ({
       ...rol,
-      key: rol.id_rol ? rol.id_rol.toString() : crypto.randomUUID(),
-      id_rol: rol.id_rol || 0,
+      key: rol.idRol ? rol.idRol.toString() : crypto.randomUUID(),
+      idRol: rol.idRol || 0,
       estado: Boolean(rol.estado),
     }));
 
@@ -154,7 +154,7 @@ export const RolTable = () => {
         {selectedRol && (
           <FormUpdate
             roles={rolesWithKey ?? []}
-            rolId={selectedRol.id_rol as number}
+            rolId={selectedRol.idRol as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -166,7 +166,7 @@ export const RolTable = () => {
           data={rolesWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(rol) => handleState(rol.id_rol)}
+          onDelete={(rol) => handleState(rol.idRol)}
           extraHeaderContent={
             <Buton text="Nuevo rol" onPress={() => setIsOpen(true)} />
           }

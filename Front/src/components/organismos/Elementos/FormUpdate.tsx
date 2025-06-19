@@ -2,10 +2,10 @@ import { Input } from "@heroui/input";
 import { useForm } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
 import { ElementoUpdateSchema, ElementoUpdate } from "@/schemas/Elemento";
 import { useElemento } from "@/hooks/Elementos/useElemento";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
   elementos: ElementoUpdate[];
@@ -14,15 +14,13 @@ type Props = {
   onclose: () => void;
 };
 
-export const FormUpdate = ({
-  elementos,
-  elementoId,
-  id,
-  onclose,
-}: Props) => {
+export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
   const { updateElemento, getElementoById } = useElemento();
 
-  const foundElemento = getElementoById(elementoId, elementos) as ElementoUpdate;
+  const foundElemento = getElementoById(
+    elementoId,
+    elementos
+  ) as ElementoUpdate;
 
   const {
     register,
@@ -45,7 +43,8 @@ export const FormUpdate = ({
       onclose();
       addToast({
         title: "Elemento actualizado",
-        description: "Los datos del elemento fueron actualizados correctamente.",
+        description:
+          "Los datos del elemento fueron actualizados correctamente.",
         color: "primary",
         timeout: 3000,
         shouldShowTimeoutProgress: true,
@@ -54,9 +53,13 @@ export const FormUpdate = ({
       console.error("Error al actualizar el Elemento", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
-    <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      id={id}
+      className="w-full space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         label="Nombre"
         placeholder="Nombre del elemento"
@@ -113,13 +116,12 @@ export const FormUpdate = ({
       />
 
       <div className="justify-center pl-10">
-        <Button
+        <Buton
+          text="Guardar"
           type="submit"
           isLoading={isSubmitting}
           className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+        />
       </div>
     </Form>
   );

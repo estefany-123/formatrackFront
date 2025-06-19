@@ -12,7 +12,7 @@ export const InventarioSitio = () => {
   if (isLoading) return <p>Cargando sitio...</p>;
   if (isError) return <p>Error al cargar el sitio.</p>;
 
-  const sitio = sitios?.find((s) => s.id_sitio === idSitio);
+  const sitio = sitios?.find((s) => s.idSitio === idSitio);
 
   if (!sitio) return <p>Sitio no encontrado</p>;
   return (

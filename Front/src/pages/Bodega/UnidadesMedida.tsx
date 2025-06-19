@@ -33,8 +33,8 @@ export const UnidadTable = () => {
     setSelectedUnidad(null);
   };
 
-  const handleState = async (id_unidad: number) => {
-    await changeState(id_unidad);
+  const handleState = async (idUnidad: number) => {
+    await changeState(idUnidad);
   };
 
   const handleAddUnidad = async (unidad: Unidad) => {
@@ -47,7 +47,7 @@ export const UnidadTable = () => {
   };
 
   const handleEdit = (unidad: Unidad) => {
-    if (!unidad || !unidad.id_unidad) {
+    if (!unidad || !unidad.idUnidad) {
       return;
     }
     setSelectedUnidad(unidad);
@@ -58,12 +58,12 @@ export const UnidadTable = () => {
   const columns: TableColumn<Unidad>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha Creación",
       render: (unidad: Unidad) => (
         <span>
-          {unidad.created_at
-            ? new Date(unidad.created_at).toLocaleDateString("es-ES", {
+          {unidad.createdAt
+            ? new Date(unidad.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -73,12 +73,12 @@ export const UnidadTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (unidad: Unidad) => (
         <span>
-          {unidad.updated_at
-            ? new Date(unidad.updated_at).toLocaleDateString("es-ES", {
+          {unidad.updatedAt
+            ? new Date(unidad.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -99,11 +99,11 @@ export const UnidadTable = () => {
   }
 
   const UnidadsWithKey = unidades
-    ?.filter((unidad) => unidad?.id_unidad !== undefined)
+    ?.filter((unidad) => unidad?.idUnidad !== undefined)
     .map((unidad) => ({
       ...unidad,
-      key: unidad.id_unidad ? unidad.id_unidad.toString() : crypto.randomUUID(),
-      id_unidad: unidad.id_unidad || 0,
+      key: unidad.idUnidad ? unidad.idUnidad.toString() : crypto.randomUUID(),
+      idUnidad: unidad.idUnidad || 0,
       estado: Boolean(unidad.estado),
     }));
 
@@ -137,13 +137,12 @@ export const UnidadTable = () => {
           addData={handleAddUnidad}
           onClose={handleClose}
         />
-        <Button
+        <Buton
+          text="Guardar"
           type="submit"
           form="unidad-form"
           className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+        />
       </Modall>
 
       <Modall
@@ -154,7 +153,7 @@ export const UnidadTable = () => {
         {selectedUnidad && (
           <FormUpdate
             unidades={UnidadsWithKey ?? []}
-            unidadId={selectedUnidad.id_unidad as number}
+            unidadId={selectedUnidad.idUnidad as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -166,7 +165,7 @@ export const UnidadTable = () => {
           data={UnidadsWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(unidad) => handleState(unidad.id_unidad)}
+          onDelete={(unidad) => handleState(unidad.idUnidad)}
           extraHeaderContent={
             <Buton text="Nueva unidad" onPress={() => setIsOpen(true)} />
           }

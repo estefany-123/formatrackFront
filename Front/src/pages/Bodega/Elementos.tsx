@@ -42,22 +42,22 @@ export const ElementosTable = () => {
     setSelectedElemento(null);
   };
 
-  const handleState = async (id_elemento: number) => {
-    await changeState(id_elemento);
+  const handleState = async (idElemento: number) => {
+    await changeState(idElemento);
   };
 
   const handleAddElemento = async (
     elemento: ElementoCreate
-  ): Promise<{ id_elemento: number }> => {
+  ): Promise<{ idElemento: number }> => {
     try {
       const response = await addElemento(elemento);
-      if (!response || !response.id_elemento) {
+      if (!response || !response.idElemento) {
         throw new Error(
-          "No se pudo agregar el elemento. La respuesta no contiene id_elemento."
+          "No se pudo agregar el elemento. La respuesta no contiene idElemento."
         );
       }
       handleClose(); // Cierra el modal solo si se ha agregado correctamente
-      return { id_elemento: response.id_elemento };
+      return { idElemento: response.idElemento };
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
       throw new Error("Error al agregar el elemento: ");
@@ -73,11 +73,11 @@ export const ElementosTable = () => {
   const columns: TableColumn<Elemento>[] = [
     {
       label: "Imagen",
-      key: "imagen_elemento",
+      key: "imagenElemento",
       render: (item: Elemento) => {
-        return item.imagen_elemento ? (
+        return item.imagenElemento ? (
           <img
-            src={`http://localhost:3000/img/${item.imagen_elemento}`}
+            src={`http://localhost:3000/img/${item.imagenElemento}`}
             alt="Imagen"
             width={200}
             height={50}
@@ -89,7 +89,6 @@ export const ElementosTable = () => {
     },
     { key: "nombre", label: "Nombre" },
     { key: "descripcion", label: "Descripcion" },
-    { key: "valor", label: "Valor" },
     {
       key: "tipoElemento",
       label: "Tipo Elemento",
@@ -97,19 +96,19 @@ export const ElementosTable = () => {
         <span>
           {elementos.perecedero
             ? "Perecedero"
-            : elementos.no_perecedero
+            : elementos.noPerecedero
               ? "No Perecedero"
               : "No Especificado"}
         </span>
       ),
     },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha Creación",
       render: (elemento: Elemento) => (
         <span>
-          {elemento.created_at
-            ? new Date(elemento.created_at).toLocaleDateString("es-ES", {
+          {elemento.createdAt
+            ? new Date(elemento.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -119,12 +118,12 @@ export const ElementosTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (elemento: Elemento) => (
         <span>
-          {elemento.updated_at
-            ? new Date(elemento.updated_at).toLocaleDateString("es-ES", {
+          {elemento.updatedAt
+            ? new Date(elemento.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -145,13 +144,13 @@ export const ElementosTable = () => {
   }
 
   const ElementosWithKey = elementos
-    ?.filter((elemento) => elemento?.id_elemento !== undefined)
+    ?.filter((elemento) => elemento?.idElemento !== undefined)
     .map((elemento) => ({
       ...elemento,
-      key: elemento.id_elemento
-        ? elemento.id_elemento.toString()
+      key: elemento.idElemento
+        ? elemento.idElemento.toString()
         : crypto.randomUUID(),
-      id_elemento: elemento.id_elemento || 0,
+      idElemento: elemento.idElemento || 0,
       estado: Boolean(elemento.estado),
     }));
 
@@ -216,7 +215,7 @@ export const ElementosTable = () => {
         {selectedElemento && (
           <FormUpdate
             elementos={ElementosWithKey ?? []}
-            elementoId={selectedElemento.id_elemento as number}
+            elementoId={selectedElemento.idElemento as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -228,7 +227,7 @@ export const ElementosTable = () => {
           data={ElementosWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(elemento) => handleState(elemento.id_elemento)}
+          onDelete={(elemento) => handleState(elemento.idElemento)}
           extraHeaderContent={
             <Buton text="Nuevo elemento" onPress={() => setIsOpen(true)} />
           }

@@ -11,6 +11,6 @@ export interface InventarioPostData {
 }
 
 export async function postInventario(data:InventarioPostData):Promise<any> {
-    const res = await axiosAPI.post(`inventario`, data);
+    const res = await axiosAPI.post(`inventarios`, data);
     return res.data;
 }

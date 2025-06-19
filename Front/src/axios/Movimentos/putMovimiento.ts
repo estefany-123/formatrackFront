@@ -20,6 +20,6 @@ export interface MovimientoPutData {
 }
 
 export async function putMovimiento(id:number, data:MovimientoPutData):Promise<any> {
-    const res = await axiosAPI.put(`movimiento/${id}`,data);
+    const res = await axiosAPI.patch(`movimientos/${id}`,data);
     return res.data
 }

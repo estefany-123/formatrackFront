@@ -3,9 +3,7 @@ import {
   HomeIcon,
   UserIcon,
   CubeIcon,
-  EnvelopeIcon,
   DocumentChartBarIcon,
-  ChartBarIcon,
   Bars3Icon,
   ArrowsRightLeftIcon,
   BuildingOfficeIcon,
@@ -50,11 +48,8 @@ const menuItems = [
     ],
   },
 
-  { name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes" },
-
   { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes" },
 
-  { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
 ];
 
 export default function Sidebar() {
