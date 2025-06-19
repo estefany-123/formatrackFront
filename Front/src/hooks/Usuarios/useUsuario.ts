@@ -53,7 +53,7 @@ export function useUsuario() {
 
 
     const getUserById = (id: number, usersList: User[]): User | null => {
-        return usersList.find((user) => user.id_usuario === id) || null;
+        return usersList.find((user) => user.idUsuario === id) || null;
     };
 
     const updateUserMutation = useMutation({

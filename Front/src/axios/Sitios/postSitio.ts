@@ -1,18 +1,16 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface SitioPostData {
-    id_sitio?: number;
+    idSitio?: number;
     nombre: string;
-    persona_encargada: string;
-    ubicacion: string;
-    estado: boolean;
-    created_at?:string;
-    updated_at?:string;
-    fk_tipo_sitio: number;
-    fk_area: number;
+    personaEncargada?: string;
+    ubicacion?: string;
+    estado?: boolean;
+    fkTipoSitio?: number;
+    fkArea?: number;
 }
 
 export async function postSitio(data:SitioPostData):Promise<any> {
-    const res = await axiosAPI.post(`sitio`, data);
+    const res = await axiosAPI.post(`sitios`, data);
     return res.data
 }

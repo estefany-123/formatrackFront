@@ -8,7 +8,7 @@ import { useSitios } from "@/hooks/sitios/useSitios";
 import { addToast } from "@heroui/react";
 
 type Props = {
-  sitios: (sitioUpdate & { id_sitio?: number })[];
+  sitios: (sitioUpdate & { idSitio?: number })[];
   sitioId: number;
   id: string;
   onclose: () => void;
@@ -27,21 +27,17 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
     resolver: zodResolver(sitioUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_sitio: foundSitio.id_sitio ?? 0,
       nombre: foundSitio.nombre,
-      persona_encargada: foundSitio.persona_encargada,
-      ubicacion: foundSitio.ubicacion,
-      estado: foundSitio.estado,
-      fk_tipo_sitio: foundSitio.fk_tipo_sitio,
-      fk_area: foundSitio.fk_area,
+      personaEncargada: foundSitio.personaEncargada,
+      ubicacion: foundSitio.ubicacion
     },
   });
 
   const onSubmit = async (data: sitioUpdate) => {
     console.log(data);
-    if (!data.id_sitio) return;
+    if (!data.idSitio) return;
     try {
-      await updateSitio(data.id_sitio, data);
+      await updateSitio(data.idSitio, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -76,9 +72,9 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
         label="Persona encargada"
         type="text"
         placeholder="Encargado"
-        {...register("persona_encargada")}
-        isInvalid={!!errors.persona_encargada}
-        errorMessage={errors.persona_encargada?.message}
+        {...register("personaEncargada")}
+        isInvalid={!!errors.personaEncargada}
+        errorMessage={errors.personaEncargada?.message}
       />
 
       <Input

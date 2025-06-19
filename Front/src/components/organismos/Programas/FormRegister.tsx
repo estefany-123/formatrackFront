@@ -81,7 +81,7 @@ export default function FormularioSede({
 
       <Controller
         control={control}
-        name="fk_area"
+        name="fkArea"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -90,12 +90,12 @@ export default function FormularioSede({
               {...field}
               value={field.value ?? ""}
               onChange={(e) => field.onChange(Number(e.target.value))}
-              isInvalid={!!errors.fk_area}
-              errorMessage={errors.fk_area?.message}
+              isInvalid={!!errors.fkArea}
+              errorMessage={errors.fkArea?.message}
             >
               {areas?.length ? (
                 areas.map((area) => (
-                  <SelectItem key={area.id_area}>{area.nombre}</SelectItem>
+                  <SelectItem key={area.idArea}>{area.nombre}</SelectItem>
                 ))
               ) : (
                 <SelectItem isDisabled>No hay áreas disponibles</SelectItem>

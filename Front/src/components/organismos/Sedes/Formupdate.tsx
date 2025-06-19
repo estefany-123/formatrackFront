@@ -8,7 +8,7 @@ import { useSede } from "@/hooks/sedes/useSedes";
 import { addToast } from "@heroui/react";
 
 type Props = {
-  sedes: (sedeUpdate & { id_sede?: number })[];
+  sedes: (sedeUpdate & { idSede?: number })[];
   sedeId: number;
   id: string;
   onclose: () => void;
@@ -27,18 +27,16 @@ export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
     resolver: zodResolver(sedeUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_sede: foundSede.id_sede,
-      nombre: foundSede.nombre,
-      estado: foundSede.estado,
-      fk_centro: foundSede.fk_centro,
+      idSede: foundSede.idSede,
+      nombre: foundSede.nombre
     },
   });
 
   const onSubmit = async (data: sedeUpdate) => {
     console.log(data);
-    if (!data.id_sede) return;
+    if (!data.idSede) return;
     try {
-      await updateSede(data.id_sede, data);
+      await updateSede(data.idSede, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",

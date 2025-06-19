@@ -1,9 +1,9 @@
 export type Pformacion = {
-    id_programa?: number;
+    idPrograma?: number;
     nombre: string;
     estado: boolean;
-    created_at?:string;
-    updated_at?:string;
-    fk_area: number;
+    createdAt?:string;
+    updatedAt?:string;
+    fkArea: number;
 }
 

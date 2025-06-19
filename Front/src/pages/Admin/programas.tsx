@@ -9,7 +9,7 @@ import { Pformacion } from "@/types/programaFormacion";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/Programas/FormUpdate";
+import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
 
 const ProgramasTable = () => {
   const { programas, isLoading, isError, error, addPrograma, changeState } =
@@ -35,8 +35,8 @@ const ProgramasTable = () => {
     setSelectedPrograma(null);
   };
 
-  const handleState = async (id_programa: number) => {
-    await changeState(id_programa);
+  const handleState = async (idPrograma: number) => {
+    await changeState(idPrograma);
   };
 
   const handleAddPrograma = async (programa: Pformacion) => {
@@ -57,12 +57,12 @@ const ProgramasTable = () => {
   const columns: TableColumn<Pformacion>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha Creación",
       render: (programa: Pformacion) => (
         <span>
-          {programa.created_at
-            ? new Date(programa.created_at).toLocaleDateString("es-ES", {
+          {programa.createdAt
+            ? new Date(programa.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -72,12 +72,12 @@ const ProgramasTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualizacion",
       render: (programa: Pformacion) => (
         <span>
-          {programa.updated_at
-            ? new Date(programa.updated_at).toLocaleDateString("es-ES", {
+          {programa.updatedAt
+            ? new Date(programa.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -100,16 +100,16 @@ const ProgramasTable = () => {
   const usersWithKey = programas
     ?.filter(
       (programa) =>
-        programa?.id_programa !== undefined &&
-        programa?.created_at &&
-        programa?.updated_at
+        programa?.idPrograma !== undefined &&
+        programa?.createdAt &&
+        programa?.updatedAt
     )
     .map((programa) => ({
       ...programa,
-      key: programa.id_programa
-        ? programa.id_programa.toString()
+      key: programa.idPrograma
+        ? programa.idPrograma.toString()
         : crypto.randomUUID(),
-      id_programa: programa.id_programa || 0,
+      idPrograma: programa.idPrograma || 0,
       estado: Boolean(programa.estado),
     }));
 
@@ -159,7 +159,7 @@ const ProgramasTable = () => {
         {selectedPrograma && (
           <FormUpdate
             programas={usersWithKey ?? []}
-            programaId={selectedPrograma.id_programa as number}
+            programaId={selectedPrograma.idPrograma as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -171,7 +171,7 @@ const ProgramasTable = () => {
           data={usersWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(programa) => handleState(programa.id_programa)}
+          onDelete={(programa) => handleState(programa.idPrograma)}
           extraHeaderContent={
             <Buton text="Añadir Programa" onPress={() => setIsOpen(true)} />
           }

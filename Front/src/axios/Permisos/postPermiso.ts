@@ -1,10 +1,10 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface PermisoPostData {
-    id_permiso?: number;
+    idPermiso?: number;
     permiso: string;
-    created_at?: string;
-    updated_at?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export async function postPermiso(data:PermisoPostData):Promise<any> {

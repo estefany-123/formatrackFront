@@ -32,11 +32,13 @@ export function useSede() {
     id: number,
     sedes: Sede[] | undefined = data
   ): Sede | null => {
-    return sedes?.find((sede) => sede.id_sede === id) || null;
+    return sedes?.find((sede) => sede.idSede === id) || null;
   };
 
   const updateSedesMutation = useMutation({
-    mutationFn: ({id,data}:{id: number, data: Sede; }) =>putSede(id, data),
+    mutationFn: ({id,data}:{id: number, data: Sede; }) =>{
+      const {idSede, ...resto}=data
+    return putSede(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["sedes"],
@@ -70,8 +72,8 @@ export function useSede() {
     return updateSedesMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (id_sede: number) => {
-    return changeStateMutation.mutateAsync(id_sede);
+  const changeState = async (idSede: number) => {
+    return changeStateMutation.mutateAsync(idSede);
   };
 
   return {

@@ -6,7 +6,7 @@ import Formulario from "@/components/organismos/permisos/FormRegister";
 import { useState } from "react";
 import { Permisos } from "@/types/permisos";
 import { usePermisos } from "@/hooks/permisos/usePermisos";
-import { FormUpdate } from "@/components/organismos/permisos/FormUpdate";
+import { FormUpdate } from "@/components/organismos/permisos/Formupdate";
 import { Button } from "@heroui/button";
 
 const PermisoTable = () => {
@@ -28,7 +28,7 @@ const PermisoTable = () => {
   };
 
   // const handleState = async (user: Permisos) => {
-  //     await changeState(user.id_permiso);
+  //     await changeState(user.idPermiso);
   // }
 
   const handleAddUser = async (permiso: Permisos) => {
@@ -59,13 +59,13 @@ const PermisoTable = () => {
   }
 
   const PermisoWithKey = permiso
-    ?.filter((permiso) => permiso?.id_permiso !== undefined)
+    ?.filter((permiso) => permiso?.idPermiso !== undefined)
     .map((permiso) => ({
       ...permiso,
-      key: permiso.id_permiso
-        ? permiso.id_permiso.toString()
+      key: permiso.idPermiso
+        ? permiso.idPermiso.toString()
         : crypto.randomUUID(),
-      estado: Boolean(permiso.id_permiso),
+      estado: Boolean(permiso.idPermiso),
     }));
 
   return (
@@ -101,7 +101,7 @@ const PermisoTable = () => {
         {selectedPermisos && (
           <FormUpdate
             permisos={PermisoWithKey ?? []}
-            permisoId={selectedPermisos.id_permiso as number}
+            permisoId={selectedPermisos.idPermiso as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
