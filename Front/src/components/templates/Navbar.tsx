@@ -10,12 +10,14 @@ import {
   Button,
 } from "@heroui/react";
 import { FormatrackLogo } from "../atoms/Icons";
-import { BellIcon } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
-import Modall from "../molecules/modal";
+import Modall from "../organismos/modal";
 // import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
 import Cookies from "universal-cookie";
+import { useAuth } from "@/providers/AuthProvider";
+import useLogin from "@/hooks/Usuarios/useLogin";
 
 type NavProps = {
   en_proceso: string;
@@ -31,6 +33,9 @@ export function Nav({ children }: NavProps) {
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
   const navigate = useNavigate();
   const cookies = new Cookies();
+  const { nombre } = useAuth();
+  const { logout } = useLogin();
+
   // const {
   //   notificaciones,
   //   isLoading,
@@ -60,9 +65,12 @@ export function Nav({ children }: NavProps) {
             <FormatrackLogo />
             <p className="hidden sm:block font-bold text-inherit">Formatrack</p>
           </NavbarBrand>
+
+
+
         </NavbarContent>
 
-        <NavbarContent as="div" className="items-center gap-4" justify="end">
+        <NavbarContent as="div" className="items-center gap-4" justify="center">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <button className="relative text-gray-700 dark:text-white">
@@ -74,6 +82,7 @@ export function Nav({ children }: NavProps) {
                 )}
               </button>
             </DropdownTrigger>
+
             <DropdownMenu
               aria-label="Notificaciones recientes"
               className="max-w-sm w-72"
@@ -97,29 +106,26 @@ export function Nav({ children }: NavProps) {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+          <div>{children}</div>
 
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                className="transition-transform"
-                color="secondary"
-                name="Usuario"
-                size="sm"
-              />
-            </DropdownTrigger>
-            <DropdownMenu variant="flat">
-              <DropdownItem key="Profile" onPress={handleGoToPerfil}>
-                Perfil
-              </DropdownItem>
-              <DropdownItem key="logout" color="danger" onClick={()=>{cookies.remove("token");window.location.href='/'}}>
-                Cerrar Sesión
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+
+
         </NavbarContent>
-        <div>{children}</div>
+
+        <NavbarContent justify="end" className="gap-3 pr-2">
+            {nombre && <p className="text-center my-4 flex items-center justify-center gap-2">{nombre}  </p>}
+            <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              color="secondary"
+              name="Usuario"
+              size="sm"
+            />
+            <ArrowRightStartOnRectangleIcon onClick={logout} height={24} className="hover:text-red-500 cursor-pointer transition" />
+
+          </NavbarContent>
+
       </Navbar>
 
       {/*<Modall

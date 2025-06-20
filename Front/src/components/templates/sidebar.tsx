@@ -15,6 +15,7 @@ import {
   TagIcon,
 } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
+import useLogin from "@/hooks/Usuarios/useLogin";
 
 const menuItems = [
   { name: "Inicio", icon: HomeIcon, href: "/" },
@@ -27,19 +28,7 @@ const menuItems = [
       { name: "Fichas", icon: TagIcon, href: "/admin/fichas" },
       { name: "Areas", icon: GlobeAmericasIcon, href: "/admin/areas" },
       { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" }
-
-    ],
-  },
-import { HomeIcon, UserIcon, Cog6ToothIcon, CubeIcon, EnvelopeIcon, ClipboardDocumentCheckIcon, DocumentChartBarIcon, ChartBarIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/providers/AuthProvider";
-import useLogin from "@/hooks/Usuarios/useLogin";
-
-export const menuItems = [
-  { name: "Inicio", icon: HomeIcon, href: "Home" },
-
-  { name: "Admin", icon: UserIcon, href: "/admin" },
-
+]},
   { name: "Bodega", icon: ArchiveBoxIcon, href: "#",
     subMenu: [
       {name:"Elementos", icon:CubeIcon, href:"/bodega/elementos" },
@@ -59,7 +48,7 @@ export default function Sidebar() {
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const {logout} = useLogin()
+
 
   const toggleItem = (name: string) => {
     setOpenItems((prev) =>

@@ -1,12 +1,12 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
+import Modall from "@/components/organismos/modal";
 import Formulario from "@/components/organismos/permisos/FormRegister";
 import { useState } from "react";
 import { Permisos } from "@/types/permisos";
 import { usePermisos } from "@/hooks/permisos/usePermisos";
-import { FormUpdate } from "@/components/organismos/permisos/FormUpdate";
+import { FormUpdate } from "@/components/organismos/permisos/Formupdate";
 import { Button } from "@heroui/button";
 
 const PermisoTable = () => {

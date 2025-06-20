@@ -41,7 +41,16 @@ export type LoginCrede = {
 }
 
 export type LoginRes = {
-    token : string,
+    access_token : string,
     documento : number,
     password : string
+}
+
+export type resetPassword = {
+    token:string,
+    password:string
+}
+
+export type forgotPassword = {
+    correo : string
 }

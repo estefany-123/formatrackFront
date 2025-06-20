@@ -26,6 +26,7 @@ import { TipoMovimientoTable } from "./pages/Bodega/TiposMovimiento";
 import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
 import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
 
@@ -68,6 +69,8 @@ function App() {
         </Route>
         </Route>
       <Route path="/login" element={<Login />} />
+      <Route path="/forgotPass" element={<ForgotPassword />} />
+
     </Routes>
   );
 }

@@ -1,14 +1,14 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
+import Modall from "@/components/organismos/modal";
 import Formulario from "@/components/organismos/Sedes/FormRegister";
 import { useState } from "react";
 import { useSede } from "@/hooks/sedes/useSedes";
 import { Button, Card, CardBody } from "@heroui/react";
 import { Sede } from "@/types/sedes";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/Sedes/FormUpdate";
+import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
 
 const SedeTable = () => {
   const { sede, isLoading, isError, error, addSede, changeState } = useSede();

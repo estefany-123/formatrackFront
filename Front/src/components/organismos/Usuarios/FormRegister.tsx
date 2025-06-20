@@ -27,11 +27,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         mode: "onChange"
     });
     
-
-
-
-
-
     const onSubmit = async (data: User) => {
         console.log(data);
         try {

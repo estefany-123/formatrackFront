@@ -1,14 +1,14 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
+import Modall from "@/components/organismos/modal";
 import Formulario from "@/components/organismos/fichas/FormRegister";
 import { useState } from "react";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdateFicha } from "@/components/organismos/fichas/FormUpdate";
+import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 
 const FichasTable = () => {
   const { fichas, isLoading, isError, error, addFicha, changeState } =
@@ -169,7 +169,7 @@ const FichasTable = () => {
           onEdit={handleEdit}
           onDelete={(ficha) => handleState(ficha.id_ficha)}
           extraHeaderContent={
-            <Buton text="Añadir Ficha" onPress={() => setIsOpen(true)} />
+            <Buton onPress={() => setIsOpen(true)}>Añadir Ficha</Buton>
           }
         />
       )}
