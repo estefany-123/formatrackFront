@@ -5,9 +5,7 @@ import {StateUsuario} from '@/axios/Usuarios/putStateUsuario';
 import { updateUsuario } from '@/axios/Usuarios/putUsuario';
 import { User,putUser } from '@/types/Usuario'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LoginCrede, LoginRes } from '@/types/Usuario';
-import Cookies from "js-cookie";
-import { axiosAPI } from '@/axios/axiosAPI';
+
 
 export function useUsuario() {
 
@@ -35,21 +33,6 @@ export function useUsuario() {
           console.log("Error al cargar el usuario", error);
         },
       });
-
-    const loginMutation = useMutation({
-        mutationFn : async (credenciales : LoginCrede ) : Promise<LoginRes> => {
-            const response = await axiosAPI.post<LoginRes>(`usuarios/login`,credenciales)
-            console.log("Esto es data :",response.data)
-            return response.data
-        },
-        onSuccess : (data) => {
-            Cookies.set("jwt",data.token,{expires :1})
-        },
-        onError : (error) => {
-            console.log("Error iniciando sesion:",error)
-        }
-    });
-
 
 
     const getUserById = (id: number, usersList: User[]): User | null => {

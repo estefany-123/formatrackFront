@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 
 
 type propsBut = {
-    text?: string,
+    text : React.ReactNode
     type? :"button" | "submit" | "reset" | undefined,
     isLoading? : boolean,
     form?:string, 

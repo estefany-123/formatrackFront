@@ -57,6 +57,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
+
   const toggleItem = (name: string) => {
     setOpenItems((prev) =>
       prev.includes(name)

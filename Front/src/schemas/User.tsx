@@ -71,11 +71,13 @@ export type User = z.infer<typeof UserSchema>
 
 export const LoginSchema = z.object({
     documento: z
-        .number({ message: "Documento es requerido y debe ser un numero" })
-        .min(10, { message: "Longitud minima de 10" }),
+        .string({ required_error: "Documento es requerido"})
+        .length(10, { message: "Debe tener exactamente 10 dígitos" })
+        .regex(/^\d+$/, { message: "Debe contener solo números" }),
     password: z
         .string()
-        .min(1,{message: "Contraseña es requerido" }),
+        .min(1, { message: "Contraseña es requerido" })
+        .min(8, { message: "minimo 8 caracteres" }),
 })
 
 
@@ -95,3 +97,22 @@ export const tokenSchema = z.object({
 
 
 export type LoginRes = z.infer<typeof tokenSchema>
+
+
+
+export const forgotPasswordSchema = z.object({
+    correo: z
+        .string()
+        .email({ message: "Ingresa un correo válido" })
+        .min(1, { message: "El correo es requerido" }),
+})
+
+export type forgotPass = z.infer<typeof forgotPasswordSchema>
+
+
+export const resetPasswordSchema = z.object({
+    password: z
+        .string({ required_error: "Contraseña es requerido" }),
+})
+
+export type resetPass = z.infer<typeof resetPasswordSchema>

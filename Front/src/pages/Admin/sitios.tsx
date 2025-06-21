@@ -1,7 +1,7 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
+import Modall from "@/components/organismos/modal";
 import Formulario from "@/components/organismos/Sitios/FormRegister";
 import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Sitios/Formupdate";

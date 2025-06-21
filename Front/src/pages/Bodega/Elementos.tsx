@@ -1,7 +1,7 @@
 import Globaltable from "@/components/organismos/table.tsx";
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
+import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";

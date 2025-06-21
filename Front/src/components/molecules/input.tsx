@@ -2,7 +2,6 @@ import { Input } from "@heroui/input";
 
 type InputProps = {
   label: string;
-  className?: string;
   placeholder?: string;
   type: string;
   isRequired?: boolean;
@@ -12,23 +11,11 @@ type InputProps = {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   selectedKey?: string;
-  accept?:string
+  accept?: string
 };
-export default function Inpu({
-  label,
-  placeholder,
-  type,
-  name,
-  isRequired,
-  labelPlacement,
-  value,
-  onChange,
-  error,
-  accept
-}: InputProps) {
+export default function Inpu({label,placeholder,type,name,isRequired,labelPlacement,value,onChange,error,accept }: InputProps) {
   return (
     <Input
-      aria-label={label}
       isRequired={isRequired}
       label={label}
       labelPlacement={labelPlacement}
@@ -42,6 +29,6 @@ export default function Inpu({
       {...error && (
         <span className="text-sm text-red-500 mt-1 ml-1">{error}</span>
       )}
-      />
+    />
   );
 }

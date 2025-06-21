@@ -1,7 +1,7 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
+import Modall from "@/components/organismos/modal";
 import Formulario from "@/components/organismos/fichas/FormRegister";
 import { useState } from "react";
 import { useFichas } from "@/hooks/fichas/useFichas";
@@ -166,7 +166,7 @@ const FichasTable = () => {
           onEdit={handleEdit}
           onDelete={(ficha) => handleState(ficha.idFicha)}
           extraHeaderContent={
-            <Buton text="Añadir Ficha" onPress={() => setIsOpen(true)} />
+            <Buton onPress={() => setIsOpen(true)}>Añadir Ficha</Buton>
           }
         />
       )}

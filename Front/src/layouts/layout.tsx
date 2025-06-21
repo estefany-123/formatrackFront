@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "@/components/organismos/sidebar";
-import { Nav } from "@/components/organismos/Navbar";
+import Sidebar from "@/components/templates/sidebar";
+import { Nav } from "@/components/templates/Navbar";
 import { DarkMode } from "@/components/molecules/DarkMode";
 import { useState } from "react";
 

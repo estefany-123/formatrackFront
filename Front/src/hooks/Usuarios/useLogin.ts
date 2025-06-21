@@ -1,4 +1,4 @@
-import { axiosAPI } from "@/axios/axiosAPI";
+import { postLogin } from "@/axios/Usuarios/postLogin";
 import { useAuth } from "@/providers/AuthProvider";
 import { Credenciales } from "@/schemas/User";
 import { jwtDecode } from "jwt-decode";
@@ -18,9 +18,10 @@ export default function useLogin(){
 
     async function login(data : Credenciales){
         try{
-            
-            const response : {data : {access_token : string}} = await axiosAPI.post('/auth/login',data);
-            const token = response.data.access_token;
+           
+            const response  = await postLogin(data);
+             console.log(response)
+            const token = response.access_token;
             cookies.set("token",token);
             //Auth
             const {nombre,apellido} : {nombre : string, apellido : string}= jwtDecode(token);

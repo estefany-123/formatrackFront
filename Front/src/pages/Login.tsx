@@ -10,7 +10,8 @@ function Login({ }: Props) {
 
   const { login, isError, error } = useLogin();
   const {register, handleSubmit, formState : { errors }, setValue} = useForm({
-    resolver :  zodResolver(LoginSchema)
+    resolver :  zodResolver(LoginSchema),
+    mode:"onChange"
   });
 
   return (
@@ -26,14 +27,16 @@ function Login({ }: Props) {
             <form onSubmit={handleSubmit(login)} className="space-y-4">
               <h1 className="text-2xl text-center text-blue-500 ">INICIO DE SESION</h1>
 
-              <Input onChange={ (e) =>setValue("documento",parseInt(e.target.value))} label="Numero de documento" placeholder="Documento" type="number" />
-              {errors.documento && <p className="text-red-500">{errors.documento.message}</p>}
-              <Input {...register("password")} label="Contraseña" placeholder="Password" type="password" />
-              {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+              <Input label="Numero de documento" placeholder="Documento" type="text"  {...register("documento")} isInvalid={!!errors.documento}
+                errorMessage={errors.documento?.message} />
+              
+              <Input {...register("password")} label="Contraseña" placeholder="Password" type="password" isInvalid={!!errors.password}
+                errorMessage={errors.password?.message} />
+              
 
-              <p className="text-center"><a href="">He olvidado mi contraseña</a></p>
+              <p className="text-center"><a href="/forgotPass">He olvidado mi contraseña</a></p>
               <div className="flex">
-                <Button color="primary" type="submit" className=" text-white px-8 mx-auto">Ingresar</Button>
+                <Button color="primary" type="submit" className="text-white px-8 mx-auto">Ingresar</Button>
               </div>
               {isError && <p>{error}</p>}
             </form>
