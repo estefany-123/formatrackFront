@@ -72,8 +72,8 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
     }
     if (startDate || endDate) {
       result = result.filter((item) => {
-        const itemDate = new Date((item as any).created_at);
-        const valueDate = new Date((item as any).updated_at);
+        const itemDate = new Date((item as any).createdAt);
+        const valueDate = new Date((item as any).updatedAt);
         if (startDate && new Date(startDate) > itemDate) return false;
         if (endDate && new Date(endDate) < itemDate) return false;
         if (startDate && new Date(startDate) > valueDate) return false;

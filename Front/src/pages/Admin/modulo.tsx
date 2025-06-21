@@ -5,8 +5,10 @@ import Modall from "@/components/molecules/modal";
 import FormModulos from "@/components/organismos/Modulos/FormModulos";
 import { useState } from "react";
 import FormUpModulo from "@/components/organismos/Modulos/FormUpModulo";
-import { Modulo } from "@/schemas/Modulo";
 import { useModulo } from "@/hooks/Modulos/useModulo";
+import { Card, CardBody } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
+import { Modulo } from "@/types/Modulo";
 
 const ModulosTable = () => {
   const { modulos, isLoading, isError, error, addModulo, changeState } =
@@ -20,14 +22,20 @@ const ModulosTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedModulo, setSelectedModulo] = useState<Modulo | null>(null);
 
+    const navigate = useNavigate();
+  
+    const handleGoToRuta = () => {
+      navigate("/admin/rutas");
+    };
+
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedModulo(null);
   };
 
   const handleState = async (modulos: Modulo) => {
-    await changeState(modulos.id_modulo);
-    console.log(modulos.id_modulo);
+    await changeState(modulos.idModulo);
+    console.log(modulos.idModulo);
   };
 
   const handleAddModulo = async (modulos: Modulo) => {
@@ -47,8 +55,38 @@ const ModulosTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Modulo>[] = [
     { key: "nombre", label: "Nombre" },
-    { key: "estado", label: "estado" },
     { key: "descripcion", label: "descripcion" },
+    {
+          key: "createdAt",
+          label: "Fecha Creacion",
+          render: (modulo: Modulo) => (
+            <span>
+              {modulo.createdAt
+                ? new Date(modulo.createdAt).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })
+                : "N/A"}
+            </span>
+          ),
+        },
+        {
+          key: "updatedAt",
+          label: "Fecha Actualización",
+          render: (modulo: Modulo) => (
+            <span>
+              {modulo.updatedAt
+                ? new Date(modulo.updatedAt).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })
+                : "N/A"}
+            </span>
+          ),
+        },
+    { key: "estado", label: "estado" },
   ];
 
   if (isLoading) {
@@ -60,18 +98,27 @@ const ModulosTable = () => {
   }
 
   const ModulosWithKey = modulos
-    ?.filter((modulos) => modulos?.id_modulo !== undefined)
+    ?.filter((modulos) => modulos?.idModulo !== undefined)
     .map((modulos) => ({
       ...modulos,
-      key: modulos.id_modulo
-        ? modulos.id_modulo.toString()
-        : crypto.randomUUID(),
+      key: modulos.idModulo ? modulos.idModulo.toString() : crypto.randomUUID(),
       estado: Boolean(modulos.estado),
     }));
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Tabla de Modulos</h1>
+      <div className="flex pb-4 pt-4">
+        <Card className="w-full">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Gestionar Modulos</h1>
+              <div className="flex gap-2">
+                <Buton text="Rutas" onPress={handleGoToRuta} />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
 
       <Modall
         ModalTitle="Agregar modulo"
@@ -79,17 +126,16 @@ const ModulosTable = () => {
         onOpenChange={handleClose}
       >
         <FormModulos
-          id="user-form"
+          id="modulo-form"
           addData={handleAddModulo}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
-          form="user-form"
+          form="modulo-form"
           className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+        />
       </Modall>
 
       <Modall
@@ -100,7 +146,7 @@ const ModulosTable = () => {
         {selectedModulo && (
           <FormUpModulo
             modulos={ModulosWithKey ?? []}
-            moduloId={selectedModulo.id_modulo}
+            moduloId={selectedModulo.idModulo}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

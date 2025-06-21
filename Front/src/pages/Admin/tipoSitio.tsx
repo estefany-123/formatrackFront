@@ -5,11 +5,10 @@ import Modall from "@/components/molecules/modal";
 import FormTipos from "@/components/organismos/TiposSitio/FormTipos";
 import { useState } from "react";
 import FormUpTipos from "@/components/organismos/TiposSitio/FormUpTipos";
-import { TipoSitio } from "@/schemas/TipoSitio";
 import { useTipoSitio } from "@/hooks/TipoSitio/useTipoSitio";
-import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { TipoSitio } from "@/types/TipoSitio";
 
 const TipoSitioTable = () => {
   const { tipos, isLoading, isError, error, addTipo, changeState } =
@@ -34,8 +33,8 @@ const TipoSitioTable = () => {
   };
 
   const handleState = async (tipos: TipoSitio) => {
-    await changeState(tipos.id_tipo as number);
-    console.log(tipos.id_tipo);
+    await changeState(tipos.idTipo as number);
+    console.log(tipos.idTipo);
   };
 
   const handleAddCentro = async (tipos: TipoSitio) => {
@@ -55,6 +54,36 @@ const TipoSitioTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<TipoSitio>[] = [
     { key: "nombre", label: "Nombre" },
+    {
+      key: "createdAt",
+      label: "Fecha Creacion",
+      render: (tipoSitio: TipoSitio) => (
+        <span>
+          {tipoSitio.createdAt
+            ? new Date(tipoSitio.createdAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      label: "Fecha Actualización",
+      render: (tipoSitio: TipoSitio) => (
+        <span>
+          {tipoSitio.updatedAt
+            ? new Date(tipoSitio.updatedAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
     { key: "estado", label: "estado" },
   ];
 
@@ -67,11 +96,11 @@ const TipoSitioTable = () => {
   }
 
   const tiposWithKey = tipos
-    ?.filter((tipos) => tipos?.id_tipo !== undefined)
+    ?.filter((tipos) => tipos?.idTipo !== undefined)
     .map((tipos) => ({
       ...tipos,
-      key: tipos.id_tipo ? tipos.id_tipo.toString() : crypto.randomUUID(),
-      id_tipo: tipos.id_tipo as number,
+      key: tipos.idTipo ? tipos.idTipo.toString() : crypto.randomUUID(),
+      idTipo: tipos.idTipo as number,
       estado: Boolean(tipos.estado),
     }));
 
@@ -81,14 +110,9 @@ const TipoSitioTable = () => {
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Gestionar Sitios</h1>
+              <h1 className="text-2xl font-bold">Gestionar Tipos de Sitio</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToSitio}
-                >
-                  Gestionar Tipos
-                </Button>
+                <Buton text="Sitios" onPress={handleGoToSitio} />
               </div>
             </div>
           </CardBody>
@@ -101,28 +125,27 @@ const TipoSitioTable = () => {
         onOpenChange={handleClose}
       >
         <FormTipos
-          id="user-form"
+          id="tipo-form"
           addData={handleAddCentro}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
-          form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+          form="tipo-form"
+          className="w-full rounded-xl"
+        />
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Tipo Sitio"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
         {selectedUser && (
           <FormUpTipos
             tipos={tiposWithKey ?? []}
-            tipoSitioId={selectedUser.id_tipo as number}
+            tipoSitioId={selectedUser.idTipo as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

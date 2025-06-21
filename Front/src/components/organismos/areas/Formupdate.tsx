@@ -5,6 +5,7 @@ import { AreaUpdateSchema, AreaUpdate } from "@/schemas/Area";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type FormuProps = {
   areas: AreaUpdate[];
@@ -63,14 +64,13 @@ export const FormUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div className="justify-center pl-10">
-        <Button
+      <div className="justify-center">
+        <Buton
+          text="Guardar"
           type="submit"
           isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+          className="w-full rounded-xl"
+        />
       </div>
     </form>
   );

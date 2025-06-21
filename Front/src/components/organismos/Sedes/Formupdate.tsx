@@ -2,10 +2,10 @@ import { Form } from "@heroui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
 import { sedeUpdate, sedeUpdateSchema } from "@/schemas/sedes";
 import { useSede } from "@/hooks/sedes/useSedes";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
   sedes: (sedeUpdate & { idSede?: number })[];
@@ -28,7 +28,7 @@ export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
     mode: "onChange",
     defaultValues: {
       idSede: foundSede.idSede,
-      nombre: foundSede.nombre
+      nombre: foundSede.nombre,
     },
   });
 
@@ -65,15 +65,13 @@ export const FormUpdate = ({ sedes, sedeId, id, onclose }: Props) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div className="justify-center pl-10">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

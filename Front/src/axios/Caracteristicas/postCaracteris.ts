@@ -5,7 +5,7 @@ export async function postCaracteristica(
     data: Caracteristica
   ): Promise<any> {
     const response = await axiosAPI.post(
-      "caracteristicas/",
+      "caracteristicas",
       data
     );
     return response.data; 

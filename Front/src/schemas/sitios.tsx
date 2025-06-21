@@ -10,46 +10,17 @@ export const sitioUpdateSchema = z.object({
   personaEncargada: z
     .string()
     .min(1, { message: "persona encargada es requerido" })
-    .min(8, { message: "Longitud minima de 8" }),
+    .min(8, { message: "Longitud minima de 8" }).optional(),
 
   ubicacion: z
     .string()
     .min(1, { message: "ubicacion es requerido" })
-    .min(2, { message: "Longitud minima de 2" }),
+    .min(2, { message: "Longitud minima de 2" }).optional()
 
 });
 
 export type sitioUpdate = z.infer<typeof sitioUpdateSchema>;
 
-export const sitioSchema = z.object({
-  idSitio: z.number(),
-
-  nombre: z
-    .string()
-    .min(1, { message: "Nombre es requerido" })
-    .min(3, { message: "Longitud minima de 3" }),
-
-  personaEncargada: z
-    .string()
-    .min(1, { message: "persona encargada es requerido" })
-    .min(8, { message: "Longitud minima de 8" }),
-
-  ubicacion: z
-    .string()
-    .min(1, { message: "ubicacion es requerido" })
-    .min(2, { message: "Longitud minima de 2" }),
-
-  createdAt: z.string(),
-  updatedAt: z.string(),
-
-  estado: z.boolean({ required_error: "Estado es requerido" }),
-
-  fkTipoSitio: z.number({ message: "tipo sitio es requerido" }),
-
-  fkArea: z.number({ message: "area  es requerido" }),
-});
-
-export type sitio = z.infer<typeof sitioSchema>;
 
 export const sitioCreateSchema = z.object({
   nombre: z

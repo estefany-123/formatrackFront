@@ -1,11 +1,13 @@
 export type Municipio = {
-    id_municipio : number,
-    nombre : string,
-    departamento : string,
-    estado : boolean
-}
+  idMunicipio: number;
+  nombre: string;
+  departamento: string;
+  estado: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 export type UpdMunicipio = {
-    id_municipio : number,
-    nombre : string
-}
+  idMunicipio: number;
+  nombre: string;
+};

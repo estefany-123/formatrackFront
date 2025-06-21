@@ -197,13 +197,12 @@ export const ElementosTable = () => {
           onClose={handleClose}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+            text="Guardar"
             type="submit"
             form="element-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full p-2 rounded-xl"
+          />
         </div>
       </Modall>
 

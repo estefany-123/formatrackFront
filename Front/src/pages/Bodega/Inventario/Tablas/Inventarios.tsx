@@ -41,8 +41,8 @@ export const InventariosTable = ({
     setSelectedInventario(null);
   };
 
-  const handleState = async (id_inventario: number) => {
-    await changeState(id_inventario);
+  const handleState = async (idInventario: number) => {
+    await changeState(idInventario);
   };
 
   const handleAddInventario = async (inventario: Inventario) => {
@@ -62,24 +62,24 @@ export const InventariosTable = ({
   // Definir las columnas de la tabla
   const columns = (elementos: Elemento[]): TableColumn<Inventario>[] => [
     {
-      key: "fk_elemento",
+      key: "fkElemento",
       label: "Elemento",
       render: (inventario: Inventario) => {
         const elemento = elementos.find(
-          (el) => el.idElemento === inventario.fk_elemento
+          (el) => el.idElemento === inventario.fkElemento
         );
         return <span>{elemento?.nombre ?? "No encontrado"}</span>;
       },
     },
     {
-      key: "imagen_elemento",
+      key: "imagenElemento",
       label: "Imagen",
       render: (inventario: Inventario) => {
         const elemento = elementos.find(
-          (el) => el.idElemento === inventario.fk_elemento
+          (el) => el.idElemento === inventario.fkElemento
         );
 
-        const imagen = elemento?.imagen_elemento;
+        const imagen = elemento?.imagenElemento;
 
         if (!imagen) return <span>No encontrado</span>;
 
@@ -96,12 +96,12 @@ export const InventariosTable = ({
     },
     { key: "stock", label: "Cantidad" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha Creación",
       render: (inventario: Inventario) => (
         <span>
-          {inventario.created_at
-            ? new Date(inventario.created_at).toLocaleDateString("es-ES", {
+          {inventario.createdAt
+            ? new Date(inventario.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -111,12 +111,12 @@ export const InventariosTable = ({
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (inventario: Inventario) => (
         <span>
-          {inventario.updated_at
-            ? new Date(inventario.updated_at).toLocaleDateString("es-ES", {
+          {inventario.updatedAt
+            ? new Date(inventario.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -141,15 +141,15 @@ export const InventariosTable = ({
   const InventariosWithKey = filtered
     ?.filter(
       (inventario) =>
-        inventario?.id_inventario !== undefined &&
-        (idSitio ? inventario.fk_sitio === idSitio : true)
+        inventario?.idInventario !== undefined &&
+        (idSitio ? inventario.fkSitio === idSitio : true)
     )
     .map((inventario) => ({
       ...inventario,
-      key: inventario.id_inventario
-        ? inventario.id_inventario.toString()
+      key: inventario.idInventario
+        ? inventario.idInventario.toString()
         : crypto.randomUUID(),
-      id_inventario: inventario.id_inventario || 0,
+      idInventario: inventario.idInventario || 0,
       estado: Boolean(inventario.estado),
     }));
 
@@ -173,9 +173,10 @@ export const InventariosTable = ({
         />
         <div className="justify-center pt-2">
           <Buton
+            text="Guardar"
             type="submit"
             form="inventario-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
+            className="w-full p-2 rounded-xl"
           />
         </div>
       </Modall>
@@ -184,7 +185,7 @@ export const InventariosTable = ({
         <Globaltable
           data={InventariosWithKey}
           columns={columns(elementos ?? [])}
-          onDelete={(inventario) => handleState(inventario.id_inventario)}
+          onDelete={(inventario) => handleState(inventario.idInventario)}
           extraHeaderContent={
             <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
           }

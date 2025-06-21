@@ -88,7 +88,7 @@ console.log("Errores", errors)
           name="fk_sitio"
           defaultValue={typeof idSitio === "number" ? idSitio : undefined}
           render={({ field }) => {
-            const sitioActual = sitios.find((s) => s.id_sitio === idSitio);
+            const sitioActual = sitios.find((s) => s.idSitio === idSitio);
 
             return (
               <div className="w-full">
@@ -114,7 +114,7 @@ console.log("Errores", errors)
                     errorMessage={errors.fk_sitio?.message}
                   >
                     {sitios.map((sitio) => (
-                      <SelectItem key={sitio.id_sitio} textValue={sitio.nombre}>
+                      <SelectItem key={sitio.idSitio} textValue={sitio.nombre}>
                         {sitio.nombre}
                       </SelectItem>
                     ))}
@@ -149,7 +149,7 @@ console.log("Errores", errors)
                 {elementos.length ? (
                   elementos.map((elemento) => (
                     <SelectItem
-                      key={elemento.id_elemento}
+                      key={elemento.idElemento}
                       textValue={elemento.nombre}
                     >
                       {elemento.nombre}

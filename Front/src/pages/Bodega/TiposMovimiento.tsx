@@ -135,13 +135,14 @@ export const TipoMovimientoTable = () => {
           addData={handleAddTipoMovimiento}
           onClose={handleClose}
         />
-        <Button
-          type="submit"
-          form="tipo-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+        <div>
+          <Buton
+            text="Guardar"
+            type="submit"
+            form="tipo-form"
+            className="w-full p-2 rounded-xl"
+          />
+        </div>
       </Modall>
 
       <Modall

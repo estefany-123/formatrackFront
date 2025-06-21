@@ -8,7 +8,7 @@ import FormUpCategoria from "@/components/organismos/Categorias/FormUpCategoria"
 import { Categoria } from "@/types/Categorias";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 
 const CategoriasTable = () => {
   const { categorias, isLoading, isError, error, addCategoria, changeState } =
@@ -36,8 +36,8 @@ const CategoriasTable = () => {
   };
 
   const handleState = async (categorias: Categoria) => {
-    await changeState(categorias.id_categoria);
-    console.log(categorias.id_categoria);
+    await changeState(categorias.idCategoria);
+    console.log(categorias.idCategoria);
   };
 
   const handleAddCategoria = async (categoria: Categoria) => {
@@ -57,6 +57,36 @@ const CategoriasTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Categoria>[] = [
     { key: "nombre", label: "Nombre" },
+    {
+      key: "createdAt",
+      label: "Fecha Creacion",
+      render: (categoria: Categoria) => (
+        <span>
+          {categoria.createdAt
+            ? new Date(categoria.createdAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      label: "Fecha Actualización",
+      render: (categoria: Categoria) => (
+        <span>
+          {categoria.updatedAt
+            ? new Date(categoria.updatedAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
     { key: "estado", label: "estado" },
   ];
 
@@ -69,11 +99,11 @@ const CategoriasTable = () => {
   }
 
   const categoriasWithKey = categorias
-    ?.filter((categorias) => categorias?.id_categoria !== undefined)
+    ?.filter((categorias) => categorias?.idCategoria !== undefined)
     .map((categorias) => ({
       ...categorias,
-      key: categorias.id_categoria
-        ? categorias.id_categoria.toString()
+      key: categorias.idCategoria
+        ? categorias.idCategoria.toString()
         : crypto.randomUUID(),
       estado: Boolean(categorias.estado),
     }));
@@ -86,12 +116,7 @@ const CategoriasTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Tipos</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToElemento}
-                >
-                  Elementos
-                </Button>
+                <Buton text="Elementos" onPress={handleGoToElemento} />
               </div>
             </div>
           </CardBody>
@@ -107,13 +132,12 @@ const CategoriasTable = () => {
           addData={handleAddCategoria}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
           form="categoria-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+          className="rounded-xl"
+        />
       </Modall>
 
       <Modall
@@ -124,7 +148,7 @@ const CategoriasTable = () => {
         {selectedCategoria && (
           <FormUpCategoria
             categorias={categoriasWithKey ?? []}
-            categoriaId={selectedCategoria.id_categoria}
+            categoriaId={selectedCategoria.idCategoria}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

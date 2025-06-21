@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const TipoSitioSchema = z.object({
-    id_tipo : z.number().optional(),
     nombre : z.string().min(1,{message : "Nombre es reqerido"}).min(4,"Mínimo 4 caracteres"),
     estado: z
     .boolean({ required_error: "Estado es requerido" }),
@@ -10,7 +9,7 @@ export const TipoSitioSchema = z.object({
 export type TipoSitio = z.infer<typeof TipoSitioSchema>
 
 export const TipoSitioUpdateSchema = z.object({
-    id_tipo : z.number(),
+    idTipo : z.number(),
     nombre : z.string().min(4,"Mínimo 4 caracteres")
 })
 

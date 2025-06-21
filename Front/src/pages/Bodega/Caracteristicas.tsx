@@ -3,16 +3,16 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
-import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
-import { FormUpdate } from "@/components/organismos/UnidadesMedida/FormUpdate";
-import { Unidad } from "@/types/Unidad";
+import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
+import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
+import { FormUpdate } from "@/components/organismos/TiposMovimiento/FormUpdate";
+import { TipoMovimiento } from "@/types/TipoMovimiento";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
-export const UnidadTable = () => {
-  const { unidades, isLoading, isError, error, addUnidad, changeState } =
-    useUnidad();
+export const TipoMovimientoTable = () => {
+  const { tipos, isLoading, isError, error, addTipoMovimiento, changeState } =
+    useTipoMovimiento();
 
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
@@ -20,50 +20,48 @@ export const UnidadTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedUnidad, setSelectedUnidad] = useState<Unidad | null>(null);
+  const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
+    useState<TipoMovimiento | null>(null);
 
   const navigate = useNavigate();
 
   const handleGoToElemento = () => {
-    navigate("/bodega/elementos");
+    navigate("/bodega/movimientos");
   };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
-    setSelectedUnidad(null);
+    setSelectedTipoMovimiento(null);
   };
 
-  const handleState = async (idUnidad: number) => {
-    await changeState(idUnidad);
+  const handleState = async (idTipo: number) => {
+    await changeState(idTipo);
   };
 
-  const handleAddUnidad = async (unidad: Unidad) => {
+  const handleAddTipoMovimiento = async (tipo: TipoMovimiento) => {
     try {
-      await addUnidad(unidad);
+      await addTipoMovimiento(tipo);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
-      console.error("Error al agregar la unidad:", error);
+      console.error("Error al agregar el tipo de movimiento:", error);
     }
   };
 
-  const handleEdit = (unidad: Unidad) => {
-    if (!unidad || !unidad.idUnidad) {
-      return;
-    }
-    setSelectedUnidad(unidad);
+  const handleEdit = (tipo: TipoMovimiento) => {
+    setSelectedTipoMovimiento(tipo);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<Unidad>[] = [
+  const columns: TableColumn<TipoMovimiento>[] = [
     { key: "nombre", label: "Nombre" },
     {
       key: "createdAt",
       label: "Fecha Creación",
-      render: (unidad: Unidad) => (
+      render: (tipo: TipoMovimiento) => (
         <span>
-          {unidad.createdAt
-            ? new Date(unidad.createdAt).toLocaleDateString("es-ES", {
+          {tipo.createdAt
+            ? new Date(tipo.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -75,10 +73,10 @@ export const UnidadTable = () => {
     {
       key: "updatedAt",
       label: "Fecha Actualización",
-      render: (unidad: Unidad) => (
+      render: (tipo: TipoMovimiento) => (
         <span>
-          {unidad.updatedAt
-            ? new Date(unidad.updatedAt).toLocaleDateString("es-ES", {
+          {tipo.updatedAt
+            ? new Date(tipo.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -98,13 +96,13 @@ export const UnidadTable = () => {
     return <span>Error: {error?.message}</span>;
   }
 
-  const UnidadsWithKey = unidades
-    ?.filter((unidad) => unidad?.idUnidad !== undefined)
-    .map((unidad) => ({
-      ...unidad,
-      key: unidad.idUnidad ? unidad.idUnidad.toString() : crypto.randomUUID(),
-      idUnidad: unidad.idUnidad || 0,
-      estado: Boolean(unidad.estado),
+  const TipoMovimientosWithKey = tipos
+    ?.filter((tipo) => tipo?.idTipo !== undefined)
+    .map((tipo) => ({
+      ...tipo,
+      key: tipo.idTipo ? tipo.idTipo.toString() : crypto.randomUUID(),
+      idTipo: tipo.idTipo || 0,
+      estado: Boolean(tipo.estado),
     }));
 
   return (
@@ -113,13 +111,13 @@ export const UnidadTable = () => {
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Gestionar Unidades</h1>
+              <h1 className="text-2xl font-bold">Gestionar Tipos</h1>
               <div className="flex gap-2">
                 <Button
                   className="text-white bg-blue-700"
                   onPress={handleGoToElemento}
                 >
-                  Elementos
+                  Movimientos
                 </Button>
               </div>
             </div>
@@ -128,48 +126,47 @@ export const UnidadTable = () => {
       </div>
 
       <Modall
-        ModalTitle="Registrar Nueva Unidad"
+        ModalTitle="Registrar Nuevo Tipo de Movimiento"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <Formulario
-          id="unidad-form"
-          addData={handleAddUnidad}
+          id="tipo-form"
+          addData={handleAddTipoMovimiento}
           onClose={handleClose}
         />
-        <div>
-          <Buton
-            text="Guardar"
-            type="submit"
-            form="unidad-form"
-            className="w-full p-2 rounded-xl"
-          />
-        </div>
+        <Button
+          type="submit"
+          form="tipo-form"
+          className="w-full bg-blue-700 text-white p-2 rounded-xl"
+        >
+          Guardar
+        </Button>
       </Modall>
 
       <Modall
-        ModalTitle="Editar Unidad"
+        ModalTitle="Editar Tipo de Movimiento"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
-        {selectedUnidad && (
+        {selectedTipoMovimiento && (
           <FormUpdate
-            unidades={UnidadsWithKey ?? []}
-            unidadId={selectedUnidad.idUnidad as number}
+            tipos={TipoMovimientosWithKey ?? []}
+            tipoId={selectedTipoMovimiento.idTipo as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
         )}
       </Modall>
 
-      {UnidadsWithKey && (
+      {TipoMovimientosWithKey && (
         <Globaltable
-          data={UnidadsWithKey}
+          data={TipoMovimientosWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(unidad) => handleState(unidad.idUnidad)}
+          onDelete={(tipo) => handleState(tipo.idTipo)}
           extraHeaderContent={
-            <Buton text="Nueva unidad" onPress={() => setIsOpen(true)} />
+            <Buton text="Nuevo tipo" onPress={() => setIsOpen(true)} />
           }
         />
       )}

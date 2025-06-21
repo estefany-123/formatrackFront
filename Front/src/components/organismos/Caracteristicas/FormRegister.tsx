@@ -1,41 +1,42 @@
 import { Form } from "@heroui/form";
-import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
-import { useForm, Controller } from "react-hook-form";
+import { addToast, Input, Select, SelectItem } from "@heroui/react";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoriaSchema, Categoria } from "@/schemas/Categorias";
+import { TipoCreate, TipoCreateSchema } from "@/schemas/TipoMovimiento";
 
 type FormularioProps = {
-  addData: (categorias: Categoria) => Promise<void>;
+  addData: (tipo: TipoCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
 
-export default function FormCategorias({
-  addData,
-  onClose,
-  id,
-}: FormularioProps) {
+export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Categoria>({
-    resolver: zodResolver(CategoriaSchema),
+  } = useForm<TipoCreate>({
+    resolver: zodResolver(TipoCreateSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: Categoria) => {
-    console.log(data);
+  const onSubmit = async (data: TipoCreate) => {
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Tipo Movimiento agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-
+  console.log("Errores", errors)
   return (
     <Form
       id={id}
@@ -44,8 +45,8 @@ export default function FormCategorias({
     >
       <Input
         label="Nombre"
-        type="text"
         placeholder="Nombre"
+        type="text"
         {...register("nombre")}
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
@@ -60,6 +61,8 @@ export default function FormCategorias({
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>

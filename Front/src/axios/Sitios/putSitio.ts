@@ -5,10 +5,9 @@ export interface SitioPutData {
     nombre: string;
     personaEncargada?: string;
     ubicacion?: string;
-
 }
 
-export async function putSitio(id:number, data:SitioPutData):Promise<any> {
-    const res = await axiosAPI.patch(`sitios/${id}`, data);
+export async function putSitio(idSitio:number, data:SitioPutData):Promise<any> {
+    const res = await axiosAPI.patch(`sitios/${idSitio}`, data);
     return res.data
 }

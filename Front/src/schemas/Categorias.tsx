@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CategoriaSchema = z.object({
-    id_categoria : z.number().optional(),
+    idCategoria : z.number(),
     nombre : z.string().min(1,{message : "Es necesario un nombre"}).min(3,"Mínimo 3 caracteres"),
     estado: z
         .boolean({ required_error: "Estado es requerido" }),
@@ -11,7 +11,7 @@ export const CategoriaSchema = z.object({
 export type Categoria = z.infer<typeof CategoriaSchema>;
 
 export const CategoriaUpdateSchema = z.object({
-    id_categoria : z.number(),
+    idCategoria : z.number(),
     nombre : z.string().min(1,{message : "Es necesario un nombre"}).min(3,"Mínimo 3 caracteres"),
 })
 

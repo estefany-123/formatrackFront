@@ -57,7 +57,9 @@ export function useUsuario() {
     };
 
     const updateUserMutation = useMutation({
-       mutationFn:({id, data}:{id:number, data:putUser}) =>updateUsuario(id, data),
+       mutationFn:({id, data}:{id:number, data:putUser}) =>{
+        const {idUsuario, ... resto} = data
+        return updateUsuario(id, resto)},
        onSuccess: () => {
          queryClient.invalidateQueries({
            queryKey: ["users"],
@@ -91,8 +93,8 @@ export function useUsuario() {
         return updateUserMutation.mutateAsync({ id, data });
     };
 
-    const changeState = async (id_usuario: number) => {
-        return changeStateMutation.mutateAsync(id_usuario);
+    const changeState = async (idUsuario: number) => {
+        return changeStateMutation.mutateAsync(idUsuario);
     };
 
     return {

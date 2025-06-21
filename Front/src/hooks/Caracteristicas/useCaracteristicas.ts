@@ -28,7 +28,7 @@ export function useCaracteristica() {
     });
 
     const getCaracteristicaById = (id: number, caracteristicas : Caracteristica[] | undefined = data ): Caracteristica | null => {
-        return caracteristicas?.find((caracteristica) => caracteristica.id_caracteristica === id) || null;
+        return caracteristicas?.find((caracteristica) => caracteristica.idCaracteristica === id) || null;
     }
 
     const updateCaracteristicaMutation = useMutation({

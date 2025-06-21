@@ -7,7 +7,6 @@ import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Sitios/Formupdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { Sitios } from "@/types/sitios";
-import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -115,12 +114,10 @@ const SitiosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Sitios</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
+                <Buton
+                  text="Gestionar Tipos"
                   onPress={handleGoToTipo}
-                >
-                  Gestionar Tipos
-                </Button>
+                />
               </div>
             </div>
           </CardBody>
@@ -136,13 +133,12 @@ const SitiosTable = () => {
           addData={handleAddSitio}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
           form="sitio-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+          className="w-full rounded-xl"
+        />
       </Modall>
 
       <Modall

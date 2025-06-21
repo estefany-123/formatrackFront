@@ -1,6 +1,6 @@
 import { axiosAPI } from "../axiosAPI"
 
-export const StateModulo = async (id_modulo : number): Promise<any> => {
-    const response = await axiosAPI.put(`modulos/estado/${id_modulo}`)
+export const StateModulo = async (idModulo : number): Promise<any> => {
+    const response = await axiosAPI.patch(`modulos/state/${idModulo}`)
     return response.data
 }

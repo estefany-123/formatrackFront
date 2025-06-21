@@ -6,7 +6,7 @@ import Formulario from "@/components/organismos/fichas/FormRegister";
 import { useState } from "react";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 
@@ -114,12 +114,10 @@ const FichasTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Fichas</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
+                <Buton
+                  text="Gestionar Programas"
                   onPress={handleGoToPrograma}
-                >
-                  Gestionar Programas
-                </Button>
+                />
               </div>
             </div>
           </CardBody>
@@ -137,13 +135,12 @@ const FichasTable = () => {
           onClose={handleClose}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+          text="Guardar"
             type="submit"
             form="ficha-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full rounded-xl"
+          />
         </div>
       </Modall>
 

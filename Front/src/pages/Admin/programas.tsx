@@ -6,7 +6,6 @@ import Formulario from "@/components/organismos/Programas/FormRegister";
 import { useState } from "react";
 import { usePrograma } from "@/hooks/programas/usePrograma";
 import { Pformacion } from "@/types/programaFormacion";
-import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
@@ -121,12 +120,7 @@ const ProgramasTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Fichas</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToFicha}
-                >
-                  Ficha
-                </Button>
+                <Buton text="Fichas" onPress={handleGoToFicha} />
               </div>
             </div>
           </CardBody>
@@ -142,13 +136,12 @@ const ProgramasTable = () => {
           addData={handleAddPrograma}
           onClose={handleClose}
         />
-        <Button
+        <Buton
+        text="Guardar"
           type="submit"
           form="programa-form"
-          className="bg-blue-700 text-white p-2 rounded-lg"
-        >
-          Guardar
-        </Button>
+          className="rounded-xl"
+        />
       </Modall>
 
       <Modall

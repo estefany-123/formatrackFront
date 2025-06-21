@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const MunicipioSchema = z.object({
-    id_municipio : z
+    idMunicipio : z
         .number(),
     nombre : z
         .string().min(1,{message:"Nombre es requerido"}).min(1,{message:"Minimo 5 caracteres"}),
@@ -16,7 +16,7 @@ export const MunicipioSchema = z.object({
 export type Municipio = z.infer<typeof MunicipioSchema>
 
 export const MunicipioUPSchema = z.object({
-    id_municipio : z
+    idMunicipio : z
         .number(),
     nombre : z
         .string().min(1,{message:"Nombre es requerido"}).min(1,{message:"Minimo 5 caracteres"})

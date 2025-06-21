@@ -5,8 +5,10 @@ import Modall from "@/components/molecules/modal";
 import FormRutas from "@/components/organismos/Rutas/FormRutas";
 import { useState } from "react";
 import FormUpRutas from "@/components/organismos/Rutas/FormUpRutas";
-import { Ruta } from "@/schemas/Ruta";
 import { useRuta } from "@/hooks/Rutas/useRuta";
+import { Card, CardBody } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
+import { Ruta } from "@/types/Ruta";
 
 const RutasTable = () => {
   const { rutas, isLoading, isError, error, addRuta, changeState } = useRuta();
@@ -19,14 +21,23 @@ const RutasTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedRuta, setSelectedRuta] = useState<Ruta | null>(null);
 
+  const navigate = useNavigate();
+
+  const handleGoToPermiso = () => {
+    navigate("/admin/permisos");
+  };
+  const handleGoToModulo = () => {
+    navigate("/admin/modulos");
+  };
+
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedRuta(null);
   };
 
   const handleState = async (rutas: Ruta) => {
-    await changeState(rutas.id_ruta);
-    console.log(rutas.id_ruta);
+    await changeState(rutas.idRuta);
+    console.log(rutas.idRuta);
   };
 
   const handleAddCentro = async (rutas: Ruta) => {
@@ -47,9 +58,38 @@ const RutasTable = () => {
   const columns: TableColumn<Ruta>[] = [
     { key: "nombre", label: "Nombre" },
     { key: "descripcion", label: "Descripcion" },
-    { key: "url_destino", label: "Url" },
+    { key: "urlDestino", label: "Url" },
+    {
+      key: "createdAt",
+      label: "Fecha Creacion",
+      render: (ruta: Ruta) => (
+        <span>
+          {ruta.createdAt
+            ? new Date(ruta.createdAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      label: "Fecha Actualización",
+      render: (ruta: Ruta) => (
+        <span>
+          {ruta.updatedAt
+            ? new Date(ruta.updatedAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
     { key: "estado", label: "Estado" },
-    { key: "fk_modulo", label: "Modulo" },
   ];
 
   if (isLoading) {
@@ -61,33 +101,44 @@ const RutasTable = () => {
   }
 
   const rutasWithKey = rutas
-    ?.filter((rutas) => rutas?.id_ruta !== undefined)
+    ?.filter((rutas) => rutas?.idRuta !== undefined)
     .map((rutas) => ({
       ...rutas,
-      key: rutas.id_ruta ? rutas.id_ruta.toString() : crypto.randomUUID(),
+      key: rutas.idRuta ? rutas.idRuta.toString() : crypto.randomUUID(),
       estado: Boolean(rutas.estado),
     }));
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Tabla de Rutas</h1>
+      <div className="flex pb-4 pt-4">
+        <Card className="w-full">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Gestionar Rutas</h1>
+              <div className="flex gap-2">
+                <Buton text="Permisos" onPress={handleGoToPermiso} />
+                <Buton text="Gestionar Modulos" onPress={handleGoToModulo} />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
       <Modall
         ModalTitle="Agregar Ruta"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <FormRutas
-          id="user-form"
+          id="ruta-form"
           addData={handleAddCentro}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
-          form="user-form"
+          form="ruta-form"
           className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+        />
       </Modall>
 
       <Modall
@@ -98,7 +149,7 @@ const RutasTable = () => {
         {selectedRuta && (
           <FormUpRutas
             rutas={rutasWithKey ?? []}
-            rutaId={selectedRuta.id_ruta}
+            rutaId={selectedRuta.idRuta}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

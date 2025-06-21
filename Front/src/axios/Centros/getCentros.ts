@@ -3,6 +3,6 @@ import { axiosAPI } from "../axiosAPI"
 
 
 export const getCentro = async (): Promise<Centro[]> => {
-    const response = await axiosAPI.get('/centros/')
+    const response = await axiosAPI.get('centros')
     return response.data
 }

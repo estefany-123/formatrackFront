@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-// export const InventarioUpdateSchema = z.object({
-//   id_inventario: z.number(),
+export const InventarioUpdateSchema = z.object({
+  id_inventario: z.number(),
 
-//   stock: z.number({ required_error: "Valor es requerido y debe ser entero" }),
-// });
+  stock: z.number({ required_error: "Valor es requerido y debe ser entero" }),
+});
 
-// export type InventarioUpdate = z.infer<typeof InventarioUpdateSchema>;
+export type InventarioUpdate = z.infer<typeof InventarioUpdateSchema>;
 
 export const InventarioCreateSchema = z.object({
   stock: z.number({ required_error: "Valor es requerido y debe ser entero" }).default(0).optional(),

@@ -7,7 +7,6 @@ import { useRol } from "@/hooks/Roles/useRol";
 import Formulario from "@/components/organismos/Roles/FormRegister";
 import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
-import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -116,19 +115,14 @@ export const RolTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Roles</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToUsuario}
-                >
-                  Usuarios
-                </Button>
+                <Buton text="Usuarios" onPress={handleGoToUsuario} />
               </div>
             </div>
           </CardBody>
         </Card>
       </div>
       <Modall
-        ModalTitle="Registrar Nuevo Rol"
+        ModalTitle="Registrar Rol"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
@@ -137,13 +131,12 @@ export const RolTable = () => {
           addData={handleAddRol}
           onClose={handleClose}
         />
-        <Button
+        <Buton
+          text="Guardar"
           type="submit"
           form="rol-form"
-          className="bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+          className="w-full rounded-xl"
+        />
       </Modall>
 
       <Modall

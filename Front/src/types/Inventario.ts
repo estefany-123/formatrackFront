@@ -1,10 +1,10 @@
 export type Inventario = {
-  idInventario: number;
-  stock: number;
+  idInventario?: number;
+  stock?: number;
   estado?: boolean;
   createdAt?:string;
   updatedAt?:string;
-  fkSitio: number;
-  fkElemento: number;
+  fkSitio?: number;
+  fkElemento?: number;
   imagenElemento?:string;
 };

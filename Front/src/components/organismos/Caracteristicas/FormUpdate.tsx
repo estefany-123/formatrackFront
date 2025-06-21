@@ -1,55 +1,52 @@
 import { Form } from "@heroui/form";
-import { usePrograma } from "@/hooks/programas/usePrograma";
-import { programaUpdate, programaUpdateSchema } from "@/schemas/programas";
+import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { Input } from "@heroui/input";
+import { TipoUpdate, TipoUpdateSchema } from "@/schemas/TipoMovimiento";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { addToast } from "@heroui/react";
 import Buton from "@/components/molecules/Button";
 
 type Props = {
-  programas: programaUpdate[];
-  programaId: number;
+  tipos: (TipoUpdate & { idTipo?: number })[];
+  tipoId: number;
   id: string;
   onclose: () => void;
 };
 
-export const FormUpdate = ({ programas, programaId, id, onclose }: Props) => {
-  const { updatePrograma, getProgramaById } = usePrograma();
+export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
+  const { updateTipoMovimiento, getTipoMovimientoById } = useTipoMovimiento();
 
-  const foundPrograma = getProgramaById(
-    programaId,
-    programas
-  ) as programaUpdate;
+  const foundRol = getTipoMovimientoById(tipoId, tipos) as TipoUpdate;
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<programaUpdate>({
-    resolver: zodResolver(programaUpdateSchema),
+  } = useForm<TipoUpdate>({
+    resolver: zodResolver(TipoUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      idPrograma: foundPrograma.idPrograma,
-      nombre: foundPrograma.nombre,
+      idTipo: foundRol.idTipo,
+      nombre: foundRol.nombre,
     },
   });
 
-  const onSubmit = async (data: programaUpdate) => {
+  const onSubmit = async (data: TipoUpdate) => {
     console.log(data);
-    if (!data.idPrograma) return;
+    if (!data.idTipo) return;
     try {
-      await updatePrograma(data.idPrograma, data);
+      await updateTipoMovimiento(data.idTipo, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
-        description: "Programa actualizado correctamente",
+        description: "Tipo Movimiento actualizado correctamente",
         color: "primary",
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
     } catch (error) {
-      console.log("Error al actualizar el programa: ", error);
+      console.log("Error al actualizar el tipo de movimiento : ", error);
     }
   };
 
@@ -62,20 +59,20 @@ export const FormUpdate = ({ programas, programaId, id, onclose }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <Input
-        label="Nombre del Programa"
-        type="text"
+        label="Nombre"
         placeholder="Nombre"
         {...register("nombre")}
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-
-      <Buton
+      <div className="justify-center pl-10">
+        <Buton
         text="Guardar"
-        type="submit"
-        isLoading={isSubmitting}
-        className="w-full rounded-xl"
-      />
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full p-2 rounded-xl"
+        />
+      </div>
     </Form>
   );
 };

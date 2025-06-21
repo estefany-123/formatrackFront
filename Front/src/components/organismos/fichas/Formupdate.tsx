@@ -4,8 +4,8 @@ import { fichaUpdateSchema, fichaUpdate } from "@/schemas/fichas";
 import { Form } from "@heroui/form";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type FormuProps = {
   fichas: (fichaUpdate & { key: string })[];
@@ -68,15 +68,12 @@ export const FormUpdateFicha = ({
         errorMessage={errors.codigoFicha?.message}
       />
 
-      <div className="justify-center pl-10">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

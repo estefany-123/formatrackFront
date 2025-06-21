@@ -2,13 +2,13 @@ import { Form } from "@heroui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
-import { sitio, sitioUpdate, sitioUpdateSchema } from "@/schemas/sitios";
+import { sitioUpdate, sitioUpdateSchema } from "@/schemas/sitios";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
-  sitios: (sitioUpdate & { idSitio?: number })[];
+  sitios: (sitioUpdate & { idSitio: number })[];
   sitioId: number;
   id: string;
   onclose: () => void;
@@ -17,7 +17,7 @@ type Props = {
 export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
   const { updateSitio, getSitioById } = useSitios();
 
-  const foundSitio = getSitioById(sitioId, sitios) as sitio;
+  const foundSitio = getSitioById(sitioId, sitios) as sitioUpdate;
 
   const {
     register,
@@ -27,9 +27,10 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
     resolver: zodResolver(sitioUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      nombre: foundSitio.nombre,
-      personaEncargada: foundSitio.personaEncargada,
-      ubicacion: foundSitio.ubicacion
+      idSitio: foundSitio?.idSitio,
+      nombre: foundSitio?.nombre,
+      personaEncargada: foundSitio?.personaEncargada,
+      ubicacion: foundSitio?.ubicacion,
     },
   });
 
@@ -86,15 +87,12 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
         errorMessage={errors.ubicacion?.message}
       />
 
-      <div className="justify-center pl-10">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

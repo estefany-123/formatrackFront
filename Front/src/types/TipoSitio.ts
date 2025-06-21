@@ -1,10 +1,12 @@
 export type TipoSitio = {
-    id_tipo :number,
+    idTipo ?:number,
     nombre : string,
     estado : boolean
+    createdAt?: string
+    updatedAt?: string
 }
 
 export type UpTipoSitio = {
-    id_tipo :number,
+    idTipo ?:number,
     nombre : string
 }

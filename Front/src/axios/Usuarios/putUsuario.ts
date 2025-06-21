@@ -1,11 +1,10 @@
-import { axiosAPI } from "../axiosAPI"
-import {putUser} from "@/types/Usuario"
-
+import { axiosAPI } from "../axiosAPI";
+import { putUser } from "@/types/Usuario";
 
 export async function updateUsuario(
-  id_usuario: number,
+  idUsuario: number,
   data: putUser
 ): Promise<any> {
-  const response = await axiosAPI.put(`usuarios/${id_usuario}/`, data);
+  const response = await axiosAPI.patch(`usuarios/update/${idUsuario}`, data);
   return response.data;
 }

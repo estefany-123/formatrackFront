@@ -56,8 +56,8 @@ export const MovimientoTable = () => {
   const columns: TableColumn<Movimiento>[] = [
     { key: "descripcion", label: "Descripcion" },
     { key: "cantidad", label: "Cantidad" },
-    { key: "hora_ingreso", label: "Ingreso" },
-    { key: "hora_salida", label: "Salida" },
+    { key: "horaIngreso", label: "Ingreso" },
+    { key: "horaSalida", label: "Salida" },
     {
       key: "tipo_bien",
       label: "Tipo Movimiento",
@@ -65,7 +65,7 @@ export const MovimientoTable = () => {
         <span>
           {movimiento.devolutivo
             ? "Devolutivo"
-            : movimiento.no_devolutivo
+            : movimiento.noDevolutivo
               ? "No Devolutivo"
               : "No especificado"}
         </span>
@@ -117,7 +117,7 @@ export const MovimientoTable = () => {
               Cancelado
             </Chip>
           );
-        if (item.en_proceso)
+        if (item.enProceso)
           return (
             <Chip color="warning" variant="flat">
               Pendiente
@@ -182,13 +182,12 @@ export const MovimientoTable = () => {
           onClose={handleClose}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+            text="Guardar"
             type="submit"
             form="movimiento-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full p-2 rounded-xl"
+          />
         </div>
       </Modall>
 

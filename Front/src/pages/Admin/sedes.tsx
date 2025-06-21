@@ -5,7 +5,7 @@ import Modall from "@/components/molecules/modal";
 import Formulario from "@/components/organismos/Sedes/FormRegister";
 import { useState } from "react";
 import { useSede } from "@/hooks/sedes/useSedes";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { Sede } from "@/types/sedes";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
@@ -116,18 +116,8 @@ const SedeTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Sedes</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToArea}
-                >
-                  Areas
-                </Button>
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToCentro}
-                >
-                  Gestionar Centros{" "}
-                </Button>
+                <Buton text="Areas" onPress={handleGoToArea} />
+                <Buton text="Gestionar Centros" onPress={handleGoToCentro} />
               </div>
             </div>
           </CardBody>
@@ -145,13 +135,12 @@ const SedeTable = () => {
           onClose={handleClose}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+            text="Guardar"
             type="submit"
             form="sede-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full rounded-xl"
+          />
         </div>
       </Modall>
 

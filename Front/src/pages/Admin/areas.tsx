@@ -6,7 +6,7 @@ import Formulario from "@/components/organismos/areas/FormRegister";
 import { useState } from "react";
 import { Area } from "@/types/area";
 import { useAreas } from "@/hooks/areas/useAreas";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/areas/Formupdate";
 
@@ -99,8 +99,7 @@ const AreaTable = () => {
 
   const areasWithKey = areas
     ?.filter(
-      (area) =>
-        area?.idArea !== undefined && area?.createdAt && area?.updatedAt
+      (area) => area?.idArea !== undefined && area?.createdAt && area?.updatedAt
     )
     .map((area) => ({
       ...area,
@@ -117,18 +116,8 @@ const AreaTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Areas</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToSede}
-                >
-                  Gestionar Sedes
-                </Button>
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToUsuario}
-                >
-                  Gestionar Usuarios
-                </Button>
+                <Buton text="Gestionar Sedes" onPress={handleGoToSede} />
+                <Buton text="Gestionar Usuarios" onPress={handleGoToUsuario} />
               </div>
             </div>
           </CardBody>
@@ -145,13 +134,12 @@ const AreaTable = () => {
           onClose={handleClose}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+            text="Guardar"
             type="submit"
             form="area-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full rounded-xl"
+          />
         </div>
       </Modall>
 

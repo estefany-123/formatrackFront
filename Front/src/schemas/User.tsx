@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const UserUpdateSchema = z.object({
     idUsuario: z
-        .number(),
+        .number().optional(),
     nombre: z
         .string()
         .min(1, { message: "Nombre es requerido" })
@@ -23,14 +23,12 @@ export const UserUpdateSchema = z.object({
         .string()
         .email({ message: "Correo es requerido" }),
     cargo: z
-        .string().min(1,{ message: "Cargo es requerido" }),
+        .string().min(1,{ message: "Cargo es requerido" }).optional(),
 })
 
 export type UserUpdate = z.infer<typeof UserUpdateSchema>
 
 export const UserSchema = z.object({
-    idUsuario: z
-        .number(),
         
     documento: z
         .number({ message: "Documento es requerido y debe ser un numero" })
@@ -39,11 +37,11 @@ export const UserSchema = z.object({
     nombre: z
         .string()
         .min(1, { message: "Nombre es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Longitud minima de 5" }),
 
     apellido: z
         .string({ required_error: "Apellido es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Longitud minima de 5" }),
     edad: z
         .number({ message: "Edad es requerido" })
         .min(1, { message: "Longitud minima de 1" }),
@@ -60,11 +58,11 @@ export const UserSchema = z.object({
         .boolean({ required_error: "Estado es requerido" }),
     cargo: z
         .string()
-        .min(1, { message: "Cargo es requerido" }),
+        .min(6, { message: "Cargo es requerido" }),
     password: z
         .string({message:"Contraseña es obligatoria"})
-        .min(1, { message: "Contraseña es requerida" }),
-    fk_rol: z
+        .min(8, { message: "Contraseña es requerida" }),
+    fkRol: z
         .number({ message: "Rol es requerido y debe ser un numero" })
 })
 

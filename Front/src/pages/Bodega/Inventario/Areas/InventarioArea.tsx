@@ -10,8 +10,8 @@ export const InventarioArea = () => {
   const { areas } = useAreas();
   const { sitios, isLoading, isError } = useSitios();
 
-  const area = areas?.find((a) => a.id_area === areaId);
-  const sitiosFiltrados = sitios?.filter((s) => s.fk_area === areaId);
+  const area = areas?.find((a) => a.idArea === areaId);
+  const sitiosFiltrados = sitios?.filter((s) => s.fkArea === areaId);
 
   if (isLoading) return <p>Cargando sitios...</p>;
   if (isError) return <p>Error al cargar los sitios</p>;
