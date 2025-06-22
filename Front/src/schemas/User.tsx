@@ -115,6 +115,12 @@ export type forgotPass = z.infer<typeof forgotPasswordSchema>
 export const resetPasswordSchema = z.object({
     password: z
         .string({ required_error: "Contraseña es requerido" }),
+    confirmPassword :z
+        .string({ required_error: "Contraseña es requerido"})
 })
+.refine((data)=> data.password === data.confirmPassword,{
+    message:"Las contraseñas no coinciden",
+    path:["confirmPassword"]
+});
 
 export type resetPass = z.infer<typeof resetPasswordSchema>

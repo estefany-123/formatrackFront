@@ -27,6 +27,7 @@ import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
 import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
 
@@ -70,6 +71,8 @@ function App() {
         </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
 
     </Routes>
   );
