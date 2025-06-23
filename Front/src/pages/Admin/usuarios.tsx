@@ -9,6 +9,7 @@ import { User } from "@/schemas/User";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import FormRegisterMasivo from "@/components/organismos/Usuarios/FormRegisterMasivo";
 
 const UsersTable = () => {
   const { users, isLoading, isError, error, addUser, changeState } =
@@ -22,14 +23,18 @@ const UsersTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const navigate = useNavigate();
-
-  const handleGoToRol = () => {
-    navigate("/admin/roles");
-  };
-
+  
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedUser(null);
+  };
+
+  //Modal subida masiva
+  const [isOpenMasivo, setIsOpenMasivo] = useState(false);
+  const handleCloseMasivo = () => setIsOpenMasivo(false);
+
+  const handleGoToRol = () => {
+    navigate("/admin/roles");
   };
 
   const handleState = async (user: User) => {
@@ -120,6 +125,10 @@ const UsersTable = () => {
 
             </Modall>
 
+        <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
+          <FormRegisterMasivo/>
+        </Modall>
+
       {usersWithKey && (
         <Globaltable
           data={usersWithKey}
@@ -127,7 +136,10 @@ const UsersTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} />
+            <div className="flex gap-2">
+              <Buton onPress={() => setIsOpen(true)}>Añadir usuario</Buton>
+              <Buton onPress={() => setIsOpenMasivo(true)}>Subir masivamente</Buton>
+            </div>
           }
         />
       )}
