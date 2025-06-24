@@ -65,14 +65,14 @@ export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div className="justify-center pl-10">
+
         <Buton
         text="Guardar"
           type="submit"
           isLoading={isSubmitting}
-          className="w-full p-2 rounded-xl"
+          className="w-full rounded-xl"
         />
-      </div>
+
     </Form>
   );
 };

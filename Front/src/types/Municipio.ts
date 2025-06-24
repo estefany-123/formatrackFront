@@ -1,5 +1,5 @@
 export type Municipio = {
-  idMunicipio: number;
+  idMunicipio?: number;
   nombre: string;
   departamento: string;
   estado: boolean;
@@ -8,6 +8,6 @@ export type Municipio = {
 };
 
 export type UpdMunicipio = {
-  idMunicipio: number;
+  idMunicipio?: number;
   nombre: string;
 };

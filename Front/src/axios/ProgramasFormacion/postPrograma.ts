@@ -3,10 +3,10 @@ import { axiosAPI } from "../axiosAPI";
 export interface ProgramaPostData {
   idPrograma?: number;
   nombre: string;
-  estado: boolean;
+  estado?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  fkArea: number;
+  fkArea?: number;
 }
 
 export async function postPrograma(data:ProgramaPostData):Promise<any> {

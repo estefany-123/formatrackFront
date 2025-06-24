@@ -13,15 +13,16 @@ export const ElementoUpdateSchema = z.object({
     .min(1, { message: "Descripcion es requerida" })
     .min(2, { message: "Longitud minima 2" }),
 
-  imagenElemento: z.union([
-    z.instanceof(File).refine((f) => f.size > 0, "Debe ser un archivo válido"),
-    z.string().min(1, "Debe ser una cadena no vacía"),
-    z.undefined().optional(),
-  ]),
-
-  fechaVencimiento: z.string({ message: "Fecha es requerida" }).optional(),
-
-  fechaUso: z.string({ message: "Fecha es requerida" }),
+imagenElemento: z
+    .any()
+    .optional()
+    .refine(
+      (file) =>
+        file === undefined || file instanceof File || typeof file === "string",
+      {
+        message: "La imagen debe ser un archivo o una URL válida",
+      }
+    ).optional(),
 });
 
 export type ElementoUpdate = z.infer<typeof ElementoUpdateSchema>;
@@ -43,13 +44,18 @@ export const ElementoCreateSchema = z.object({
 
   estado: z.boolean({ required_error: "Estado es requerido" }),
 
-  baja: z.boolean({ required_error: "baja es requerida" }),
+  baja: z.boolean({ required_error: "baja es requerida" }).default(false).optional(),
 
-  imagenElemento: z.union([
-    z.instanceof(File).refine((f) => f.size > 0, "Debe ser un archivo válido"),
-    z.string().min(1, "Debe ser una cadena no vacía"),
-    z.undefined(),
-  ]),
+imagenElemento: z
+    .any()
+    .optional()
+    .refine(
+      (file) =>
+        file === undefined || file instanceof File || typeof file === "string",
+      {
+        message: "La imagen debe ser un archivo o una URL válida",
+      }
+    ),
 
   fechaVencimiento: z.string({ message: "Fecha es requerida" }).optional(),
 
@@ -59,7 +65,7 @@ export const ElementoCreateSchema = z.object({
 
   fkCategoria: z.number({ required_error: "Categoria es requerida" }),
 
-  fkCaracteristica: z.number({ required_error: "Caracteristica es requerida" }),
+  fkCaracteristica: z.number({ required_error: "Caracteristica es requerida" }).optional(),
 
   tipoElemento: z.enum(["perecedero", "noPerecedero"], {
     required_error: "Debe seleccionar un tipo de elemento",

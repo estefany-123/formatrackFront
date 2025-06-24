@@ -137,7 +137,7 @@ const RutasTable = () => {
           text="Guardar"
           type="submit"
           form="ruta-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="w-full rounded-xl"
         />
       </Modall>
 

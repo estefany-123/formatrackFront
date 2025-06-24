@@ -5,6 +5,6 @@ export interface InventarioPutData {
 }
 
 export async function putInventario(idInventario:number, data:InventarioPutData):Promise<any> {
-    const res = await axiosAPI.post(`inventarios/${idInventario}`, data);
+    const res = await axiosAPI.patch(`inventarios/${idInventario}`, data);
     return res.data;
 }

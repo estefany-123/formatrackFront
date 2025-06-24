@@ -25,9 +25,6 @@ const PermisoTable = () => {
 
   const navigate = useNavigate();
 
-  const handleGoToModulo = () => {
-    navigate("/admin/modulos");
-  };
 
   const handleGoToRuta = () => {
     navigate("/admin/rutas");
@@ -54,7 +51,7 @@ const PermisoTable = () => {
 
   // Definir las columnas de la tabla
   const columns: TableColumn<Permisos>[] = [
-    { key: "permiso", label: "permiso" },
+    { key: "permiso", label: "Permiso" },
     {
           key: "createdAt",
           label: "Fecha Creacion",
@@ -113,7 +110,6 @@ const PermisoTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Permisos</h1>
               <div className="flex gap-2">
-                <Buton text="Gestionar Modulos" onPress={handleGoToModulo} />
                 <Buton text="Gestionar Rutas" onPress={handleGoToRuta} />
               </div>
             </div>

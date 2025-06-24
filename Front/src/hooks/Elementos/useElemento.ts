@@ -1,6 +1,6 @@
-import { ElementoPostData, postElemento } from "@/axios/Elementos/postElemento";
+import { postElemento } from "@/axios/Elementos/postElemento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Elemento } from "@/types/Elemento";
+import { Elemento, postElementos, putElementos } from "@/types/Elemento";
 import { putElemento } from "@/axios/Elementos/putElemento";
 import { deleteElemento } from "@/axios/Elementos/deleteElemento";
 import { getElemento } from "@/axios/Elementos/getElemento";
@@ -36,7 +36,8 @@ export function useElemento() {
   };
 
   const updateElementoMutation = useMutation({
-    mutationFn: ({id, data}:{id:number, data:Elemento}) => putElemento(id, data),
+    mutationFn: ({ id, data }: { id: number; data: putElementos }) =>
+      putElemento(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["elementos"],
@@ -49,7 +50,7 @@ export function useElemento() {
   });
 
   const changeStateMutation = useMutation({
-    mutationFn:deleteElemento,
+    mutationFn: deleteElemento,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -62,16 +63,12 @@ export function useElemento() {
     },
   });
 
-  const addElemento = async (elemento: Elemento): Promise<{ idElemento: number }> => {
-    const response = await addElementoMutation.mutateAsync(elemento);
-    if (response && response.idElemento) {
-      return { idElemento: response.idElemento };
-    }
-    throw new Error("Respuesta inesperada de la API");
+  const addElemento = async (elemento: postElementos) => {
+    return await addElementoMutation.mutateAsync(elemento);
   };
 
-  const updateElemento = async (id: number, data:Elemento) => {
-    return updateElementoMutation.mutateAsync({ id, data});
+  const updateElemento = async (id: number, data: putElementos) => {
+    return updateElementoMutation.mutateAsync({ id, data });
   };
 
   const changeState = async (idElemento: number) => {

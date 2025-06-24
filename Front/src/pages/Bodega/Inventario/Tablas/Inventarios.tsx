@@ -5,9 +5,9 @@ import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
-import { Inventario } from "@/types/Inventario";
-import { Elemento } from "@/types/Elemento";
+import { Inventario, InventarioConSitio } from "@/types/Inventario";
 import { useElemento } from "@/hooks/Elementos/useElemento";
+import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -26,7 +26,6 @@ export const InventariosTable = ({
     addInventario,
     changeState,
   } = useInventario();
-  const { elementos: elementos } = useElemento();
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
@@ -59,31 +58,31 @@ export const InventariosTable = ({
     setIsOpenUpdate(true);
   };
 
-  // Definir las columnas de la tabla
-  const columns = (elementos: Elemento[]): TableColumn<Inventario>[] => [
+  const columns: TableColumn<Inventario>[] = [
     {
       key: "fkElemento",
       label: "Elemento",
       render: (inventario: Inventario) => {
-        const elemento = elementos.find(
-          (el) => el.idElemento === inventario.fkElemento
-        );
-        return <span>{elemento?.nombre ?? "No encontrado"}</span>;
+        const fkElemento = (inventario as any).fkElemento;
+
+        const nombre =
+          typeof fkElemento === "object" && fkElemento?.nombre
+            ? fkElemento.nombre
+            : "No encontrado";
+
+        return <span>{nombre}</span>;
       },
     },
     {
       key: "imagenElemento",
       label: "Imagen",
       render: (inventario: Inventario) => {
-        const elemento = elementos.find(
-          (el) => el.idElemento === inventario.fkElemento
-        );
-
-        const imagen = elemento?.imagenElemento;
+        const fkElemento = (inventario as any).fkElemento;
+        const imagen = fkElemento?.imagenElemento;
 
         if (!imagen) return <span>No encontrado</span>;
 
-        const src = `http://localhost:3000/img/${imagen}`;
+        const src = `http://localhost:3000/img/elementos/${imagen}`;
 
         return (
           <img
@@ -94,7 +93,33 @@ export const InventariosTable = ({
         );
       },
     },
-    { key: "stock", label: "Cantidad" },
+    {
+      key: "stock",
+      label: "Cantidad",
+      render: (inventario: Inventario) => {
+        const cantidad = inventario.stock ?? 0;
+
+        let color = "text-gray-500";
+        let estado = "Sin stock";
+
+        if (cantidad >= 50) {
+          color = "text-green-600 font-bold";
+          estado = "Suficiente";
+        } else if (cantidad >= 25) {
+          color = "text-yellow-500 font-semibold";
+          estado = "Moderado";
+        } else if (cantidad > 0 && cantidad <= 11) {
+          color = "text-red-500 font-semibold";
+          estado = "Bajo";
+        }
+
+        return (
+          <span className={color}>
+            {cantidad} <span className="ml-1 text-sm">({estado})</span>
+          </span>
+        );
+      },
+    },
     {
       key: "createdAt",
       label: "Fecha Creación",
@@ -126,6 +151,17 @@ export const InventariosTable = ({
       ),
     },
     { key: "estado", label: "Estado" },
+    {
+      key: "acciones",
+      label: "",
+      render: (inventario: Inventario) => (
+        <Buton
+          text="Agregar stock"
+          onPress={() => handleOpenAddStock(inventario)}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        />
+      ),
+    },
   ];
 
   if (isLoading && !inventariosProp) {
@@ -136,13 +172,13 @@ export const InventariosTable = ({
     return <span>Error: {error?.message}</span>;
   }
 
-  const filtered = inventariosProp ?? inventariosHook;
+  const filtered = (inventariosProp ?? inventariosHook) as InventarioConSitio[];
 
   const InventariosWithKey = filtered
     ?.filter(
       (inventario) =>
         inventario?.idInventario !== undefined &&
-        (idSitio ? inventario.fkSitio === idSitio : true)
+        (idSitio ? inventario.fkSitio?.idSitio === idSitio : true)
     )
     .map((inventario) => ({
       ...inventario,
@@ -152,6 +188,9 @@ export const InventariosTable = ({
       idInventario: inventario.idInventario || 0,
       estado: Boolean(inventario.estado),
     }));
+
+  console.log("Inventarios filtrados:", filtered);
+  console.log("idSitio recibido por props:", idSitio);
 
   return (
     <div className="p-4">
@@ -181,10 +220,25 @@ export const InventariosTable = ({
         </div>
       </Modall>
 
+      <Modall
+        ModalTitle="Agregar Stock"
+        isOpen={IsOpenUpdate}
+        onOpenChange={handleCloseUpdate}
+      >
+        {selectedInventario && (
+          <FormUpdate
+            inventarios={InventariosWithKey ?? []}
+            inventarioId={selectedInventario.idInventario as number}
+            id="FormUpdate"
+            onclose={handleCloseUpdate}
+          />
+        )}
+      </Modall>
       {InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
-          columns={columns(elementos ?? [])}
+          columns={columns ?? []}
+          onEdit={handleEdit}
           onDelete={(inventario) => handleState(inventario.idInventario)}
           extraHeaderContent={
             <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />

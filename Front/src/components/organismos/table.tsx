@@ -7,7 +7,14 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 
-import { Button, Chip, Input, Pagination } from "@heroui/react";
+import {
+  Button,
+  Chip,
+  Input,
+  Pagination,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 import {
   Table,
   TableHeader,
@@ -55,11 +62,21 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
     direction: null,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [estadoFiltro, setEstadoFiltro] = useState<
+    "todos" | "activos" | "inactivos"
+  >("activos");
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
 
   const filteredData = useMemo(() => {
     let result = data;
+
+
+    if (estadoFiltro === "activos") {
+      result = result.filter((item) => item.estado === true);
+    } else if (estadoFiltro === "inactivos") {
+      result = result.filter((item) => item.estado === false);
+    }
 
     if (searchTerm.trim()) {
       const lowerSearch = searchTerm.toLowerCase();
@@ -70,6 +87,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
         })
       );
     }
+
     if (startDate || endDate) {
       result = result.filter((item) => {
         const itemDate = new Date((item as any).createdAt);
@@ -83,7 +101,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
     }
 
     return result;
-  }, [searchTerm, startDate, endDate, data, columns]);
+  }, [searchTerm, startDate, endDate, estadoFiltro, data, columns]);
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
@@ -145,7 +163,39 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   return (
     <>
       <div className="flex justify-between items-center flex-wrap gap-4 mt-4 mb-4 ">
-        {extraHeaderContent}
+        <div className="flex items-center gap-4">
+          {extraHeaderContent}
+          <Select
+            label="Estado"
+            size="sm"
+            className="w-48"
+            aria-label="Filtro por estado"
+            variant="flat"
+            color="primary"
+            radius="md"
+            classNames={{
+              trigger: "dark:bg-zinc-900 text-black dark:text-white",
+            }}
+            selectedKeys={[estadoFiltro]}
+            onSelectionChange={(keys) => {
+              const selected = Array.from(keys)[0] as
+                | "todos"
+                | "activos"
+                | "inactivos";
+              setEstadoFiltro(selected);
+            }}
+          >
+            <SelectItem key="activos" textValue="activos">
+              Activos
+            </SelectItem>
+            <SelectItem key="inactivos" textValue="inactivos">
+              Inactivos
+            </SelectItem>
+            <SelectItem key="todos" textValue="todos">
+              Todos
+            </SelectItem>
+          </Select>
+        </div>
         <div className="flex">
           <Input
             className="mr-4 mt-1"

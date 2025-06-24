@@ -39,7 +39,7 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
       console.log("Sended success");
       onclose();
     } catch (error) {
-      console.log("Error al actualizar el centro", error);
+      console.log("Error al actualizar el municipio", error);
     }
   };
 
@@ -62,7 +62,6 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
           isLoading={isSubmitting}
           className="w-full"
         />
-
     </Form>
   );
 };

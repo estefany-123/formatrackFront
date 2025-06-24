@@ -6,7 +6,7 @@ import Formulario from "@/components/organismos/Sitios/FormRegister";
 import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Sitios/Formupdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
-import { Sitios } from "@/types/sitios";
+import { ListarSitios, Sitios } from "@/types/sitios";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -52,14 +52,14 @@ const SitiosTable = () => {
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<Sitios>[] = [
+  const columns: TableColumn<ListarSitios>[] = [
     { key: "nombre", label: "Nombre" },
     { key: "personaEncargada", label: "personaEncargada" },
     { key: "ubicacion", label: "ubicacion" },
     {
       key: "createdAt",
       label: "Fecha CReacion",
-      render: (sitio: Sitios) => (
+      render: (sitio: ListarSitios) => (
         <span>
           {sitio.createdAt
             ? new Date(sitio.createdAt).toLocaleDateString("es-ES", {
@@ -74,7 +74,7 @@ const SitiosTable = () => {
     {
       key: "updatedAt",
       label: "Fecha Actualización",
-      render: (sitio: Sitios) => (
+      render: (sitio: ListarSitios) => (
         <span>
           {sitio.updatedAt
             ? new Date(sitio.updatedAt).toLocaleDateString("es-ES", {
@@ -114,10 +114,7 @@ const SitiosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Sitios</h1>
               <div className="flex gap-2">
-                <Buton
-                  text="Gestionar Tipos"
-                  onPress={handleGoToTipo}
-                />
+                <Buton text="Gestionar Tipos" onPress={handleGoToTipo} />
               </div>
             </div>
           </CardBody>
@@ -160,7 +157,13 @@ const SitiosTable = () => {
         <Globaltable
           data={sitiosWithKey}
           columns={columns}
-          onEdit={handleEdit}
+          onEdit={(item) => {
+            const sitioParaEditar: Sitios = {
+              ...item,
+              fkArea: item.fkArea?.idArea, 
+            };
+            handleEdit(sitioParaEditar);
+          }}
           onDelete={(sitio) => handleState(sitio.idSitio)}
           extraHeaderContent={
             <Buton text="Añadir sitio" onPress={() => setIsOpen(true)} />

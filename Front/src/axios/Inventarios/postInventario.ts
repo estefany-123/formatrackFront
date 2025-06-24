@@ -4,8 +4,8 @@ export interface InventarioPostData {
     idInventario?: number;
     stock?: number;
     estado?: boolean;
-    fk_sitio?: number;
-    fk_elemento?: number;
+    fkSitio?: number;
+    fkElemento?: number;
 }
 
 export async function postInventario(data:InventarioPostData):Promise<any> {

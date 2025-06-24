@@ -166,7 +166,7 @@ const FichasTable = () => {
           onEdit={handleEdit}
           onDelete={(ficha) => handleState(ficha.idFicha)}
           extraHeaderContent={
-            <Buton onPress={() => setIsOpen(true)}>Añadir Ficha</Buton>
+            <Buton text="Añadir Ficha" onPress={() => setIsOpen(true)}/>
           }
         />
       )}

@@ -1,27 +1,26 @@
 import { Form } from "@heroui/form";
-import { addToast, Input, Select, SelectItem } from "@heroui/react";
-import { Controller, useForm } from "react-hook-form";
+import { addToast, Input} from "@heroui/react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TipoCreate, TipoCreateSchema } from "@/schemas/TipoMovimiento";
+import { CaracteristicaCreate, CaracteristicaCreateSchema } from "@/schemas/Caracteristica";
 
 type FormularioProps = {
-  addData: (tipo: TipoCreate) => Promise<void>;
+  addData: (tipo: CaracteristicaCreate) => Promise<void>;
   onClose: () => void;
   id: string;
 };
 
 export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TipoCreate>({
-    resolver: zodResolver(TipoCreateSchema),
+  } = useForm<CaracteristicaCreate>({
+    resolver: zodResolver(CaracteristicaCreateSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: TipoCreate) => {
+  const onSubmit = async (data: CaracteristicaCreate) => {
     try {
       await addData(data);
       onClose();
@@ -51,23 +50,13 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <Controller
-        control={control}
-        name="estado"
-        render={({ field }) => (
-          <Select
-            label="Estado"
-            placeholder="Selecciona estado"
-            {...field}
-            value={field.value ? "true" : "false"}
-            onChange={(e) => field.onChange(e.target.value === "true")}
-            isInvalid={!!errors.estado}
-            errorMessage={errors.estado?.message}
-          >
-            <SelectItem key="true">Activo</SelectItem>
-            <SelectItem key="false">Inactivo</SelectItem>
-          </Select>
-        )}
+      <Input
+        label="Simbolo"
+        placeholder="Simbolo"
+        type="text"
+        {...register("simbolo")}
+        isInvalid={!!errors.simbolo}
+        errorMessage={errors.simbolo?.message}
       />
     </Form>
   );

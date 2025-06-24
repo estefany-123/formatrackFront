@@ -2,7 +2,6 @@ import { axiosAPI } from "../axiosAPI";
 
 export interface TipoPutData {
     nombre: string;
-    estado: boolean;
 }
 
 export async function putTipo(id:number, data:TipoPutData):Promise<any> {

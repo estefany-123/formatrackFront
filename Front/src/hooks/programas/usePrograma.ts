@@ -63,8 +63,8 @@ export function usePrograma() {
     },
   });
 
-  const addPrograma = async (ficha: Pformacion) => {
-    return addProgramaMutation.mutateAsync(ficha);
+  const addPrograma = async (programa: Pformacion) => {
+    return addProgramaMutation.mutateAsync(programa);
   };
 
   const updatePrograma = async (id: number, data: Pformacion) => {

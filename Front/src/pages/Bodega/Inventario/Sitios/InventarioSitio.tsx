@@ -5,19 +5,19 @@ import { Button } from "@heroui/button";
 
 export const InventarioSitio = () => {
   const { sitioId } = useParams();
-  const idSitio = sitioId ? parseInt(sitioId) : 0;
+  const idSitios = sitioId ? parseInt(sitioId) : 0;
 
   const { sitios, isLoading, isError } = useSitios();
 
   if (isLoading) return <p>Cargando sitio...</p>;
   if (isError) return <p>Error al cargar el sitio.</p>;
 
-  const sitio = sitios?.find((s) => s.idSitio === idSitio);
+  const sitio = sitios?.find((s) => s.idSitio === idSitios);
 
   if (!sitio) return <p>Sitio no encontrado</p>;
   return (
     <div>
-      <Link to={`/bodega/inventario/areas/${idSitio}`}>
+      <Link to={`/bodega/inventario/areas/${sitio.fkArea?.idArea}`}>
         <h2 className="text-lg m-4 font-semibold">
           <Button className=" bg-blue-600 text-white hover:bg-blue-800 hover:text-white dark:hover:text-white">
             Regresar
@@ -27,7 +27,7 @@ export const InventarioSitio = () => {
       <h1 className="text-2xl font-bold text-center mb-4">
         Inventario del sitio {sitio.nombre}
       </h1>
-      <InventariosTable idSitio={idSitio} />
+      <InventariosTable idSitio={idSitios} />
     </div>
   );
 };

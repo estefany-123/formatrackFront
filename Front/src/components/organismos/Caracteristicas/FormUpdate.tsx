@@ -1,42 +1,42 @@
 import { Form } from "@heroui/form";
-import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { Input } from "@heroui/input";
-import { TipoUpdate, TipoUpdateSchema } from "@/schemas/TipoMovimiento";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { addToast } from "@heroui/react";
 import Buton from "@/components/molecules/Button";
+import { CaracteristicaUpdate, CaracteristicaUpdateSchema } from "@/schemas/Caracteristica";
+import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 
 type Props = {
-  tipos: (TipoUpdate & { idTipo?: number })[];
-  tipoId: number;
+  caracteristicas: (CaracteristicaUpdate & { idCaracteristica?: number })[];
+  caracteristicaId: number;
   id: string;
   onclose: () => void;
 };
 
-export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
-  const { updateTipoMovimiento, getTipoMovimientoById } = useTipoMovimiento();
+export const FormUpdate = ({ caracteristicas, caracteristicaId, id, onclose }: Props) => {
+  const { updateCaracteristica, getCaracteristicaById } = useCaracteristica();
 
-  const foundRol = getTipoMovimientoById(tipoId, tipos) as TipoUpdate;
+  const foundCaracteristica = getCaracteristicaById(caracteristicaId, caracteristicas) as CaracteristicaUpdate;
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<TipoUpdate>({
-    resolver: zodResolver(TipoUpdateSchema),
+  } = useForm<CaracteristicaUpdate>({
+    resolver: zodResolver(CaracteristicaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      idTipo: foundRol.idTipo,
-      nombre: foundRol.nombre,
+      idCaracteristica: foundCaracteristica.idCaracteristica,
+      nombre: foundCaracteristica.nombre,
     },
   });
 
-  const onSubmit = async (data: TipoUpdate) => {
+  const onSubmit = async (data: CaracteristicaUpdate) => {
     console.log(data);
-    if (!data.idTipo) return;
+    if (!data.idCaracteristica) return;
     try {
-      await updateTipoMovimiento(data.idTipo, data);
+      await updateCaracteristica(data.idCaracteristica, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -65,14 +65,13 @@ export const FormUpdate = ({ tipos, tipoId, id, onclose }: Props) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div className="justify-center pl-10">
+
         <Buton
         text="Guardar"
           type="submit"
           isLoading={isSubmitting}
-          className="w-full p-2 rounded-xl"
+          className="w-full rounded-xl"
         />
-      </div>
     </Form>
   );
 };

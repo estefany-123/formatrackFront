@@ -11,6 +11,7 @@ import {
   ArchiveBoxIcon,
   GlobeAmericasIcon,
   TagIcon,
+  ClipboardDocumentCheckIcon,
 } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
 
@@ -26,6 +27,7 @@ const menuItems = [
       { name: "Fichas", icon: TagIcon, href: "/admin/fichas" },
       { name: "Areas", icon: GlobeAmericasIcon, href: "/admin/areas" },
       { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" },
+      { name: "Permisos", icon: ClipboardDocumentCheckIcon  , href: "/admin/permisos" },
     ],
   },
 
@@ -49,14 +51,12 @@ const menuItems = [
   },
 
   { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes" },
-
 ];
 
 export default function Sidebar() {
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-
 
   const toggleItem = (name: string) => {
     setOpenItems((prev) =>

@@ -1,4 +1,4 @@
-import { Modulo, ModuloUpdate, ModuloUpdateSchema } from "@/schemas/Modulos";
+import {  ModuloUpdate, ModuloUpdateSchema } from "@/schemas/Modulos";
 import { Form } from "@heroui/form";
 import { useModulo } from "@/hooks/Modulos/useModulo";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,7 @@ import { Input } from "@heroui/input";
 import Buton from "@/components/molecules/Button";
 
 type Props = {
-  modulos: Modulo[];
+  modulos: ModuloUpdate[];
   moduloId: number;
   id: string;
   onclose: () => void;

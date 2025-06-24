@@ -5,12 +5,12 @@ export const sitioUpdateSchema = z.object({
   nombre: z
     .string()
     .min(1, { message: "Nombre es requerido" })
-    .min(3, { message: "Longitud minima de 3" }),
+    .min(2, { message: "Longitud minima de 3" }),
 
   personaEncargada: z
     .string()
     .min(1, { message: "persona encargada es requerido" })
-    .min(8, { message: "Longitud minima de 8" }).optional(),
+    .min(3, { message: "Longitud minima de 3" }).optional(),
 
   ubicacion: z
     .string()
@@ -26,12 +26,12 @@ export const sitioCreateSchema = z.object({
   nombre: z
     .string()
     .min(1, { message: "Nombre es requerido" })
-    .min(3, { message: "Longitud minima de 3" }),
+    .min(2, { message: "Longitud minima de 3" }),
 
   personaEncargada: z
     .string()
     .min(1, { message: "persona encargada es requerido" })
-    .min(8, { message: "Longitud minima de 8" }),
+    .min(3, { message: "Longitud minima de 3" }),
 
   ubicacion: z
     .string()

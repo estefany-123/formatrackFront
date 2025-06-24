@@ -98,7 +98,7 @@ export default function FormularioSede({
             >
               {centros?.length ? (
                 centros.map((centro) => (
-                  <SelectItem key={centro.id_centro} textValue={centro.nombre}>
+                  <SelectItem key={centro.idCentro} textValue={centro.nombre}>
                     {centro.nombre}
                   </SelectItem>
                 ))

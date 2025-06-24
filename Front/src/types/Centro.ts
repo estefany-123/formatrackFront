@@ -1,5 +1,5 @@
 export type Centro = {
-    idCentro : number,
+    idCentro ?: number,
     nombre : string,
     estado : boolean,
     createdAt?: string

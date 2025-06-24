@@ -2,13 +2,13 @@ import { deleteSitio } from "@/axios/Sitios/deleteSitio";
 import { getSitio } from "@/axios/Sitios/getSitio";
 import { postSitio } from "@/axios/Sitios/postSitio";
 import { putSitio } from "@/axios/Sitios/putSitio";
-import { Sitios } from "@/types/sitios";
+import { ListarSitios, Sitios } from "@/types/sitios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useSitios() {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery<Sitios[]>({
+  const { data, isLoading, isError, error } = useQuery<ListarSitios[]>({
     queryKey: ["sitios"],
     queryFn:getSitio,
     staleTime: 1000 * 60 * 5,
@@ -30,8 +30,8 @@ export function useSitios() {
 
   const getSitioById = (
     id: number,
-    sitios: Sitios[] | undefined = data
-  ): Sitios | null => {
+    sitios: ListarSitios[] | undefined = data
+  ): ListarSitios | null => {
     return sitios?.find((sitio) => sitio.idSitio === id) || null;
   };
 

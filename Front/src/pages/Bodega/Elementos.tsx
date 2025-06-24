@@ -7,7 +7,7 @@ import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";
 import Formulario from "@/components/organismos/Elementos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Elementos/FormUpdate";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { ElementoCreate } from "@/schemas/Elemento";
 
@@ -69,15 +69,19 @@ export const ElementosTable = () => {
     setIsOpenUpdate(true);
   };
 
-  // Definir las columnas de la tabla
   const columns: TableColumn<Elemento>[] = [
     {
       label: "Imagen",
       key: "imagenElemento",
       render: (item: Elemento) => {
-        return item.imagenElemento ? (
+        const imagen = item.imagenElemento?.[0]?.url;
+        console.log(imagen);
+        const cleanImagen = imagen?.replace(/^\/+|\/+$/g, "");
+
+        console.log("Imagen limpia:", cleanImagen);
+        return imagen ? (
           <img
-            src={`http://localhost:3000/img/${item.imagenElemento}`}
+            src={`http://localhost:3000${imagen}`}
             alt="Imagen"
             width={200}
             height={50}
@@ -162,24 +166,15 @@ export const ElementosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Elementos</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToUnidad}
-                >
-                  Gestionar Unidad
-                </Button>
-                <Button
-                  className="text-white bg-blue-700"
+                <Buton text="Gestionar Unidad" onPress={handleGoToUnidad} />
+                <Buton
+                  text="Gestionar Categoria"
                   onPress={handleGoToCategoria}
-                >
-                  Gestionar Categoria
-                </Button>
-                <Button
-                  className="text-white bg-blue-700"
+                />
+                <Buton
+                  text="Gestionar Caracteristica"
                   onPress={handleGoToCaracteristica}
-                >
-                  Gestionar Caracteristica
-                </Button>
+                />
               </div>
             </div>
           </CardBody>
@@ -206,20 +201,20 @@ export const ElementosTable = () => {
         </div>
       </Modall>
 
-      <Modall
-        ModalTitle="Editar Elemento"
-        isOpen={IsOpenUpdate}
-        onOpenChange={handleCloseUpdate}
-      >
-        {selectedElemento && (
-          <FormUpdate
-            elementos={ElementosWithKey ?? []}
-            elementoId={selectedElemento.idElemento as number}
-            id="FormUpdate"
-            onclose={handleCloseUpdate}
-          />
-        )}
-      </Modall>
+        <Modall
+          ModalTitle="Editar Elemento"
+          isOpen={IsOpenUpdate}
+          onOpenChange={handleCloseUpdate}
+        >
+          {selectedElemento && (
+            <FormUpdate
+              elementos={ElementosWithKey ?? []}
+              elementoId={selectedElemento.idElemento as number}
+              id="FormUpdate"
+              onclose={handleCloseUpdate}
+            />
+          )}
+        </Modall>
 
       {ElementosWithKey && (
         <Globaltable

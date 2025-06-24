@@ -71,7 +71,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             >
               {modulos?.length ? (
                 modulos.map((modulo) => (
-                  <SelectItem key={modulo.id_modulo} textValue={modulo.nombre}>
+                  <SelectItem key={modulo.idModulo} textValue={modulo.nombre}>
                     {modulo.nombre}
                   </SelectItem>
                 ))

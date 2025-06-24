@@ -1,7 +1,6 @@
 import {
   CategoriaUpdate,
   CategoriaUpdateSchema,
-  Categoria,
 } from "@/schemas/Categorias";
 import { Form } from "@heroui/form";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
@@ -11,7 +10,7 @@ import { Input } from "@heroui/input";
 import Buton from "@/components/molecules/Button";
 
 type Props = {
-  categorias: Categoria[];
+  categorias: CategoriaUpdate[];
   categoriaId: number;
   id: string;
   onclose: () => void;
@@ -60,14 +59,21 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div>
+
+      <Input
+        {...register("codigoUNPSC")}
+        label="Codigo UNPSC"
+        type="text"
+        isInvalid={!!errors.codigoUNPSC}
+        errorMessage={errors.codigoUNPSC?.message}
+      />
+
         <Buton
           text="Guardar"
           type="submit"
           isLoading={isSubmitting}
-          className="w-full"
+          className="w-full rounded-xl"
         />
-      </div>
     </Form>
   );
 };

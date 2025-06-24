@@ -22,11 +22,11 @@ const ModulosTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedModulo, setSelectedModulo] = useState<Modulo | null>(null);
 
-    const navigate = useNavigate();
-  
-    const handleGoToRuta = () => {
-      navigate("/admin/rutas");
-    };
+  const navigate = useNavigate();
+
+  const handleGoToRuta = () => {
+    navigate("/admin/rutas");
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
@@ -57,35 +57,35 @@ const ModulosTable = () => {
     { key: "nombre", label: "Nombre" },
     { key: "descripcion", label: "descripcion" },
     {
-          key: "createdAt",
-          label: "Fecha Creacion",
-          render: (modulo: Modulo) => (
-            <span>
-              {modulo.createdAt
-                ? new Date(modulo.createdAt).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })
-                : "N/A"}
-            </span>
-          ),
-        },
-        {
-          key: "updatedAt",
-          label: "Fecha Actualización",
-          render: (modulo: Modulo) => (
-            <span>
-              {modulo.updatedAt
-                ? new Date(modulo.updatedAt).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })
-                : "N/A"}
-            </span>
-          ),
-        },
+      key: "createdAt",
+      label: "Fecha Creacion",
+      render: (modulo: Modulo) => (
+        <span>
+          {modulo.createdAt
+            ? new Date(modulo.createdAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      label: "Fecha Actualización",
+      render: (modulo: Modulo) => (
+        <span>
+          {modulo.updatedAt
+            ? new Date(modulo.updatedAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
     { key: "estado", label: "estado" },
   ];
 
@@ -134,7 +134,7 @@ const ModulosTable = () => {
           text="Guardar"
           type="submit"
           form="modulo-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="w-full rounded-xl"
         />
       </Modall>
 

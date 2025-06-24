@@ -26,12 +26,12 @@ import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
 import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
+import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 
 function App() {
-
   return (
     <Routes>
-      <Route element={<ProtectedRoute/>}>
+      <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="perfil" element={<Perfil />} />
@@ -53,7 +53,7 @@ function App() {
           <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
           <Route path="bodega/unidades" element={<UnidadTable />} />
           <Route path="bodega/categorias" element={<CategoriasTable />} />
-          <Route path="bodega/caracteristicas" element={<CategoriasTable />} />
+          <Route path="bodega/caracteristicas" element={<CaracteristicasTable />} />
           <Route path="bodega/inventario/" element={<Inventario />} />
           <Route path="bodega/inventario/areas" element={<Inventario />} />
           <Route
@@ -65,7 +65,7 @@ function App() {
             element={<InventarioSitio />}
           />
         </Route>
-        </Route>
+      </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
     </Routes>

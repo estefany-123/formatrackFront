@@ -2,7 +2,8 @@ import { Button } from "@heroui/button";
 
 
 type propsBut = {
-    text : React.ReactNode
+    text ?: React.ReactNode
+    children? : React.ReactNode
     type? :"button" | "submit" | "reset" | undefined,
     isLoading? : boolean,
     form?:string, 
@@ -13,11 +14,11 @@ type propsBut = {
 }
 
 
-export default function Buton({text,type="button",className="",color,variant="solid",onPress, isLoading, form}:propsBut){
+export default function Buton({text,children,type="button",className="",color,variant="solid",onPress, isLoading, form}:propsBut){
       const baseClasses = "text-white bg-blue-700"; 
     return(
         <Button form={form} isLoading={isLoading} onPress={onPress} className={`${baseClasses} ${className}`} type={type} color={color} variant={variant}>
-            {text}
+            {text} {children}
         </Button>
     )
 }

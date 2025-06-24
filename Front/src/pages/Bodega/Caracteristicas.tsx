@@ -1,18 +1,18 @@
 import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
-import Modall from "@/components/molecules/modal";
 import { useState } from "react";
-import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
-import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
-import { FormUpdate } from "@/components/organismos/TiposMovimiento/FormUpdate";
-import { TipoMovimiento } from "@/types/TipoMovimiento";
-import { Button, Card, CardBody } from "@heroui/react";
+import {Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
+import { Caracteristica } from "@/types/Caracteristica";
+import Modall from "@/components/organismos/modal";
+import Formulario from "@/components/organismos/Caracteristicas/FormRegister";
+import { FormUpdate } from "@/components/organismos/Caracteristicas/FormUpdate";
 
-export const TipoMovimientoTable = () => {
-  const { tipos, isLoading, isError, error, addTipoMovimiento, changeState } =
-    useTipoMovimiento();
+export const CaracteristicasTable = () => {
+  const { caracteristicas, isLoading, isError, error, addCaracteristica } =
+    useCaracteristica();
 
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
@@ -20,48 +20,44 @@ export const TipoMovimientoTable = () => {
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedTipoMovimiento, setSelectedTipoMovimiento] =
-    useState<TipoMovimiento | null>(null);
+  const [selectedCaracteristicas, setSelectedCaracteristicas] =
+    useState<Caracteristica | null>(null);
 
   const navigate = useNavigate();
 
   const handleGoToElemento = () => {
-    navigate("/bodega/movimientos");
+    navigate("/bodega/elementos");
   };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
-    setSelectedTipoMovimiento(null);
+    setSelectedCaracteristicas(null);
   };
 
-  const handleState = async (idTipo: number) => {
-    await changeState(idTipo);
-  };
-
-  const handleAddTipoMovimiento = async (tipo: TipoMovimiento) => {
+  const handleAddCaracteristicas = async (caracteristica: Caracteristica) => {
     try {
-      await addTipoMovimiento(tipo);
+      await addCaracteristica(caracteristica);
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
-      console.error("Error al agregar el tipo de movimiento:", error);
+      console.error("Error al agregar el caracteristica de movimiento:", error);
     }
   };
 
-  const handleEdit = (tipo: TipoMovimiento) => {
-    setSelectedTipoMovimiento(tipo);
+  const handleEdit = (caracteristica: Caracteristica) => {
+    setSelectedCaracteristicas(caracteristica);
     setIsOpenUpdate(true);
   };
 
   // Definir las columnas de la tabla
-  const columns: TableColumn<TipoMovimiento>[] = [
+  const columns: TableColumn<Caracteristica>[] = [
     { key: "nombre", label: "Nombre" },
     {
       key: "createdAt",
       label: "Fecha Creación",
-      render: (tipo: TipoMovimiento) => (
+      render: (caracteristica: Caracteristica) => (
         <span>
-          {tipo.createdAt
-            ? new Date(tipo.createdAt).toLocaleDateString("es-ES", {
+          {caracteristica.createdAt
+            ? new Date(caracteristica.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -73,10 +69,10 @@ export const TipoMovimientoTable = () => {
     {
       key: "updatedAt",
       label: "Fecha Actualización",
-      render: (tipo: TipoMovimiento) => (
+      render: (caracteristica: Caracteristica) => (
         <span>
-          {tipo.updatedAt
-            ? new Date(tipo.updatedAt).toLocaleDateString("es-ES", {
+          {caracteristica.updatedAt
+            ? new Date(caracteristica.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -85,7 +81,6 @@ export const TipoMovimientoTable = () => {
         </span>
       ),
     },
-    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {
@@ -96,13 +91,14 @@ export const TipoMovimientoTable = () => {
     return <span>Error: {error?.message}</span>;
   }
 
-  const TipoMovimientosWithKey = tipos
-    ?.filter((tipo) => tipo?.idTipo !== undefined)
-    .map((tipo) => ({
-      ...tipo,
-      key: tipo.idTipo ? tipo.idTipo.toString() : crypto.randomUUID(),
-      idTipo: tipo.idTipo || 0,
-      estado: Boolean(tipo.estado),
+  const CaracteristicassWithKey = caracteristicas
+    ?.filter((caracteristica) => caracteristica?.idCaracteristica !== undefined)
+    .map((caracteristica) => ({
+      ...caracteristica,
+      key: caracteristica.idCaracteristica
+        ? caracteristica.idCaracteristica.toString()
+        : crypto.randomUUID(),
+      idCaracteristica: caracteristica.idCaracteristica || 0,
     }));
 
   return (
@@ -111,14 +107,9 @@ export const TipoMovimientoTable = () => {
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Gestionar Tipos</h1>
+              <h1 className="text-2xl font-bold">Gestionar Caraccteristicas</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToElemento}
-                >
-                  Movimientos
-                </Button>
+                <Buton text="Elementos" onPress={handleGoToElemento} />
               </div>
             </div>
           </CardBody>
@@ -126,47 +117,50 @@ export const TipoMovimientoTable = () => {
       </div>
 
       <Modall
-        ModalTitle="Registrar Nuevo Tipo de Movimiento"
+        ModalTitle="Registrar Nueva Caracteristica"
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
         <Formulario
-          id="tipo-form"
-          addData={handleAddTipoMovimiento}
+          id="caracteristica-form"
+          addData={handleAddCaracteristicas}
           onClose={handleClose}
         />
-        <Button
+        <Buton
+          text="Guardar"
           type="submit"
-          form="tipo-form"
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+          form="caracteristica-form"
+          className="w-full rounded-xl"
+        />
       </Modall>
 
       <Modall
-        ModalTitle="Editar Tipo de Movimiento"
+        ModalTitle="Editar Caracteristica"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
-        {selectedTipoMovimiento && (
+        {selectedCaracteristicas && (
           <FormUpdate
-            tipos={TipoMovimientosWithKey ?? []}
-            tipoId={selectedTipoMovimiento.idTipo as number}
+            caracteristicas={CaracteristicassWithKey ?? []}
+            caracteristicaId={
+              selectedCaracteristicas.idCaracteristica as number
+            }
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
         )}
       </Modall>
 
-      {TipoMovimientosWithKey && (
+      {CaracteristicassWithKey && (
         <Globaltable
-          data={TipoMovimientosWithKey}
+          data={CaracteristicassWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(tipo) => handleState(tipo.idTipo)}
           extraHeaderContent={
-            <Buton text="Nuevo tipo" onPress={() => setIsOpen(true)} />
+            <Buton
+              text="Nueva caracteristica"
+              onPress={() => setIsOpen(true)}
+            />
           }
         />
       )}

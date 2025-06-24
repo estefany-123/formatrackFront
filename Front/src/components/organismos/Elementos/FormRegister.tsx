@@ -5,9 +5,7 @@ import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 import { Form } from "@heroui/form";
 import { addToast, Input, Select, SelectItem } from "@heroui/react";
-import { useState } from "react";
 import { ElementoCreate, ElementoCreateSchema } from "@/schemas/Elemento";
-import { CaracteristicaCreateSchema } from "@/schemas/Caracteristica";
 
 type FormularioProps = {
   addData: (elemento: ElementoCreate) => Promise<{ idElemento: number }>;
@@ -36,12 +34,11 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
   const onSubmit = async (data: ElementoCreate) => {
     try {
-      const { idElemento } = await addData({
+       await addData({
         ...data,
         estado: data.estado,
         tipoElemento: data.tipoElemento as "perecedero" | "noPerecedero",
       });
-
 
       onClose();
       addToast({
@@ -96,7 +93,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             errorMessage={errors.tipoElemento?.message}
           >
             <SelectItem key="perecedero">Perecedero</SelectItem>
-            <SelectItem key="no_perecedero">No Perecedero</SelectItem>
+            <SelectItem key="noPerecedero">No Perecedero</SelectItem>
           </Select>
         )}
       />
@@ -204,7 +201,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             >
               {categorias?.length ? (
                 categorias.map((cat) => (
-                  <SelectItem key={cat.id_categoria} textValue={cat.nombre}>
+                  <SelectItem key={cat.idCategoria} textValue={cat.nombre}>
                     {cat.nombre}
                   </SelectItem>
                 ))

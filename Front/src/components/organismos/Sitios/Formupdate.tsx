@@ -48,7 +48,7 @@ export const FormUpdate = ({ sitios, sitioId, id, onclose }: Props) => {
         shouldShowTimeoutProgress: true,
       });
     } catch (error) {
-      console.log("Error al actualizar la sede : ", error);
+      console.log("Error al actualizar el sitio : ", error);
     }
   };
 

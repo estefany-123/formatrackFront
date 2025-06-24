@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CentroSchema = z.object({
-    idCentro : z.number(),
+    idCentro : z.number().optional(),
     nombre : z.string().min(1,{message : "Es necesario un nombre"}).min(3,"Mínimo 3 caracteres"),
     estado: z
         .boolean({ required_error: "Estado es requerido" }),

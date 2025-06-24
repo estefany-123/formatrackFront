@@ -34,12 +34,12 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
     defaultValues: foundElemento,
   });
 
-  const imagen = watch("imagen_elemento");
+  const imagen = watch("imagenElemento");
 
   const onSubmit = async (data: ElementoUpdate) => {
-    if (!data.id_elemento) return;
+    if (!data.idElemento) return;
     try {
-      await updateElemento(data.id_elemento, data);
+      await updateElemento(data.idElemento, data);
       onclose();
       addToast({
         title: "Elemento actualizado",
@@ -76,19 +76,10 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
         errorMessage={errors.descripcion?.message}
       />
 
-      <Input
-        label="Valor"
-        placeholder="Valor del elemento"
-        type="number"
-        {...register("valor")}
-        isInvalid={!!errors.valor}
-        errorMessage={errors.valor?.message}
-      />
-
       {imagen && typeof imagen === "string" && (
         <div className="flex justify-center">
           <img
-            src={`http://localhost:3000/img/${imagen}`}
+             src={`http://localhost:3000${imagen}`}
             alt="Imagen actual"
             className="w-40 h-40 object-cover rounded-lg mb-4"
           />
@@ -111,18 +102,17 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
         accept="image/*"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) setValue("imagen_elemento", file);
+          if (file) setValue("imagenElemento", file);
         }}
       />
 
-      <div className="justify-center pl-10">
         <Buton
           text="Guardar"
           type="submit"
           isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
+          className="w-full rounded-xl"
         />
-      </div>
+
     </Form>
   );
 };

@@ -5,20 +5,20 @@ export const CaracteristicaCreateSchema = z.object({
   nombre: z
     .string()
     .min(1, { message: "Es necesario un nombre" })
-    .min(3, "Mínimo 3 caracteres"),
+    .min(2, "Mínimo 2 caracteres"),
 
-  codigo: z
-    .string({message:"Codigo debe ser un string"}).min(2,{message:"Minimo 2 caracteres"})
+  simbolo: z
+    .string({message:"Simbolo debe ser un string"}).min(2,{message:"Minimo 2 caracteres"})
 });
 
 export type CaracteristicaCreate = z.infer<typeof CaracteristicaCreateSchema>;
 
 export const CaracteristicaUpdateSchema = z.object({
-  id_caracteristica: z.number(),
+  idCaracteristica: z.number().optional(),
   nombre: z
     .string()
     .min(1, { message: "Es necesario un nombre" })
-    .min(3, "Mínimo 3 caracteres"),
+    .min(2, "Mínimo 2 caracteres"),
 });
 
 export type CaracteristicaUpdate = z.infer<typeof CaracteristicaUpdateSchema>;

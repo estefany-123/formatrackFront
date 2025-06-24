@@ -13,7 +13,7 @@ export async function putElemento(id:number, data:ElementoPutData):Promise<any> 
     if (data.imagenElemento) {
         formData.append('imagenElemento', data.imagenElemento);
     }
-    const res = await axiosAPI.post(`elementos/${id}`, formData, {
+    const res = await axiosAPI.patch(`elementos/${id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

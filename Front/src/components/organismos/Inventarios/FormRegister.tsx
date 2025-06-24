@@ -85,7 +85,7 @@ console.log("Errores", errors)
       {!loadingSitios && !errorSitios && Array.isArray(sitios) && (
         <Controller
           control={control}
-          name="fk_sitio"
+          name="fkSitio"
           defaultValue={typeof idSitio === "number" ? idSitio : undefined}
           render={({ field }) => {
             const sitioActual = sitios.find((s) => s.idSitio === idSitio);
@@ -110,8 +110,8 @@ console.log("Errores", errors)
                       const sitioId = Number(e.target.value);
                       field.onChange(sitioId);
                     }}
-                    isInvalid={!!errors.fk_sitio}
-                    errorMessage={errors.fk_sitio?.message}
+                    isInvalid={!!errors.fkSitio}
+                    errorMessage={errors.fkSitio?.message}
                   >
                     {sitios.map((sitio) => (
                       <SelectItem key={sitio.idSitio} textValue={sitio.nombre}>
@@ -129,7 +129,7 @@ console.log("Errores", errors)
       {!loadingElementos && !errorElementos && elementos && (
         <Controller
           control={control}
-          name="fk_elemento"
+          name="fkElemento"
           render={({ field }) => (
             <div className="w-full">
               <Select
@@ -143,8 +143,8 @@ console.log("Errores", errors)
                   const elementoId = Number(e.target.value);
                   field.onChange(elementoId);
                 }}
-                isInvalid={!!errors.fk_elemento}
-                errorMessage={errors.fk_elemento?.message}
+                isInvalid={!!errors.fkElemento}
+                errorMessage={errors.fkElemento?.message}
               >
                 {elementos.length ? (
                   elementos.map((elemento) => (

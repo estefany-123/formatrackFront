@@ -1,8 +1,9 @@
 import { Form } from "@heroui/form";
 import { Ruta, RutaSchema } from "@/schemas/Ruta";
 import { Input, Select, SelectItem } from "@heroui/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useModulo } from "@/hooks/Modulos/useModulo";
 
 type FormularioProps = {
   addData: (rutas: Ruta) => Promise<void>;
@@ -15,10 +16,12 @@ export default function FormRutas({ addData, onClose, id }: FormularioProps) {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+    control,
   } = useForm({
     resolver: zodResolver(RutaSchema),
   });
+
+  const { modulos } = useModulo();
 
   const onSubmit = async (data: Ruta) => {
     try {
@@ -36,38 +39,85 @@ export default function FormRutas({ addData, onClose, id }: FormularioProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full space-y-4"
     >
-      <Input {...register("nombre")} label="Nombre" type="text" />
-      {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
-      <Input {...register("descripcion")} label="Descripcion" type="text" />
-      {errors.descripcion && (
-        <p className="text-red-500">{errors.descripcion.message}</p>
-      )}
-      <Input {...register("urlDestino")} label="Url destino" type="text" />
-      {errors.urlDestino && (
-        <p className="text-red-500">{errors.urlDestino.message}</p>
-      )}
-
-      <Select
-        aria-labelledby="estado"
-        labelPlacement="outside"
-        placeholder="Estado"
-        onChange={(e) =>
-          setValue("estado", e.target.value === "true" ? true : false)
-        }
-      >
-        <SelectItem key="true">Activo</SelectItem>
-        <SelectItem key="false">Inactivo</SelectItem>
-      </Select>
-      {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
-
       <Input
-        label="Modulo"
-        type="number"
-        onChange={(e) => setValue("fkModulo", parseInt(e.target.value))}
+        {...register("nombre")}
+        label="Nombre"
+        placeholder="Ingrese el nombre de la ruta"
+        type="text"
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
       />
-      {errors.fkModulo && (
-        <p className="text-red-500">{errors.fkModulo.message}</p>
-      )}
+      <Input
+        {...register("descripcion")}
+        label="Descripcion"
+        placeholder="Ingrese la descripcion de la ruta"
+        type="text"
+        isInvalid={!!errors.descripcion}
+        errorMessage={errors.descripcion?.message}
+      />
+      <Input
+        {...register("urlDestino")}
+        label="Url destino"
+        placeholder="Ingrese la url de la ruta"
+        type="text"
+        isInvalid={!!errors.urlDestino}
+        errorMessage={errors.urlDestino?.message}
+      />
+
+      <Controller
+        control={control}
+        name="estado"
+        render={({ field }) => (
+          <Select
+            label="Estado"
+            placeholder="Selecciona estado"
+            {...field}
+            value={field.value ? "true" : "false"}
+            onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
+          >
+            <SelectItem key="true">Activo</SelectItem>
+            <SelectItem key="false">Inactivo</SelectItem>
+          </Select>
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="fkModulo"
+        render={({ field }) => (
+          <div className="w-full">
+            <Select
+              {...field}
+              label="Modulo"
+              placeholder="Selecciona un modulo"
+              aria-label="Seleccionar modulo"
+              className="w-full"
+              selectedKeys={field.value ? [field.value.toString()] : []}
+              onChange={(e) => {
+                const elementoId = Number(e.target.value);
+                field.onChange(elementoId);
+              }}
+              isInvalid={!!errors.fkModulo}
+              errorMessage={errors.fkModulo?.message}
+            >
+              {modulos?.length ? (
+                modulos.map((elemento) => (
+                  <SelectItem
+                    key={elemento.idModulo}
+                    textValue={elemento.nombre}
+                  >
+                    {elemento.nombre}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem isDisabled>No hay modulos disponibles</SelectItem>
+              )}
+            </Select>
+          </div>
+        )}
+      />
     </Form>
   );
 }
