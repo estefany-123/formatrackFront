@@ -48,11 +48,11 @@ const ResetPassword = () => {
                         <h1 className="text-center font-sans text-xl font-bold mb-6">Restablece tu contraseña</h1>
                         <p className='text-center text-sm pb-5'>Ingresa una nueva contraseña para </p>
 
-                        <Input {...register("password")} label='Nueva contraseña' type='password' placeholder='escribe tu nueva contraseña' />
-                        {errors.password && <p>{errors.password.message}</p>}
+                        <Input {...register("password")} label='Nueva contraseña' type='password' placeholder='escribe tu nueva contraseña'  isInvalid={!!errors.password} errorMessage={errors.password?.message}/>
+                        
 
-                        <Input {...register("confirmPassword")} label='Confirma tu contraseña' type='password' placeholder='confirma tu contraseña' />
-                        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+                        <Input {...register("confirmPassword")} label='Confirma tu contraseña' type='password' placeholder='confirma tu contraseña'   isInvalid={!!errors.confirmPassword}errorMessage={errors.confirmPassword?.message} />
+                        
 
                         <Buton className='block mx-auto' type='submit'>
                             Restablecer contraseña
