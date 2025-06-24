@@ -1,15 +1,17 @@
 export type Ruta ={
-    id_ruta : number,
+    idRuta : number,
     nombre : string,
     descripcion : string,
-    url_destino : string,
+    urlDestino : string,
     estado : boolean,
-    fk_modulo : number
+    createdAt?: string
+    updatedAt?: string
+    fkModulo : number
 }
 
 export type UpRuta ={
-    id_ruta : number,
+    idRuta : number,
     nombre : string,
     descripcion : string,
-    url_destino : string
+    urlDestino : string
 }

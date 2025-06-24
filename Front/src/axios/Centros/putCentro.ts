@@ -3,9 +3,9 @@ import {PutCentro} from "@/types/Centro"
 
 
 export async function updateCentro(
-  id_centro: number,
+  idCentro: number,
   data: PutCentro
 ): Promise<any> {
-  const response = await axiosAPI.put(`centros/${id_centro}/`, data);
+  const response = await axiosAPI.patch(`centros/${idCentro}`, data);
   return response.data;
 }

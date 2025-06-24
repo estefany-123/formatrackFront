@@ -1,72 +1,77 @@
-import { Modulo, ModuloUpdate, ModuloUpdateSchema } from "@/schemas/Modulos";
+import {  ModuloUpdate, ModuloUpdateSchema } from "@/schemas/Modulos";
 import { Form } from "@heroui/form";
 import { useModulo } from "@/hooks/Modulos/useModulo";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@heroui/input";
-
-
+import Buton from "@/components/molecules/Button";
 
 type Props = {
-    modulos: Modulo[];
-    moduloId: number;
-    id: string
-    onclose: () => void;
+  modulos: ModuloUpdate[];
+  moduloId: number;
+  id: string;
+  onclose: () => void;
+};
 
-}
+const FormUpCentro = ({ moduloId, id, onclose }: Props) => {
+  const { updateModulo, getModuloById } = useModulo();
 
-const FormUpCentro = ({  moduloId, id, onclose }: Props) => {
+  const foundModulo = getModuloById(moduloId) as ModuloUpdate;
+  console.log(foundModulo);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(ModuloUpdateSchema),
+    defaultValues: {
+      idModulo: foundModulo.idModulo,
+      nombre: foundModulo.nombre,
+    },
+  });
 
-    const { updateModulo, getModuloById } = useModulo()
-
-    const foundModulo = getModuloById(moduloId) as ModuloUpdate;
-    console.log(foundModulo);
-
-    const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: zodResolver(ModuloUpdateSchema),
-        defaultValues: {
-            id_modulo: foundModulo.id_modulo,
-            nombre: foundModulo.nombre
-        }
-    });
-
-    const onSubmit = async (data: ModuloUpdate) => {
-        console.log("submiting...");
-        console.log(data);
-        try {
-            await updateModulo(data.id_modulo, data);
-            console.log("Sended success")
-            onclose();
-        } catch (error) {
-            console.log("Error al actualizar el centro", error);
-        }
+  const onSubmit = async (data: ModuloUpdate) => {
+    console.log("submiting...");
+    console.log(data);
+    try {
+      await updateModulo(data.idModulo, data);
+      console.log("Sended success");
+      onclose();
+    } catch (error) {
+      console.log("Error al actualizar el centro", error);
     }
+  };
 
-    return (
-        <Form onSubmit={handleSubmit(onSubmit)} id={id} className="w-full space-y-4">
-            <Input
-                {...register("nombre")}
-                label="Nombre"
-                type="text"
-                isInvalid={!!errors.nombre}
-                errorMessage={errors.nombre?.message}
-            />
+  return (
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      id={id}
+      className="w-full space-y-4"
+    >
+      <Input
+        {...register("nombre")}
+        label="Nombre"
+        type="text"
+        isInvalid={!!errors.nombre}
+        errorMessage={errors.nombre?.message}
+      />
 
-            <Input
-                {...register("descripcion")}
-                label="Descripcion"
-                type="text"
-                isInvalid={!!errors.descripcion}
-                errorMessage={errors.descripcion?.message}
-            />
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-                Guardar Cambios
-            </button>
-        </Form>
-    )
-
-}
-
+      <Input
+        {...register("descripcion")}
+        label="Descripcion"
+        type="text"
+        isInvalid={!!errors.descripcion}
+        errorMessage={errors.descripcion?.message}
+      />
+        <Buton
+          text="Guardar"
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full"
+        />
+    </Form>
+  );
+};
 
 export default FormUpCentro;

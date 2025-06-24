@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { usePermisos } from "@/hooks/permisos/usePermisos";
-import { PermisoCreateSchema, PermisoUpdate } from "@/schemas/Permiso";
+import { PermisoUpdateSchema, PermisoUpdate } from "@/schemas/Permiso";
 import { addToast } from "@heroui/react";
 
 type Props = {
-  permisos: (PermisoUpdate & { id_permiso?: number })[];
+  permisos: (PermisoUpdate & { idPermiso?: number })[];
   permisoId: number;
   id: string;
   onclose: () => void;
@@ -24,21 +24,19 @@ export const FormUpdate = ({ permisos, permisoId, id, onclose }: Props) => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<PermisoUpdate>({
-    resolver: zodResolver(PermisoCreateSchema),
+    resolver: zodResolver(PermisoUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_permiso: foundPermiso.id_permiso,
+      idPermiso: foundPermiso.idPermiso,
       permiso: foundPermiso.permiso,
-      estado: foundPermiso.estado,
-      fk_modulo: foundPermiso.fk_modulo,
     },
   });
 
   const onSubmit = async (data: PermisoUpdate) => {
     console.log(data);
-    if (!data.id_permiso) return;
+    if (!data.idPermiso) return;
     try {
-      await updatePermisos(data.id_permiso, data);
+      await updatePermisos(data.idPermiso, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",

@@ -4,8 +4,8 @@ import { programaUpdate, programaUpdateSchema } from "@/schemas/programas";
 import { Input } from "@heroui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
   programas: programaUpdate[];
@@ -30,18 +30,16 @@ export const FormUpdate = ({ programas, programaId, id, onclose }: Props) => {
     resolver: zodResolver(programaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_programa: foundPrograma.id_programa,
+      idPrograma: foundPrograma.idPrograma,
       nombre: foundPrograma.nombre,
-      estado: foundPrograma.estado,
-      fk_area: foundPrograma.fk_area,
     },
   });
 
   const onSubmit = async (data: programaUpdate) => {
     console.log(data);
-    if (!data.id_programa) return;
+    if (!data.idPrograma) return;
     try {
-      await updatePrograma(data.id_programa, data);
+      await updatePrograma(data.idPrograma, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -72,15 +70,12 @@ export const FormUpdate = ({ programas, programaId, id, onclose }: Props) => {
         errorMessage={errors.nombre?.message}
       />
 
-      <div className="justify-center pl-10">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

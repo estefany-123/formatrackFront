@@ -1,53 +1,58 @@
-
 import { Input } from "@heroui/input";
 import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
 import { UserUpdateSchema, UserUpdate } from "@/schemas/User";
-import { User } from '@/schemas/User'
 import { Form } from "@heroui/form";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import Buton from "@/components/molecules/Button";
 
 type FormuProps = {
-    Users: (User & {key : string})[];
-    userId: number;
-    id: string
-    onclose: () => void;
-}
+  Users: (UserUpdate & { idUsuario: number })[];
+  userId: number;
+  id: string;
+  onclose: () => void;
+};
 
- export const FormUpdate = ({Users,userId,id, onclose} : FormuProps) => {
+export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
+  const { updateUser, getUserById } = useUsuario();
 
-    const {updateUser, getUserById} = useUsuario();
-    
-    const foundUser = getUserById(userId,Users) as User;
+  const foundUser = getUserById(userId, Users) as UserUpdate;
 
-    const { register,handleSubmit, formState : {errors},} = useForm<UserUpdate>({
-        resolver : zodResolver(UserUpdateSchema),mode: "onChange",  defaultValues: {
-            idUsuario : foundUser.idUsuario,
-            nombre : foundUser.nombre,
-            apellido : foundUser.apellido,
-            edad : Number(foundUser.edad),
-            telefono : foundUser.telefono,
-            correo : foundUser.correo,
-            cargo : foundUser.cargo
-        }
-    });
-    
-    const onSubmit = async (data : UserUpdate) => {
-        console.log(data);
-        if(!data.idUsuario) return;
-        try {
-            await updateUser(data.idUsuario,data);
-            onclose();
-        }catch(error){
-            console.log("Error al actualizar el usuario : ",error)
-        }
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<UserUpdate>({
+    resolver: zodResolver(UserUpdateSchema),
+    mode: "onChange",
+    defaultValues: {
+      idUsuario: foundUser.idUsuario,
+      nombre: foundUser.nombre,
+      apellido: foundUser.apellido,
+      edad: Number(foundUser.edad),
+      telefono: foundUser.telefono,
+      correo: foundUser.correo,
+      cargo: foundUser.cargo,
+    },
+  });
 
-    return (
-        <Form id={id} className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+  const onSubmit = async (data: UserUpdate) => {
+    console.log(data);
+    if (!data.idUsuario) return;
+    try {
+      await updateUser(data.idUsuario, data);
+      onclose();
+    } catch (error) {
+      console.log("Error al actualizar el usuario : ", error);
+    }
+  };
 
+  return (
+    <Form
+      id={id}
+      className="w-full space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         label="Nombre"
         placeholder="Nombre"
@@ -92,11 +97,12 @@ type FormuProps = {
         isInvalid={!!errors.cargo}
         errorMessage={errors.cargo?.message}
       />
-
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-        Guardar Cambios
-      </button>
+        <Buton
+          text="Guardar"
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full rounded-xl"
+        />
     </Form>
-);
-
+  );
 };

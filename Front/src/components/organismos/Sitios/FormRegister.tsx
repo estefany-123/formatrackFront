@@ -66,9 +66,9 @@ export default function FormularioSitio({
         label="Persona encargada"
         type="text"
         placeholder="Encargado"
-        {...register("persona_encargada")}
-        isInvalid={!!errors.persona_encargada}
-        errorMessage={errors.persona_encargada?.message}
+        {...register("personaEncargada")}
+        isInvalid={!!errors.personaEncargada}
+        errorMessage={errors.personaEncargada?.message}
       />
 
       <Input
@@ -101,7 +101,7 @@ export default function FormularioSitio({
 
       <Controller
         control={control}
-        name="fk_area"
+        name="fkArea"
         render={({ field }) => (
           <div className="w-full mb-4">
             <Select
@@ -109,12 +109,12 @@ export default function FormularioSitio({
               value={field.value ?? 0}
               onChange={(e) => field.onChange(Number(e.target.value))}
               placeholder="Selecciona un área..."
-              isInvalid={!!errors.fk_area}
-              errorMessage={errors.fk_area?.message}
+              isInvalid={!!errors.fkArea}
+              errorMessage={errors.fkArea?.message}
             >
               {areas?.length ? (
                 areas.map((area) => (
-                  <SelectItem key={area.id_area} textValue={area.nombre}>
+                  <SelectItem key={area.idArea} textValue={area.nombre}>
                     {area.nombre}
                   </SelectItem>
                 ))
@@ -128,7 +128,7 @@ export default function FormularioSitio({
 
       <Controller
         control={control}
-        name="fk_tipo_sitio"
+        name="fkTipoSitio"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -136,12 +136,12 @@ export default function FormularioSitio({
               value={field.value ?? 0}
               onChange={(e) => field.onChange(Number(e.target.value))}
               placeholder="Selecciona un tipo..."
-              isInvalid={!!errors.fk_tipo_sitio}
-              errorMessage={errors.fk_tipo_sitio?.message}
+              isInvalid={!!errors.fkTipoSitio}
+              errorMessage={errors.fkTipoSitio?.message}
             >
               {tipos?.length ? (
                 tipos.map((tipo) => (
-                  <SelectItem key={tipo.id_tipo} textValue={tipo.nombre}>
+                  <SelectItem key={tipo.idTipo} textValue={tipo.nombre}>
                     {tipo.nombre}
                   </SelectItem>
                 ))

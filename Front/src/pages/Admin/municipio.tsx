@@ -8,7 +8,7 @@ import FormUpMunicipio from "@/components/organismos/Municipio/FormUpMunicipio";
 import { Municipio } from "@/types/Municipio";
 import { useMunicipio } from "@/hooks/Municipio/useMunicipio";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 
 const MunicipiosTable = () => {
   const { municipios, isLoading, isError, error, addMunicipio, changeState } =
@@ -36,8 +36,8 @@ const MunicipiosTable = () => {
   };
 
   const handleState = async (municipios: Municipio) => {
-    await changeState(municipios.id_municipio);
-    console.log(municipios.id_municipio);
+    await changeState(municipios.idMunicipio);
+    console.log(municipios.idMunicipio);
   };
 
   const handleAddMunicipio = async (municipios: Municipio) => {
@@ -58,6 +58,36 @@ const MunicipiosTable = () => {
   const columns: TableColumn<Municipio>[] = [
     { key: "nombre", label: "Nombre" },
     { key: "departamento", label: "Departamento" },
+    {
+          key: "createdAt",
+          label: "Fecha Creacion",
+          render: (municipio: Municipio) => (
+            <span>
+              {municipio.createdAt
+                ? new Date(municipio.createdAt).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })
+                : "N/A"}
+            </span>
+          ),
+        },
+        {
+          key: "updatedAt",
+          label: "Fecha Actualización",
+          render: (municipio: Municipio) => (
+            <span>
+              {municipio.updatedAt
+                ? new Date(municipio.updatedAt).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })
+                : "N/A"}
+            </span>
+          ),
+        },
     { key: "estado", label: "estado" },
   ];
 
@@ -70,11 +100,11 @@ const MunicipiosTable = () => {
   }
 
   const municipiosWithKey = municipios
-    ?.filter((municipios) => municipios?.id_municipio !== undefined)
+    ?.filter((municipios) => municipios?.idMunicipio !== undefined)
     .map((municipios) => ({
       ...municipios,
-      key: municipios.id_municipio
-        ? municipios.id_municipio.toString()
+      key: municipios.idMunicipio
+        ? municipios.idMunicipio.toString()
         : crypto.randomUUID(),
       estado: Boolean(municipios.estado),
     }));
@@ -87,12 +117,7 @@ const MunicipiosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Municipios</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToCentro}
-                >
-                  Centros{" "}
-                </Button>
+                <Buton text="Centros" onPress={handleGoToCentro} />
               </div>
             </div>
           </CardBody>
@@ -109,13 +134,12 @@ const MunicipiosTable = () => {
           addData={handleAddMunicipio}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
           form="municipio-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+          className=" w-full rounded-xl"
+        />
       </Modall>
 
       <Modall
@@ -126,7 +150,7 @@ const MunicipiosTable = () => {
         {selectedMunicipio && (
           <FormUpMunicipio
             municipios={municipiosWithKey ?? []}
-            municipioId={selectedMunicipio.id_municipio}
+            municipioId={selectedMunicipio.idMunicipio}
             id="FormUpMuni"
             onclose={handleCloseUpdate}
           />

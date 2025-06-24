@@ -2,13 +2,13 @@ import { deleteSitio } from "@/axios/Sitios/deleteSitio";
 import { getSitio } from "@/axios/Sitios/getSitio";
 import { postSitio } from "@/axios/Sitios/postSitio";
 import { putSitio } from "@/axios/Sitios/putSitio";
-import { Sitios } from "@/types/sitios";
+import { ListarSitios, Sitios } from "@/types/sitios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useSitios() {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery<Sitios[]>({
+  const { data, isLoading, isError, error } = useQuery<ListarSitios[]>({
     queryKey: ["sitios"],
     queryFn:getSitio,
     staleTime: 1000 * 60 * 5,
@@ -30,13 +30,15 @@ export function useSitios() {
 
   const getSitioById = (
     id: number,
-    sitios: Sitios[] | undefined = data
-  ): Sitios | null => {
-    return sitios?.find((sitio) => sitio.id_sitio === id) || null;
+    sitios: ListarSitios[] | undefined = data
+  ): ListarSitios | null => {
+    return sitios?.find((sitio) => sitio.idSitio === id) || null;
   };
 
   const updateSitioMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Sitios }) => putSitio(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Sitios }) => {
+      const {idSitio, ...resto}=data;
+      return putSitio(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["sitios"],
@@ -70,8 +72,8 @@ export function useSitios() {
     return updateSitioMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (id_sitio: number) => {
-    return changeStateMutation.mutateAsync(id_sitio);
+  const changeState = async (idSitio: number) => {
+    return changeStateMutation.mutateAsync(idSitio);
   };
 
   return {

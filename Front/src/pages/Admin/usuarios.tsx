@@ -5,10 +5,10 @@ import Modall from "@/components/organismos/modal";
 import FormRegister from "@/components/organismos/Usuarios/FormRegister";
 import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Usuarios/Formupdate";
-import { User } from "@/schemas/User";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { User } from "@/types/Usuario";
 import FormRegisterMasivo from "@/components/organismos/Usuarios/FormRegisterMasivo";
 
 const UsersTable = () => {
@@ -74,10 +74,12 @@ const UsersTable = () => {
     return <span>Error: {error?.message}</span>;
   }
 
-    const usersWithKey = users?.filter(user => user?.idUsuario !== undefined).map((user) => ({
-        ...user,
-        key: user.idUsuario ? user.idUsuario.toString() : crypto.randomUUID(),
-        estado: Boolean(user.estado)
+  const usersWithKey = users
+    ?.filter((user): user is User & { idUsuario: number } => user?.idUsuario !== undefined)
+    .map((user) => ({
+      ...user,
+      key: user.idUsuario ? user.idUsuario.toString() : crypto.randomUUID(),
+      estado: Boolean(user.estado),
     }));
 
   return (
@@ -88,12 +90,10 @@ const UsersTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Usuarios</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
+                <Buton
+                  text="Gestionar Roles"
                   onPress={handleGoToRol}
-                >
-                  Gestionar Roles
-                </Button>
+                />
               </div>
             </div>
           </CardBody>
@@ -109,15 +109,30 @@ const UsersTable = () => {
           addData={handleAddUser}
           onClose={handleClose}
         />
-        <button
-          type="submit"
-          form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+        <div>
+          <Buton
+            text="Guardar"
+            type="submit"
+            form="user-form"
+            className="w-full p-2 rounded-xl"
+          />
+        </div>
       </Modall>
 
+      <Modall
+        ModalTitle="Editar Usuario"
+        isOpen={IsOpenUpdate}
+        onOpenChange={handleCloseUpdate}
+      >
+        {selectedUser && (
+          <FormUpdate
+            Users={usersWithKey ?? []}
+            userId={selectedUser.idUsuario as number}
+            id="FormUpdate"
+            onclose={handleCloseUpdate}
+          />
+        )}
+      </Modall>
             <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
                 {selectedUser && (
                     <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.idUsuario as number} id="FormUpdate" onclose={handleCloseUpdate} />

@@ -5,6 +5,7 @@ import { AreaUpdateSchema, AreaUpdate } from "@/schemas/Area";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type FormuProps = {
   areas: AreaUpdate[];
@@ -26,19 +27,16 @@ export const FormUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
     resolver: zodResolver(AreaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_area: foundArea.id_area,
       nombre: foundArea.nombre,
-      estado: foundArea.estado,
-      fk_sede: foundArea.fk_sede,
-      fk_usuario: foundArea.fk_usuario
+      idArea: foundArea.idArea,
     },
   });
 
   const onSubmit = async (data: AreaUpdate) => {
     console.log("Enviando datos:", data);
-    if (!data.id_area) return;
+    if (!data.idArea) return;
     try {
-      await updateArea(data.id_area, data);
+      await updateArea(data.idArea, { nombre: data.nombre });
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -66,14 +64,13 @@ export const FormUpdate = ({ areas, areaId, id, onclose }: FormuProps) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div className="justify-center pl-10">
-        <Button
+      <div className="justify-center">
+        <Buton
+          text="Guardar"
           type="submit"
           isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+          className="w-full rounded-xl"
+        />
       </div>
     </form>
   );

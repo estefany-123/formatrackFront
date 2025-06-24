@@ -1,12 +1,14 @@
 export type Modulo = {
-    id_modulo : number, 
+    idModulo : number, 
     nombre : string,
     descripcion : string,
     estado : boolean
+    createdAt?:string
+    updatedAt?:string
 }
 
 export type UpModulo = {
-    id_modulo : number, 
+    idModulo : number, 
     nombre : string,
     descripcion : string
 }

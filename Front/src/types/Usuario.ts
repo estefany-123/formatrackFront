@@ -1,33 +1,33 @@
 
 export type User = {
-    idUsuario: number;
-    documento: number;
+    idUsuario?: number;
+    documento?: number;
     nombre: string;
     apellido: string;
     edad: number;
     telefono: string;
     correo: string;
-    estado: boolean;
-    cargo: string;
-    password: string;
-    fk_rol: number;
+    estado?: boolean;
+    cargo?: string;
+    password?: string;
+    fkRol?: number;
 }
 
 export type postUser = {
-    documento: number;
+    documento?: number;
     nombre: string;
     apellido: string;
     edad: number;
     telefono: string;
     correo: string;
-    estado: boolean;
-    cargo: string;
-    password: string;
-    fk_rol: number;
+    estado?: boolean;
+    cargo?: string;
+    password?: string;
+    fkRol?: number;
 }
 
 export type putUser = {
-    id_usuario: number;
+    idUsuario?: number;
     nombre: string;
     apellido: string | null;
     edad: number | null;

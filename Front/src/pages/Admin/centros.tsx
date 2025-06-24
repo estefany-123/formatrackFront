@@ -5,10 +5,10 @@ import Modall from "@/components/organismos/modal";
 import FormCentros from "@/components/organismos/Centros/FormCentros";
 import { useState } from "react";
 import FormUpCentro from "@/components/organismos/Centros/FormUpCentro";
-import { Centro } from "@/schemas/Centro";
 import { useCentro } from "@/hooks/Centros/useCentros";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
+import { Centro } from "@/types/Centro";
 
 const CentrosTable = () => {
   const { centros, isLoading, isError, error, addCentro, changeState } =
@@ -38,8 +38,8 @@ const CentrosTable = () => {
   };
 
   const handleState = async (centros: Centro) => {
-    await changeState(centros.id_centro as number);
-    console.log(centros.id_centro);
+    await changeState(centros.idCentro as number);
+    console.log(centros.idCentro);
   };
 
   const handleAddCentro = async (centros: Centro) => {
@@ -59,8 +59,37 @@ const CentrosTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Centro>[] = [
     { key: "nombre", label: "Nombre" },
+    {
+      key: "createdAt",
+      label: "Fecha Creacion",
+      render: (centro: Centro) => (
+        <span>
+          {centro.createdAt
+            ? new Date(centro.createdAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      label: "Fecha Actualización",
+      render: (centro: Centro) => (
+        <span>
+          {centro.updatedAt
+            ? new Date(centro.updatedAt).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "N/A"}
+        </span>
+      ),
+    },
     { key: "estado", label: "estado" },
-    { key: "fk_municipio", label: "municipio" },
   ];
 
   if (isLoading) {
@@ -72,13 +101,11 @@ const CentrosTable = () => {
   }
 
   const centrosWithKey = centros
-    ?.filter((centros) => centros?.id_centro !== undefined)
+    ?.filter((centros) => centros?.idCentro !== undefined)
     .map((centros) => ({
       ...centros,
-      key: centros.id_centro
-        ? centros.id_centro.toString()
-        : crypto.randomUUID(),
-      id_centro: centros.id_centro as number,
+      key: centros.idCentro ? centros.idCentro.toString() : crypto.randomUUID(),
+      idCentro: centros.idCentro as number,
       estado: Boolean(centros.estado),
     }));
 
@@ -90,18 +117,11 @@ const CentrosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Centros</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToSede}
-                >
-                  Sedes
-                </Button>
-                <Button
-                  className="text-white bg-blue-700"
+                <Buton text="Sedes" onPress={handleGoToSede} />
+                <Buton
+                  text="Gestionar Municipios"
                   onPress={handleGoToMunicipio}
-                >
-                  Gestionar Municipios{" "}
-                </Button>
+                />
               </div>
             </div>
           </CardBody>
@@ -118,24 +138,23 @@ const CentrosTable = () => {
           addData={handleAddCentro}
           onClose={handleClose}
         />
-        <button
+        <Buton
+          text="Guardar"
           type="submit"
           form="user-form"
-          className="bg-blue-500 text-white p-2 rounded-md"
-        >
-          Guardar
-        </button>
+          className="w-full rounded-xl"
+        />
       </Modall>
 
       <Modall
-        ModalTitle="Editar Usuario"
+        ModalTitle="Editar Centro"
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
         {selectedUser && (
           <FormUpCentro
             centros={centrosWithKey ?? []}
-            centroId={selectedUser.id_centro as number}
+            centroId={selectedUser.idCentro as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />

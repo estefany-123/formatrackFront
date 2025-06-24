@@ -1,16 +1,10 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface InventarioPutData {
-    id_inventario?: number;
-    stock: number;
-    estado: boolean;
-    created_at?:string;
-    updated_at?:string;
-    fk_sitio: number;
-    fk_elemento: number;
+    stock?: number;
 }
 
-export async function putInventario(id:number, data:InventarioPutData):Promise<any> {
-    const res = await axiosAPI.post(`inventario/${id}`, data);
+export async function putInventario(idInventario:number, data:InventarioPutData):Promise<any> {
+    const res = await axiosAPI.patch(`inventarios/${idInventario}`, data);
     return res.data;
 }

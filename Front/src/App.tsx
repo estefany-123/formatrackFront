@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./layouts/layout";
 import Home from "./pages/Home/Home";
-import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
 import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
 import { Inventario } from "./pages/Bodega/Inventarios";
@@ -26,11 +25,11 @@ import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
 import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
+import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
 
 function App() {
-
   return (
     <Routes>
       <Route element={<ProtectedRoute />}>
@@ -55,7 +54,7 @@ function App() {
           <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
           <Route path="bodega/unidades" element={<UnidadTable />} />
           <Route path="bodega/categorias" element={<CategoriasTable />} />
-          <Route path="bodega/caracteristicas" element={<CategoriasTable />} />
+          <Route path="bodega/caracteristicas" element={<CaracteristicasTable />} />
           <Route path="bodega/inventario/" element={<Inventario />} />
           <Route path="bodega/inventario/areas" element={<Inventario />} />
           <Route
@@ -66,7 +65,6 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
-          <Route path="solicitudes" element={<SolicitudTable />} />
         </Route>
       </Route>
       

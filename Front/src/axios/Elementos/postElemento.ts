@@ -3,48 +3,68 @@ import { axiosAPI } from "../axiosAPI";
 export interface ElementoPostData {
   nombre: string;
   descripcion: string;
-  valor: number;
-  perecedero: boolean;
-  no_perecedero: boolean;
-  estado: boolean;
-  fecha_vencimiento?: string;
-  fecha_uso: string;
-  imagen_elemento?: string | File;
-  fk_unidad_medida: number;
-  fk_categoria: number;
+  perecedero?: boolean;
+  noPerecedero?: boolean;
+  estado?: boolean;
+  fechaVencimiento?: string;
+  fechaUso?: string;
+  imagenElemento?: string | File;
+  fkUnidadMedida?: number;
+  fkCategoria?: number;
+  fkCaracteristica?: number | null;
 }
 
-export async function postElemento(
-  data: ElementoPostData
-): Promise<{ id_elemento: number }> {
+export async function postElemento(data: ElementoPostData): Promise<any> {
   const formData = new FormData();
   formData.append("nombre", data.nombre);
   formData.append("descripcion", data.descripcion);
-  formData.append("valor", data.valor.toString());
-  formData.append("perecedero", data.perecedero.toString());
-  formData.append("no_perecedero", data.no_perecedero.toString());
-  formData.append("estado", data.estado.toString());
-  if (data.fecha_vencimiento) {
-    formData.append("fecha_vencimiento", data.fecha_vencimiento.toString());
+  if (data.estado !== undefined) {
+    formData.append("estado", data.estado.toString());
   }
-  formData.append("fecha_uso", data.fecha_uso.toString());
-  formData.append("fk_unidad_medida", data.fk_unidad_medida.toString());
-  formData.append("fk_categoria", data.fk_categoria.toString());
-  if (data.imagen_elemento) {
-    formData.append("imagen_elemento", data.imagen_elemento);
+  if (data.perecedero !== undefined) {
+    formData.append("perecedero", data.perecedero.toString());
+  }
+  if (data.noPerecedero !== undefined) {
+    formData.append("noPerecedero", data.noPerecedero.toString());
+  }
+  if (data.fechaVencimiento) {
+    formData.append("fechaVencimiento", data.fechaVencimiento.toString());
+  }
+  if (data.fechaUso) {
+    formData.append("fechaUso", data.fechaUso.toString());
+  }
+  if (data.fkUnidadMedida) {
+    formData.append("fkUnidadMedida", data.fkUnidadMedida.toString());
+  }
+  if (data.fkCategoria) {
+    formData.append("fkCategoria", data.fkCategoria.toString());
+  }
+  if (data.fkCaracteristica) {
+    formData.append("fkCaracteristica", data.fkCaracteristica.toString());
+  }
+  const imagen = data.imagenElemento;
+
+  if (typeof imagen === "string") {
+    formData.append("imagenElemento", imagen);
+  } else if (imagen instanceof File) {
+    formData.append("imagenElemento", imagen.name);
+  } else {
+    formData.append("imagenElemento", ""); 
   }
 
-  const res = await axiosAPI.post("elemento", formData, {
+  console.log("Enviando:", [...formData.entries()]);
+
+  const res = await axiosAPI.post("elementos", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  const id = res.data?.id_elemento;
+  const id = res.data?.idElemento;
 
   if (typeof id !== "number") {
     throw new Error("La respuesta del backend no contiene un id válido");
   }
 
-  return { id_elemento: id };
+  return { idElemento: id };
 }

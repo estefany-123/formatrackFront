@@ -2,6 +2,6 @@ import { Inventario } from "@/types/Inventario";
 import { axiosAPI } from "../axiosAPI";
 
 export const getInventario = async():Promise<Inventario[]> =>{
-    const res = await axiosAPI.get(`inventario`);
+    const res = await axiosAPI.get(`inventarios`);
     return res.data
 }

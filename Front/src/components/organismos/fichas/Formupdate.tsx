@@ -4,8 +4,8 @@ import { fichaUpdateSchema, fichaUpdate } from "@/schemas/fichas";
 import { Form } from "@heroui/form";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type FormuProps = {
   fichas: (fichaUpdate & { key: string })[];
@@ -32,17 +32,15 @@ export const FormUpdateFicha = ({
     resolver: zodResolver(fichaUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_ficha: foundFicha.id_ficha,
-      codigo_ficha: foundFicha.codigo_ficha,
-      estado: foundFicha.estado,
-      fk_programa: foundFicha.fk_programa,
+      idFicha: foundFicha.idFicha,
+      codigoFicha: foundFicha.codigoFicha,
     },
   });
 
   const onSubmit = async (data: fichaUpdate) => {
-    if (!data.id_ficha) return;
+    if (!data.idFicha) return;
     try {
-      await updateFicha(data.id_ficha, data);
+      await updateFicha(data.idFicha, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -55,7 +53,7 @@ export const FormUpdateFicha = ({
       console.error("Error al actualizar la ficha:", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -65,20 +63,17 @@ export const FormUpdateFicha = ({
       <Input
         label="Código Ficha"
         placeholder="Ingrese el código de ficha"
-        {...register("codigo_ficha",{valueAsNumber:true})}
-        isInvalid={!!errors.codigo_ficha}
-        errorMessage={errors.codigo_ficha?.message}
+        {...register("codigoFicha", { valueAsNumber: true })}
+        isInvalid={!!errors.codigoFicha}
+        errorMessage={errors.codigoFicha?.message}
       />
 
-      <div className="justify-center pl-10">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

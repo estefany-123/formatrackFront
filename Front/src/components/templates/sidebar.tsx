@@ -3,9 +3,7 @@ import {
   HomeIcon,
   UserIcon,
   CubeIcon,
-  EnvelopeIcon,
   DocumentChartBarIcon,
-  ChartBarIcon,
   Bars3Icon,
   ArrowsRightLeftIcon,
   BuildingOfficeIcon,
@@ -13,9 +11,9 @@ import {
   ArchiveBoxIcon,
   GlobeAmericasIcon,
   TagIcon,
+  ClipboardDocumentCheckIcon,
 } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
-import useLogin from "@/hooks/Usuarios/useLogin";
 
 const menuItems = [
   { name: "Inicio", icon: HomeIcon, href: "/" },
@@ -24,31 +22,41 @@ const menuItems = [
     name: "Admin",
     icon: UserIcon,
     href: "#",
-    subMenu: [{ name: "Usuarios", icon: UserIcon, href: "/admin/usuarios" },
+    subMenu: [
+      { name: "Usuarios", icon: UserIcon, href: "/admin/usuarios" },
       { name: "Fichas", icon: TagIcon, href: "/admin/fichas" },
       { name: "Areas", icon: GlobeAmericasIcon, href: "/admin/areas" },
-      { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" }
-]},
-  { name: "Bodega", icon: ArchiveBoxIcon, href: "#",
-    subMenu: [
-      {name:"Elementos", icon:CubeIcon, href:"/bodega/elementos" },
-      {name:"Movimientos", icon:ArrowsRightLeftIcon, href:"/bodega/movimientos" },
-      {name:"Inventario", icon:ClipboardDocumentListIcon, href:"bodega/inventario/areas" },
+      { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" },
+      { name: "Permisos", icon: ClipboardDocumentCheckIcon  , href: "/admin/permisos" },
     ],
-   },
+  },
 
-  { name: "Solicitudes", icon: EnvelopeIcon, href: "/solicitudes" },
+  {
+    name: "Bodega",
+    icon: ArchiveBoxIcon,
+    href: "#",
+    subMenu: [
+      { name: "Elementos", icon: CubeIcon, href: "/bodega/elementos" },
+      {
+        name: "Movimientos",
+        icon: ArrowsRightLeftIcon,
+        href: "/bodega/movimientos",
+      },
+      {
+        name: "Inventario",
+        icon: ClipboardDocumentListIcon,
+        href: "bodega/inventario/areas",
+      },
+    ],
+  },
 
   { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes" },
-
-  { name: "Estadisticas", icon: ChartBarIcon, href: "/estadisticas" },
 ];
 
 export default function Sidebar() {
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-
 
   const toggleItem = (name: string) => {
     setOpenItems((prev) =>

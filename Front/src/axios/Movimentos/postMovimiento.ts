@@ -20,6 +20,6 @@ export interface MovimientoPostData {
 }
 
 export async function postMovimiento(data:MovimientoPostData):Promise<any> {
-    const res = await axiosAPI.post(`movimiento`,data);
+    const res = await axiosAPI.post(`movimientos`,data);
     return res.data
 }

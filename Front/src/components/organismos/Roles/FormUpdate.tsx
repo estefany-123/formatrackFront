@@ -4,11 +4,11 @@ import { RolUpdate, RolUpdateSchema } from "@/schemas/Rol";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
-  roles: (RolUpdate & { id_rol?: number })[];
+  roles: (RolUpdate & { idRol?: number })[];
   rolId: number;
   id: string;
   onclose: () => void;
@@ -27,17 +27,16 @@ export const FormUpdate = ({ roles, rolId, id, onclose }: Props) => {
     resolver: zodResolver(RolUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      id_rol: foundRol.id_rol,
+      idRol: foundRol.idRol,
       nombre: foundRol.nombre,
-      estado: foundRol.estado,
     },
   });
 
   const onSubmit = async (data: RolUpdate) => {
     console.log(data);
-    if (!data.id_rol) return;
+    if (!data.idRol) return;
     try {
-      await updateRol(data.id_rol, data);
+      await updateRol(data.idRol, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -66,15 +65,12 @@ export const FormUpdate = ({ roles, rolId, id, onclose }: Props) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-      <div className="justify-center pl-10">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
-      </div>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

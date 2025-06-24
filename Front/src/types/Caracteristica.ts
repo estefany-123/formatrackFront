@@ -1,6 +1,7 @@
 export type Caracteristica = {
-    id_caracteristica ?: number,
-    nombre : string,
-    codigo: string
-    fk_elemento?: number
-}
+  idCaracteristica?: number;
+  nombre: string;
+  simbolo?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};

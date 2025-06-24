@@ -6,9 +6,9 @@ import Formulario from "@/components/organismos/areas/FormRegister";
 import { useState } from "react";
 import { Area } from "@/types/area";
 import { useAreas } from "@/hooks/areas/useAreas";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { FormUpdate } from "@/components/organismos/areas/FormUpdate";
+import { FormUpdate } from "@/components/organismos/areas/Formupdate";
 
 const AreaTable = () => {
   const { areas, isLoading, isError, error, addArea, changeState } = useAreas();
@@ -34,13 +34,13 @@ const AreaTable = () => {
     setSelectedArea(null);
   };
 
-  const handleState = async (id_area: number) => {
-    await changeState(id_area);
+  const handleState = async (idArea: number) => {
+    await changeState(idArea);
   };
 
   const handleAddArea = async (area: Area) => {
     try {
-      const areaToAdd = { ...area, id_area: area.id_area || 0 };
+      const areaToAdd = { ...area, idArea: area.idArea || 0 };
       await addArea(areaToAdd);
       handleClose();
     } catch (error) {
@@ -57,12 +57,12 @@ const AreaTable = () => {
   const columns: TableColumn<Area>[] = [
     { key: "nombre", label: "Nombre" },
     {
-      key: "created_at",
+      key: "createdAt",
       label: "Fecha Creación",
       render: (Area: Area) => (
         <span>
-          {Area.created_at
-            ? new Date(Area.created_at).toLocaleDateString("es-ES", {
+          {Area.createdAt
+            ? new Date(Area.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -72,12 +72,12 @@ const AreaTable = () => {
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualizacion",
       render: (Area: Area) => (
         <span>
-          {Area.updated_at
-            ? new Date(Area.updated_at).toLocaleDateString("es-ES", {
+          {Area.updatedAt
+            ? new Date(Area.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -99,14 +99,13 @@ const AreaTable = () => {
 
   const areasWithKey = areas
     ?.filter(
-      (area) =>
-        area?.id_area !== undefined && area?.created_at && area?.updated_at
+      (area) => area?.idArea !== undefined && area?.createdAt && area?.updatedAt
     )
     .map((area) => ({
       ...area,
-      key: area.id_area ? area.id_area.toString() : crypto.randomUUID(), // Asegurando que el key sea único
+      key: area.idArea ? area.idArea.toString() : crypto.randomUUID(), // Asegurando que el key sea único
       estado: Boolean(area.estado), // Asegurar que estado sea un booleano
-      id_area: area.id_area || 0, // Asegurar que id_area no sea undefined, asignando 0 si es necesario
+      idArea: area.idArea || 0, // Asegurar que idArea no sea undefined, asignando 0 si es necesario
     }));
 
   return (
@@ -117,18 +116,8 @@ const AreaTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Areas</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToSede}
-                >
-                  Gestionar Sedes
-                </Button>
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToUsuario}
-                >
-                  Gestionar Usuarios
-                </Button>
+                <Buton text="Gestionar Sedes" onPress={handleGoToSede} />
+                <Buton text="Gestionar Usuarios" onPress={handleGoToUsuario} />
               </div>
             </div>
           </CardBody>
@@ -145,13 +134,12 @@ const AreaTable = () => {
           onClose={handleClose}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+            text="Guardar"
             type="submit"
             form="area-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full rounded-xl"
+          />
         </div>
       </Modall>
 
@@ -163,7 +151,7 @@ const AreaTable = () => {
         {selectedArea && (
           <FormUpdate
             areas={areasWithKey ?? []}
-            areaId={selectedArea.id_area as number}
+            areaId={selectedArea.idArea as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
@@ -175,7 +163,7 @@ const AreaTable = () => {
           data={areasWithKey}
           columns={columns}
           onEdit={handleEdit}
-          onDelete={(area) => handleState(area.id_area)}
+          onDelete={(area) => handleState(area.idArea)}
           extraHeaderContent={
             <Buton text="Añadir Area" onPress={() => setIsOpen(true)} />
           }

@@ -32,11 +32,13 @@ export function usePrograma() {
     id: number,
     Programa: Pformacion[] | undefined = data
   ): Pformacion | null => {
-    return Programa?.find((Programa) => Programa.id_programa === id) || null;
+    return Programa?.find((Programa) => Programa.idPrograma === id) || null;
   };
 
   const updateProgramaMutation = useMutation({
-    mutationFn: ({id, data}:{id:number, data:Pformacion}) => putPrograma(id, data),
+    mutationFn: ({id, data}:{id:number, data:Pformacion}) => {
+      const {idPrograma, ...resto}=data;
+      return putPrograma(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["programa"],
@@ -61,16 +63,16 @@ export function usePrograma() {
     },
   });
 
-  const addPrograma = async (ficha: Pformacion) => {
-    return addProgramaMutation.mutateAsync(ficha);
+  const addPrograma = async (programa: Pformacion) => {
+    return addProgramaMutation.mutateAsync(programa);
   };
 
   const updatePrograma = async (id: number, data: Pformacion) => {
     return updateProgramaMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (id_programa: number) => {
-    return changeStateMutation.mutateAsync(id_programa);
+  const changeState = async (idPrograma: number) => {
+    return changeStateMutation.mutateAsync(idPrograma);
   };
 
   return {

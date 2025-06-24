@@ -5,7 +5,7 @@ export async function postCentros(
     data: Centro
   ): Promise<any> {
     const response = await axiosAPI.post(
-      "centros/",
+      "centros",
       data
     );
     return response.data; 

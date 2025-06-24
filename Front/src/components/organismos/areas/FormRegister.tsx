@@ -29,6 +29,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
   const onSubmit = async (data: AreaCreate) => {
     try {
+      console.log("Datos que se van a enviar al backend:", data); //errores
+      
       await addData(data);
       onClose();
       addToast({
@@ -38,11 +40,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
+      
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -79,7 +82,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
       <Controller
         control={control}
-        name="fk_sede"
+        name="fkSede"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -90,12 +93,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               className="w-full"
               placeholder="Selecciona una sede..."
               aria-label="Seleccionar Sede"
-              isInvalid={!!errors.fk_sede}
-              errorMessage={errors.fk_sede?.message}
+              isInvalid={!!errors.fkSede}
+              errorMessage={errors.fkSede?.message}
             >
               {sede?.length ? (
                 sede.map((s) => (
-                  <SelectItem key={s.id_sede} textValue={s.nombre}>
+                  <SelectItem key={s.idSede} textValue={s.nombre}>
                     {s.nombre}
                   </SelectItem>
                 ))
@@ -109,7 +112,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
 
       <Controller
         control={control}
-        name="fk_usuario"
+        name="fkUsuario"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -120,13 +123,13 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               className="w-full"
               placeholder="Selecciona un usuario..."
               aria-label="Seleccionar Usuario"
-              isInvalid={!!errors.fk_usuario}
-              errorMessage={errors.fk_usuario?.message}
+              isInvalid={!!errors.fkUsuario}
+              errorMessage={errors.fkUsuario?.message}
             >
               {/* Asegúrate de que users no sea undefined */}
               {users?.length ? (
                 users.map((u) => (
-                  <SelectItem key={u.id_usuario} textValue={u.nombre}>
+                  <SelectItem key={u.idUsuario} textValue={u.nombre}>
                     {u.nombre}
                   </SelectItem>
                 ))

@@ -56,7 +56,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       />
       <Controller
         control={control}
-        name="fk_modulo"
+        name="fkModulo"
         render={({ field }) => (
           <div className="w-full">
             <Select
@@ -66,12 +66,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               placeholder="Selecciona un modulo..."
               aria-label="Seleccionar Modulo"
               onChange={(e) => field.onChange(Number(e.target.value))}
-              isInvalid={!!errors.fk_modulo}
-              errorMessage={errors.fk_modulo?.message}
+              isInvalid={!!errors.fkModulo}
+              errorMessage={errors.fkModulo?.message}
             >
               {modulos?.length ? (
                 modulos.map((modulo) => (
-                  <SelectItem key={modulo.id_modulo} textValue={modulo.nombre}>
+                  <SelectItem key={modulo.idModulo} textValue={modulo.nombre}>
                     {modulo.nombre}
                   </SelectItem>
                 ))

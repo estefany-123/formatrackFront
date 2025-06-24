@@ -1,15 +1,13 @@
 import { axiosAPI } from "../axiosAPI";
 
-
 export interface RolPostData {
-    id_rol?: number;
-    nombre: string;
-    estado: boolean;
-    created_at?:string;
-    updated_at?:string;
+  idRol?: number;
+  nombre: string;
+  estado?: boolean;
 }
 
-export async function  postRol(data:RolPostData):Promise<any> {
-    const res = await axiosAPI.post('rol', data);
-    return res.data
+export async function postRol(data: RolPostData): Promise<any> {
+  const { idRol, ...resto } = data;
+  const res = await axiosAPI.post("roles", resto);
+  return res.data;
 }

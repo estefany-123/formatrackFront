@@ -5,7 +5,7 @@ export async function postMunicipio(
     data: Municipio
   ): Promise<any> {
     const response = await axiosAPI.post(
-      "municipios/",
+      "municipios",
       data
     );
     return response.data; 

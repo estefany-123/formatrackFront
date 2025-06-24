@@ -27,6 +27,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         mode: "onChange"
     });
     
+
+
+
     const onSubmit = async (data: User) => {
         console.log(data);
         try {
@@ -130,12 +133,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                 <Select
                     aria-label="Roles"
                     placeholder="Selecciona un rol"
-                    onChange={(e) => {setValue("fk_rol",parseInt(e.target.value))}}
-                    isInvalid={!!errors.fk_rol}
-                    errorMessage={errors.fk_rol?.message}
+                    onChange={(e) => {setValue("fkRol",parseInt(e.target.value))}}
+                    isInvalid={!!errors.fkRol}
+                    errorMessage={errors.fkRol?.message}
                 >
                     {roles.map((roles) => (
-                        <SelectItem key={roles.id_rol}>
+                        <SelectItem key={roles.idRol}>
                             {roles.nombre}
                         </SelectItem>
                     ))}

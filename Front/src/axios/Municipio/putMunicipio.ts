@@ -3,9 +3,9 @@ import { UpdMunicipio } from "@/types/Municipio";
 
 
 export async function UpMunicipio(
-  id_municipio: number,
+  idMunicipio: number,
   data: UpdMunicipio
 ): Promise<any> {
-  const response = await axiosAPI.put(`municipios/${id_municipio}/`, data);
+  const response = await axiosAPI.patch(`municipios/${idMunicipio}`, data);
   return response.data;
 }

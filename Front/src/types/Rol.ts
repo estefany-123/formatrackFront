@@ -1,7 +1,7 @@
 export type Rol = {
-  id_rol?: number;
+  idRol?: number;
   nombre: string;
-  estado: boolean;
-  created_at?:string;
-  updated_at?:string;
+  estado?: boolean;
+  createdAt?:string;
+  updatedAt?:string;
 };

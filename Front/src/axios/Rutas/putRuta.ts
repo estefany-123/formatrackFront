@@ -3,9 +3,9 @@ import {UpRuta} from "@/types/Ruta"
 
 
 export async function putRuta(
-  id_ruta: number,
+  idRuta: number,
   data: UpRuta
 ): Promise<any> {
-  const response = await axiosAPI.put(`rutas/${id_ruta}/`, data);
+  const response = await axiosAPI.patch(`rutas/${idRuta}/`, data);
   return response.data;
 }

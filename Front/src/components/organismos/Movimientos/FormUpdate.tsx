@@ -6,6 +6,7 @@ import { Button } from "@heroui/button";
 import { MovimientoUpdate, MovimientoUpdateSchema } from "@/schemas/Movimento";
 import { useMovimiento } from "@/hooks/Movimientos/useMovimiento";
 import { addToast } from "@heroui/react";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
   movimientos: (MovimientoUpdate & { id_movimiento?: number })[];
@@ -34,7 +35,7 @@ export const FormUpdate = ({
   } = useForm<MovimientoUpdate>({
     resolver: zodResolver(MovimientoUpdateSchema),
     mode: "onChange",
-    defaultValues: foundMovimiento
+    defaultValues: foundMovimiento,
   });
 
   const onSubmit = async (data: MovimientoUpdate) => {
@@ -94,13 +95,12 @@ export const FormUpdate = ({
         errorMessage={errors.hora_salida?.message}
       />
       <div className="justify-center pl-10">
-        <Button
+        <Buton
+          text="Guardar"
           type="submit"
           isLoading={isSubmitting}
           className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        >
-          Guardar
-        </Button>
+        />
       </div>
     </Form>
   );

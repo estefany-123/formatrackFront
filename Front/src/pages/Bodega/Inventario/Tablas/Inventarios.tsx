@@ -5,10 +5,9 @@ import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
-import { Inventario } from "@/types/Inventario";
-import { Elemento } from "@/types/Elemento";
+import { Inventario, InventarioConSitio } from "@/types/Inventario";
 import { useElemento } from "@/hooks/Elementos/useElemento";
-import { Button } from "@heroui/button";
+import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -27,23 +26,22 @@ export const InventariosTable = ({
     addInventario,
     changeState,
   } = useInventario();
-  const { elementos: elementos } = useElemento();
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
 
   //Modal actualizar
-  // const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  // const [selectedInventario, setSelectedInventario] =
-  //   useState<Inventario | null>(null);
+  const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
+  const [selectedInventario, setSelectedInventario] =
+    useState<Inventario | null>(null);
 
-  // const handleCloseUpdate = () => {
-  //   setIsOpenUpdate(false);
-  //   setSelectedInventario(null);
-  // };
+  const handleCloseUpdate = () => {
+    setIsOpenUpdate(false);
+    setSelectedInventario(null);
+  };
 
-  const handleState = async (id_inventario: number) => {
-    await changeState(id_inventario);
+  const handleState = async (idInventario: number) => {
+    await changeState(idInventario);
   };
 
   const handleAddInventario = async (inventario: Inventario) => {
@@ -55,36 +53,36 @@ export const InventariosTable = ({
     }
   };
 
-  // const handleEdit = (inventario: Inventario) => {
-  //   setSelectedInventario(inventario);
-  //   setIsOpenUpdate(true);
-  // };
+  const handleEdit = (inventario: Inventario) => {
+    setSelectedInventario(inventario);
+    setIsOpenUpdate(true);
+  };
 
-  // Definir las columnas de la tabla
-  const columns = (elementos: Elemento[]): TableColumn<Inventario>[] => [
+  const columns: TableColumn<Inventario>[] = [
     {
-      key: "fk_elemento",
+      key: "fkElemento",
       label: "Elemento",
       render: (inventario: Inventario) => {
-        const elemento = elementos.find(
-          (el) => el.id_elemento === inventario.fk_elemento
-        );
-        return <span>{elemento?.nombre ?? "No encontrado"}</span>;
+        const fkElemento = (inventario as any).fkElemento;
+
+        const nombre =
+          typeof fkElemento === "object" && fkElemento?.nombre
+            ? fkElemento.nombre
+            : "No encontrado";
+
+        return <span>{nombre}</span>;
       },
     },
     {
-      key: "imagen_elemento",
+      key: "imagenElemento",
       label: "Imagen",
       render: (inventario: Inventario) => {
-        const elemento = elementos.find(
-          (el) => el.id_elemento === inventario.fk_elemento
-        );
-
-        const imagen = elemento?.imagen_elemento;
+        const fkElemento = (inventario as any).fkElemento;
+        const imagen = fkElemento?.imagenElemento;
 
         if (!imagen) return <span>No encontrado</span>;
 
-        const src = `http://localhost:3000/img/${imagen}`;
+        const src = `http://localhost:3000/img/elementos/${imagen}`;
 
         return (
           <img
@@ -95,14 +93,40 @@ export const InventariosTable = ({
         );
       },
     },
-    { key: "stock", label: "Cantidad" },
     {
-      key: "created_at",
+      key: "stock",
+      label: "Cantidad",
+      render: (inventario: Inventario) => {
+        const cantidad = inventario.stock ?? 0;
+
+        let color = "text-gray-500";
+        let estado = "Sin stock";
+
+        if (cantidad >= 50) {
+          color = "text-green-600 font-bold";
+          estado = "Suficiente";
+        } else if (cantidad >= 25) {
+          color = "text-yellow-500 font-semibold";
+          estado = "Moderado";
+        } else if (cantidad > 0 && cantidad <= 11) {
+          color = "text-red-500 font-semibold";
+          estado = "Bajo";
+        }
+
+        return (
+          <span className={color}>
+            {cantidad} <span className="ml-1 text-sm">({estado})</span>
+          </span>
+        );
+      },
+    },
+    {
+      key: "createdAt",
       label: "Fecha Creación",
       render: (inventario: Inventario) => (
         <span>
-          {inventario.created_at
-            ? new Date(inventario.created_at).toLocaleDateString("es-ES", {
+          {inventario.createdAt
+            ? new Date(inventario.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -112,12 +136,12 @@ export const InventariosTable = ({
       ),
     },
     {
-      key: "updated_at",
+      key: "updatedAt",
       label: "Fecha Actualización",
       render: (inventario: Inventario) => (
         <span>
-          {inventario.updated_at
-            ? new Date(inventario.updated_at).toLocaleDateString("es-ES", {
+          {inventario.updatedAt
+            ? new Date(inventario.updatedAt).toLocaleDateString("es-ES", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -127,6 +151,17 @@ export const InventariosTable = ({
       ),
     },
     { key: "estado", label: "Estado" },
+    {
+      key: "acciones",
+      label: "",
+      render: (inventario: Inventario) => (
+        <Buton
+          text="Agregar stock"
+          onPress={() => handleOpenAddStock(inventario)}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        />
+      ),
+    },
   ];
 
   if (isLoading && !inventariosProp) {
@@ -137,22 +172,25 @@ export const InventariosTable = ({
     return <span>Error: {error?.message}</span>;
   }
 
-  const filtered = inventariosProp ?? inventariosHook;
+  const filtered = (inventariosProp ?? inventariosHook) as InventarioConSitio[];
 
   const InventariosWithKey = filtered
     ?.filter(
       (inventario) =>
-        inventario?.id_inventario !== undefined &&
-        (idSitio ? inventario.fk_sitio === idSitio : true)
+        inventario?.idInventario !== undefined &&
+        (idSitio ? inventario.fkSitio?.idSitio === idSitio : true)
     )
     .map((inventario) => ({
       ...inventario,
-      key: inventario.id_inventario
-        ? inventario.id_inventario.toString()
+      key: inventario.idInventario
+        ? inventario.idInventario.toString()
         : crypto.randomUUID(),
-      id_inventario: inventario.id_inventario || 0,
+      idInventario: inventario.idInventario || 0,
       estado: Boolean(inventario.estado),
     }));
+
+  console.log("Inventarios filtrados:", filtered);
+  console.log("idSitio recibido por props:", idSitio);
 
   return (
     <div className="p-4">
@@ -173,21 +211,35 @@ export const InventariosTable = ({
           idSitio={idSitio!}
         />
         <div className="justify-center pt-2">
-          <Button
+          <Buton
+            text="Guardar"
             type="submit"
             form="inventario-form"
-            className="w-full bg-blue-700 text-white p-2 rounded-xl"
-          >
-            Guardar
-          </Button>
+            className="w-full p-2 rounded-xl"
+          />
         </div>
       </Modall>
 
+      <Modall
+        ModalTitle="Agregar Stock"
+        isOpen={IsOpenUpdate}
+        onOpenChange={handleCloseUpdate}
+      >
+        {selectedInventario && (
+          <FormUpdate
+            inventarios={InventariosWithKey ?? []}
+            inventarioId={selectedInventario.idInventario as number}
+            id="FormUpdate"
+            onclose={handleCloseUpdate}
+          />
+        )}
+      </Modall>
       {InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
-          columns={columns(elementos ?? [])}
-          onDelete={(inventario) => handleState(inventario.id_inventario)}
+          columns={columns ?? []}
+          onEdit={handleEdit}
+          onDelete={(inventario) => handleState(inventario.idInventario)}
           extraHeaderContent={
             <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
           }
