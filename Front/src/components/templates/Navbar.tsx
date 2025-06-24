@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   Avatar,
   Button,
+  User,
 } from "@heroui/react";
 import { FormatrackLogo } from "../atoms/Icons";
 import { ArrowRightStartOnRectangleIcon, BellIcon } from "@heroicons/react/24/outline";
@@ -18,6 +19,7 @@ import Modall from "../organismos/modal";
 import Cookies from "universal-cookie";
 import { useAuth } from "@/providers/AuthProvider";
 import useLogin from "@/hooks/Usuarios/useLogin";
+import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 
 type NavProps = {
   en_proceso: string;
@@ -33,8 +35,9 @@ export function Nav({ children }: NavProps) {
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
   const navigate = useNavigate();
   const cookies = new Cookies();
-  const { nombre } = useAuth();
+  const { nombre, perfil } = useAuth();
   const { logout } = useLogin();
+  const { users } = useUsuario();
 
   // const {
   //   notificaciones,
@@ -48,6 +51,7 @@ export function Nav({ children }: NavProps) {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
 
   function handleClickNotificacion(id_notificacion: number): void {
     throw new Error("Function not implemented.");
@@ -113,18 +117,24 @@ export function Nav({ children }: NavProps) {
         </NavbarContent>
 
         <NavbarContent justify="end" className="gap-3 pr-2">
-            {nombre && <p className="text-center my-4 flex items-center justify-center gap-2">{nombre}  </p>}
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="secondary"
-              name="Usuario"
-              size="sm"
-            />
-            <ArrowRightStartOnRectangleIcon onClick={logout} height={24} className="hover:text-red-500 cursor-pointer transition" />
 
-          </NavbarContent>
+          <User
+            name={nombre}
+            avatarProps={{
+              src: `http://localhost:3000/perfiles/${perfil ?? 'defaultPerfil.png'}`,
+              onClick: () => navigate('/perfil'), 
+              isBordered: true
+            }}
+
+          />
+
+
+
+
+
+          <ArrowRightStartOnRectangleIcon onClick={logout} height={24} className="hover:text-red-500 cursor-pointer transition" />
+
+        </NavbarContent>
 
       </Navbar>
 

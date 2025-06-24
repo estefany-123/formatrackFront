@@ -24,7 +24,7 @@ type FormuProps = {
 
     const { register,handleSubmit, formState : {errors},} = useForm<UserUpdate>({
         resolver : zodResolver(UserUpdateSchema),mode: "onChange",  defaultValues: {
-            id_usuario : foundUser.id_usuario,
+            idUsuario : foundUser.idUsuario,
             nombre : foundUser.nombre,
             apellido : foundUser.apellido,
             edad : Number(foundUser.edad),
@@ -36,9 +36,9 @@ type FormuProps = {
     
     const onSubmit = async (data : UserUpdate) => {
         console.log(data);
-        if(!data.id_usuario) return;
+        if(!data.idUsuario) return;
         try {
-            await updateUser(data.id_usuario,data);
+            await updateUser(data.idUsuario,data);
             onclose();
         }catch(error){
             console.log("Error al actualizar el usuario : ",error)

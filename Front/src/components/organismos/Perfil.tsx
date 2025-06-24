@@ -6,7 +6,7 @@ import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Avatar, Card } from "@heroui/react";
 
-export const Perfil = () => {
+export const Perfilluis = () => {
   const navigate = useNavigate();
   const { users: usuarios = [], updateUser } = useUsuario();
   const idUsuarioActual = Number(localStorage.getItem("id_usuario"));

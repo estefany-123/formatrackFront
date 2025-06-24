@@ -36,6 +36,7 @@ export function useUsuario() {
 
 
     const getUserById = (id: number, usersList: User[]): User | null => {
+      if (!usersList) return null;
         return usersList.find((user) => user.idUsuario === id) || null;
     };
 

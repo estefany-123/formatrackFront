@@ -5,7 +5,6 @@ import { SolicitudTable } from "./pages/Solicitudes/Solicitudes";
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
 import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
 import { Inventario } from "./pages/Bodega/Inventarios";
-import { Perfil } from "./components/organismos/Perfil";
 import Login from "./pages/Login";
 import UsersTable from "./pages/Admin/usuarios";
 import SedeTable from "./pages/Admin/sedes";
@@ -28,12 +27,13 @@ import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Perfil from "./pages/Perfil";
 
 function App() {
 
   return (
     <Routes>
-      <Route element={<ProtectedRoute/>}>
+      <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="perfil" element={<Perfil />} />
@@ -68,10 +68,12 @@ function App() {
           />
           <Route path="solicitudes" element={<SolicitudTable />} />
         </Route>
-        </Route>
+      </Route>
+      
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/perfil" element={<Perfil />} />
 
 
     </Routes>
