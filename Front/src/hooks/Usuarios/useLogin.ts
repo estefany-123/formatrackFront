@@ -12,7 +12,7 @@ export default function useLogin(){
 
     const [isError,setIsError] = useState<boolean>(false);
     const [error,setError] = useState<string | undefined>(undefined);
-    const {setAuthenticated, setNombre, setPerfil,setIdUser} = useAuth();
+    const {setAuthenticated, setNombre, setPerfil,setIdUser,setPermissions} = useAuth();
 
     const navigate = useNavigate();
 
@@ -23,7 +23,9 @@ export default function useLogin(){
             console.log("datos que se envian al back",typeof data.documento);
              console.log(response)
             const token = response.access_token;
+            const permissions = response.modules;
             cookies.set("token",token);
+            cookies.set("permissions",permissions);
             //Auth
             const {nombre,apellido,perfil,iduser} : {nombre : string, apellido : string, perfil: string,iduser:number}= jwtDecode(token);
             setNombre(`${nombre} ${apellido}`);
@@ -34,6 +36,7 @@ export default function useLogin(){
             //Error handling
             setIsError(false);
             setError(undefined);
+            setPermissions(permissions);
             //Redirection
             navigate("/");
         }
@@ -49,6 +52,8 @@ export default function useLogin(){
             cookies.remove("token");
             navigate('/login');
         }
+
+
         catch(error){
             console.log(error);
         }

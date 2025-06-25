@@ -43,7 +43,8 @@ export type LoginCrede = {
 export type LoginRes = {
     access_token : string,
     documento : number,
-    password : string
+    password : string,
+    modules : any[]
 }
 
 export type resetPassword = {

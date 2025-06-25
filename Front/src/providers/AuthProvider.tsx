@@ -10,7 +10,9 @@ type Auth = {
     perfil : string | undefined,
     setPerfil : React.Dispatch<React.SetStateAction<string | undefined>>
     idUsuario : number | undefined,
-    setIdUser : React.Dispatch<React.SetStateAction<number | undefined>>
+    setIdUser : React.Dispatch<React.SetStateAction<number | undefined>>,
+    permissions : any[],
+    setPermissions : React.Dispatch<React.SetStateAction<any[]>>
 }
 
 const AuthContext = createContext<Auth | null>(null);
@@ -23,11 +25,13 @@ export default function AuthProvider({children}:{children : React.ReactNode}) {
     const [nombre,setNombre] = useState<string | undefined>(undefined);
     const [perfil,setPerfil] = useState<string | undefined>(undefined);
     const [idUsuario,setIdUser] = useState<number | undefined>(undefined);
+    const [permissions, setPermissions] = useState<any[]>([]);
     
     const cookies = new Cookies();
     
     useEffect(()=>{
         const token = cookies.get("token");
+        const permissions = cookies.get("permissions");
         if(token){
             const {nombre,apellido,perfil,idUsuario} : {nombre : string,apellido : string,perfil:string,idUsuario:number}= jwtDecode(token);
             setNombre(`${nombre} ${apellido}`);
@@ -35,11 +39,14 @@ export default function AuthProvider({children}:{children : React.ReactNode}) {
             setIdUser(idUsuario);
             setAuthenticated(true);
             console.log("Esto es idusuario",idUsuario)
-        }    
+        }
+        if(permissions){
+            setPermissions(permissions);
+        }
     },[])
     
     return(
-        <AuthContext.Provider value={{authenticated,setAuthenticated,nombre,setNombre,perfil,setPerfil,setIdUser,idUsuario}}>
+        <AuthContext.Provider value={{authenticated,setAuthenticated,nombre,setNombre,perfil,setPerfil,setIdUser,idUsuario, permissions, setPermissions}}>
             {children}
         </AuthContext.Provider>
     )
