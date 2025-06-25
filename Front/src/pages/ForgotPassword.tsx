@@ -52,7 +52,7 @@ function ForgotPassword() {
       <div className="w-1/2 flex items-center absolute bottom-44 translate-x-3/4">
 
 
-        <Card1>
+        <Card1 className="w-2/4">
           <InformationCircleIcon className='flex size-24 mx-auto text-blue-500 m-5' />
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
 
@@ -74,9 +74,6 @@ function ForgotPassword() {
             Volver al login
           </Link>
 
-          <Link href="/reset-password" className="text-xs text-blue-600 text-center mt-4 flex justify-center gap-2">
-            Ver reset
-          </Link>
         </Card1>
 
 
