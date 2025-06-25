@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { jwtDecode } from 'jwt-decode'
+import { getRefetchPermisos } from "@/axios/Usuarios/getRefetchPermisos";
 
 type Auth = {
     authenticated : boolean | undefined,
@@ -43,6 +44,11 @@ export default function AuthProvider({children}:{children : React.ReactNode}) {
         if(permissions){
             setPermissions(permissions);
         }
+        async function reloadPermisos(){
+            const response = await getRefetchPermisos();
+            setPermissions(response);
+        }
+        reloadPermisos();
     },[])
     
     return(
