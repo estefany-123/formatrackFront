@@ -15,6 +15,7 @@ import {
   // TagIcon,
   // ClipboardDocumentCheckIcon,
   Bars3Icon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 
 // const menuItems = [
@@ -97,7 +98,7 @@ export default function Sidebar() {
       </div>
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
         {permissions.map((item) => {
-          const Icono = iconsConfig[item.icono];
+          const Icono = iconsConfig[item.icono] ?? BookOpenIcon;
           return(
           <div key={item.nombre}>
             <Link
@@ -115,7 +116,7 @@ export default function Sidebar() {
             {item.rutas && openItems.includes(item.nombre) && (
               <div className="pl-6">
                 {item.rutas.map((subItem: any) => {
-                  const SubIcono = iconsConfig[subItem.icono];
+                  const SubIcono = iconsConfig[subItem.icono] ?? BookOpenIcon;
                   return(
                   <Link
                     key={subItem.nombre}
