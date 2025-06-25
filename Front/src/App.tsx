@@ -25,9 +25,9 @@ import { UnidadTable } from "./pages/Bodega/UnidadesMedida";
 import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
+import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
-import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 
 function App() {
   return (

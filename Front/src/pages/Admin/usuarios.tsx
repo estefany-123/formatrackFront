@@ -8,8 +8,8 @@ import { FormUpdate } from "@/components/organismos/Usuarios/Formupdate";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import FormRegisterMasivo from "@/components/organismos/Usuarios/FormRegisterMasivo";
 import { User } from "@/types/Usuario";
+import FormRegisterMasivo from "@/components/organismos/Usuarios/FormRegisterMasivo";
 
 const UsersTable = () => {
   const { users, isLoading, isError, error, addUser, changeState } =
@@ -143,6 +143,16 @@ const UsersTable = () => {
           />
         )}
       </Modall>
+            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+                {selectedUser && (
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.idUsuario as number} id="FormUpdate" onclose={handleCloseUpdate} />
+                )}
+
+            </Modall>
+
+        <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
+          <FormRegisterMasivo/>
+        </Modall>
 
       {usersWithKey && (
         <Globaltable

@@ -1,59 +1,65 @@
 import { useState } from "react";
-import {
-  HomeIcon,
-  UserIcon,
-  CubeIcon,
-  DocumentChartBarIcon,
-  Bars3Icon,
-  ArrowsRightLeftIcon,
-  BuildingOfficeIcon,
-  ClipboardDocumentListIcon,
-  ArchiveBoxIcon,
-  GlobeAmericasIcon,
-  TagIcon,
-  ClipboardDocumentCheckIcon,
-} from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/providers/AuthProvider";
+import iconsConfig from "@/config/iconsConfig";
+import {
+  // HomeIcon,
+  // UserIcon,
+  // CubeIcon,
+  // DocumentChartBarIcon,
+  // ArrowsRightLeftIcon,
+  // BuildingOfficeIcon,
+  // ClipboardDocumentListIcon,
+  // ArchiveBoxIcon,
+  // GlobeAmericasIcon,
+  // TagIcon,
+  // ClipboardDocumentCheckIcon,
+  Bars3Icon,
+  BookOpenIcon,
+} from "@heroicons/react/24/outline";
 
-const menuItems = [
-  { name: "Inicio", icon: HomeIcon, href: "/" },
+// const menuItems = [
+//   { nombre: "Inicio", icono: HomeIcon, href: "/" },
 
-  {
-    name: "Admin",
-    icon: UserIcon,
-    href: "#",
-    subMenu: [
-      { name: "Usuarios", icon: UserIcon, href: "/admin/usuarios" },
-      { name: "Fichas", icon: TagIcon, href: "/admin/fichas" },
-      { name: "Areas", icon: GlobeAmericasIcon, href: "/admin/areas" },
-      { name: "Sitios", icon: BuildingOfficeIcon, href: "/admin/sitios" },
-      { name: "Permisos", icon: ClipboardDocumentCheckIcon  , href: "/admin/permisos" },
-    ],
-  },
+//   {
+//     nombre: "Admin",
+//     icono: UserIcon,
+//     href: "#",
+//     rutas: [
+//       { nombre: "Usuarios", icono: UserIcon, href: "/admin/usuarios" },
+//       { nombre: "Fichas", icono: TagIcon, href: "/admin/fichas" },
+//       { nombre: "Areas", icono: GlobeAmericasIcon, href: "/admin/areas" },
+//       { nombre: "Sitios", icono: BuildingOfficeIcon, href: "/admin/sitios" },
+//       { nombre: "Permisos", icono: ClipboardDocumentCheckIcon  , href: "/admin/permisos" },
+//     ],
+//   },
 
-  {
-    name: "Bodega",
-    icon: ArchiveBoxIcon,
-    href: "#",
-    subMenu: [
-      { name: "Elementos", icon: CubeIcon, href: "/bodega/elementos" },
-      {
-        name: "Movimientos",
-        icon: ArrowsRightLeftIcon,
-        href: "/bodega/movimientos",
-      },
-      {
-        name: "Inventario",
-        icon: ClipboardDocumentListIcon,
-        href: "bodega/inventario/areas",
-      },
-    ],
-  },
+//   {
+//     nombre: "Bodega",
+//     icono: ArchiveBoxIcon,
+//     href: "#",
+//     rutas: [
+//       { nombre: "Elementos", icono: CubeIcon, href: "/bodega/elementos" },
+//       {
+//         nombre: "Movimientos",
+//         icono: ArrowsRightLeftIcon,
+//         href: "/bodega/movimientos",
+//       },
+//       {
+//         nombre: "Inventario",
+//         icono: ClipboardDocumentListIcon,
+//         href: "bodega/inventario/areas",
+//       },
+//     ],
+//   },
 
-  { name: "Reportes", icon: DocumentChartBarIcon, href: "/reportes" },
-];
+//   { nombre: "Reportes", icono: DocumentChartBarIcon, href: "/reportes" },
+// ];
 
 export default function Sidebar() {
+
+  const { permissions } = useAuth();
+
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
@@ -91,25 +97,29 @@ export default function Sidebar() {
         </button>
       </div>
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-        {menuItems.map((item) => (
-          <div key={item.name}>
+        {permissions.map((item) => {
+          const Icono = iconsConfig[item.icono] ?? BookOpenIcon;
+          return(
+          <div key={item.nombre}>
             <Link
               to={item.href}
-              onClick={() => toggleItem(item.name)}
+              onClick={() => toggleItem(item.nombre)}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
                 location.pathname === item.href
                   ? "bg-blue-600 text-white"
                   : "hover:bg-blue-600 text-black-300"
               }`}
             >
-              <item.icon className="w-6 h-6" />
-              {!collapsed && <span>{item.name}</span>}
+              <Icono className="w-6 h-6" />
+              {!collapsed && <span>{item.nombre}</span>}
             </Link>
-            {item.subMenu && openItems.includes(item.name) && (
+            {item.rutas && openItems.includes(item.nombre) && (
               <div className="pl-6">
-                {item.subMenu.map((subItem) => (
+                {item.rutas.map((subItem: any) => {
+                  const SubIcono = iconsConfig[subItem.icono] ?? BookOpenIcon;
+                  return(
                   <Link
-                    key={subItem.name}
+                    key={subItem.nombre}
                     to={subItem.href}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
                       location.pathname === subItem.href
@@ -117,14 +127,14 @@ export default function Sidebar() {
                         : "hover:bg-blue-600 text-black-300"
                     }`}
                   >
-                    <subItem.icon className="w-6 h-6" />
-                    {!collapsed && <span>{subItem.name}</span>}
+                    <SubIcono className="w-6 h-6" />
+                    {!collapsed && <span>{subItem.nombre}</span>}
                   </Link>
-                ))}
+                )})}
               </div>
             )}
           </div>
-        ))}
+        )})}
       </nav>
     </aside>
   );
