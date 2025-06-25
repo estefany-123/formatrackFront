@@ -8,6 +8,7 @@ import { FormUpdate } from "@/components/organismos/Usuarios/Formupdate";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import FormRegisterMasivo from "@/components/organismos/Usuarios/FormRegisterMasivo";
 import { User } from "@/types/Usuario";
 
 const UsersTable = () => {
@@ -22,14 +23,18 @@ const UsersTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const navigate = useNavigate();
-
-  const handleGoToRol = () => {
-    navigate("/admin/roles");
-  };
-
+  
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedUser(null);
+  };
+
+  //Modal subida masiva
+  const [isOpenMasivo, setIsOpenMasivo] = useState(false);
+  const handleCloseMasivo = () => setIsOpenMasivo(false);
+
+  const handleGoToRol = () => {
+    navigate("/admin/roles");
   };
 
   const handleState = async (user: User) => {
@@ -114,6 +119,16 @@ const UsersTable = () => {
         </div>
       </Modall>
 
+            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+                {selectedUser && (
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.idUsuario as number} id="FormUpdate" onclose={handleCloseUpdate} />
+                )}
+
+            </Modall>
+
+        <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
+          <FormRegisterMasivo/>
+        </Modall>
       <Modall
         ModalTitle="Editar Usuario"
         isOpen={IsOpenUpdate}
@@ -136,7 +151,10 @@ const UsersTable = () => {
           onEdit={handleEdit}
           onDelete={handleState}
           extraHeaderContent={
-            <Buton text="Añadir Usuario" onPress={() => setIsOpen(true)} />
+            <div className="flex gap-2">
+              <Buton onPress={() => setIsOpen(true)}>Añadir usuario</Buton>
+              <Buton onPress={() => setIsOpenMasivo(true)}>Subir masivamente</Buton>
+            </div>
           }
         />
       )}

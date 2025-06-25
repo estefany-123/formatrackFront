@@ -5,7 +5,6 @@ import { addToast } from "@heroui/react";
 import Buton from "@/components/molecules/Button";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { InventarioUpdate, InventarioUpdateSchema } from "@/schemas/Inventario";
-import { Form } from "react-router-dom";
 
 type FormuProps = {
   inventarios: InventarioUpdate[];
@@ -26,6 +25,12 @@ export const FormUpdate = ({
     inventarioId,
     inventarios
   ) as InventarioUpdate;
+
+  if (!foundInventario) {
+    return (
+      <div className="p-4 text-red-500">Error: Inventario no encontrado</div>
+    );
+  }
 
   const {
     register,
@@ -60,7 +65,7 @@ export const FormUpdate = ({
 
   console.log("Errores", errors);
   return (
-    <Form
+    <form
       id={id}
       className="w-full space-y-4"
       onSubmit={handleSubmit(onSubmit)}
@@ -68,16 +73,16 @@ export const FormUpdate = ({
       <Input
         label="Cantidad"
         placeholder="Ingrese la cantidad ..."
-        {...register("stock")}
+        {...register("stock", {valueAsNumber:true})}
         isInvalid={!!errors.stock}
         errorMessage={errors.stock?.message}
       />
-        <Buton
-          text="Guardar"
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full rounded-xl"
-        />
-    </Form>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
+    </form>
   );
 };

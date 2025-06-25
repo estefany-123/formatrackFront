@@ -18,4 +18,5 @@ export type Movimiento = {
   fkSitio?: number;
   fkInventario?: number;
   tipo_bien?: string;
+  codigos?: string[];
 };

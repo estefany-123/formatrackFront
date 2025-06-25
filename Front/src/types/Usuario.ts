@@ -47,8 +47,8 @@ export type LoginRes = {
 }
 
 export type resetPassword = {
-    token:string,
     password:string
+    confirmPassword:string
 }
 
 export type forgotPassword = {

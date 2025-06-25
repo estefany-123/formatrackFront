@@ -71,7 +71,6 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   const filteredData = useMemo(() => {
     let result = data;
 
-
     if (estadoFiltro === "activos") {
       result = result.filter((item) => item.estado === true);
     } else if (estadoFiltro === "inactivos") {
@@ -313,9 +312,11 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
 
                     {showActions && columnKey === "actions" && (
                       <div className="flex gap-2 justify-center">
-                        <button onClick={() => onEdit?.(item)}>
-                          <PencilIcon className="h-5 w-5 text-blue-500" />
-                        </button>
+                        {onEdit && (
+                          <button onClick={() => onEdit(item)}>
+                            <PencilIcon className="h-5 w-5 text-blue-500" />
+                          </button>
+                        )}
                         {onDelete && (
                           <button onClick={() => onDelete?.(item)}>
                             {item.estado ? (

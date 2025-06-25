@@ -29,7 +29,14 @@ function ForgotPassword() {
         description: "porfavor revisa tu correo",
         color: "success",
       })
-    } catch (error) {
+    } catch (error: any) {
+      if(error?.status && error?.status == 404) {
+        addToast({
+          title: "Error enviando email",
+          description: "No existe un usuario con ese email",
+          color: "danger"
+        })
+      }
       console.error("Error al enviar el email:", error);
     }
 
@@ -38,7 +45,7 @@ function ForgotPassword() {
 
 
   return (
-    <div className='min-h-screen static '>
+    <div className='min-h-screen static'>
       <div className='bg-blue-400  w-full h-64'>
 
       </div>
@@ -55,6 +62,8 @@ function ForgotPassword() {
             <Input {...register("correo")} label='correo' type='email' placeholder='correo@gmail.com' isInvalid={!!errors.correo}
                 errorMessage={errors.correo?.message}/>
             
+            {isError && <p>{error}</p>}
+            
             <Buton className='block mx-auto' type='submit'>
               Enviar al correo
             </Buton>
@@ -64,8 +73,10 @@ function ForgotPassword() {
           <ArrowLeftCircleIcon className='size-7'/>
             Volver al login
           </Link>
-          
 
+          <Link href="/reset-password" className="text-xs text-blue-600 text-center mt-4 flex justify-center gap-2">
+            Ver reset
+          </Link>
         </Card1>
 
 
