@@ -18,34 +18,28 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
 
   const foundUser = getUserById(userId, Users) as UserUpdate;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<UserUpdate>({
-    resolver: zodResolver(UserUpdateSchema),
-    mode: "onChange",
-    defaultValues: {
-      idUsuario: foundUser.idUsuario,
-      nombre: foundUser.nombre,
-      apellido: foundUser.apellido,
-      edad: Number(foundUser.edad),
-      telefono: foundUser.telefono,
-      correo: foundUser.correo,
-      cargo: foundUser.cargo,
-    },
-  });
-
-  const onSubmit = async (data: UserUpdate) => {
-    console.log(data);
-    if (!data.idUsuario) return;
-    try {
-      await updateUser(data.idUsuario, data);
-      onclose();
-    } catch (error) {
-      console.log("Error al actualizar el usuario : ", error);
-    }
-  };
+    const { register,handleSubmit, formState : {errors},} = useForm<UserUpdate>({
+        resolver : zodResolver(UserUpdateSchema),mode: "onChange",  defaultValues: {
+            idUsuario : foundUser.idUsuario,
+            nombre : foundUser.nombre,
+            apellido : foundUser.apellido,
+            edad : Number(foundUser.edad),
+            telefono : foundUser.telefono,
+            correo : foundUser.correo,
+            cargo : foundUser.cargo
+        }
+    });
+    
+    const onSubmit = async (data : UserUpdate) => {
+        console.log(data);
+        if(!data.idUsuario) return;
+        try {
+            await updateUser(data.idUsuario,data);
+            onclose();
+        }catch(error){
+            console.log("Error al actualizar el usuario : ",error)
+        }
+    };
 
   return (
     <Form

@@ -36,7 +36,7 @@ export type putUser = {
 }
 
 export type LoginCrede = {
-    documento : number,
+    documento : string,
     password : string
 }
 

@@ -4,7 +4,6 @@ import Home from "./pages/Home/Home";
 import { InventarioSitio } from "./pages/Bodega/Inventario/Sitios/InventarioSitio";
 import { InventarioArea } from "./pages/Bodega/Inventario/Areas/InventarioArea";
 import { Inventario } from "./pages/Bodega/Inventarios";
-import { Perfil } from "./components/organismos/Perfil";
 import Login from "./pages/Login";
 import UsersTable from "./pages/Admin/usuarios";
 import SedeTable from "./pages/Admin/sedes";
@@ -27,6 +26,7 @@ import CategoriasTable from "./pages/Admin/categorias";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Perfil from "./pages/Perfil";
 import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 
 function App() {
@@ -67,9 +67,11 @@ function App() {
           />
         </Route>
       </Route>
+      
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/perfil" element={<Perfil />} />
 
 
     </Routes>
