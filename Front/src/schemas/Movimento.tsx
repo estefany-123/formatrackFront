@@ -67,5 +67,7 @@ export const MovimientoCreateSchema = z.object({
   tipo_bien: z.enum(["devolutivo", "no_devolutivo"], {
     required_error: "Debe seleccionar un tipo de elemento",
   }),
+
+  codigos: z.array(z.string()).optional(),
 });
 export type MovimientoCreate = z.infer<typeof MovimientoCreateSchema>;

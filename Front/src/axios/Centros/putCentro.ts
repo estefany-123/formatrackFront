@@ -6,6 +6,6 @@ export async function updateCentro(
   idCentro: number,
   data: PutCentro
 ): Promise<any> {
-  const response = await axiosAPI.patch(`centros/${idCentro}`, data);
+  const response = await axiosAPI.patch(`centros/update/${idCentro}`, data);
   return response.data;
 }

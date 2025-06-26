@@ -41,12 +41,12 @@ const ResetPassword = () => {
         <div className='min-h-screen static'>
             <div className='bg-blue-400  w-full h-64' />
             <div className="w-1/2 flex items-center absolute bottom-44 translate-x-3/4">
-                <Card1>
+                <Card1 className="w-2/4">
                     <InformationCircleIcon className='flex size-24 mx-auto text-blue-500 m-5' />
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
 
                         <h1 className="text-center font-sans text-xl font-bold mb-6">Restablece tu contraseña</h1>
-                        <p className='text-center text-sm pb-5'>Ingresa una nueva contraseña para </p>
+                        <p className='text-center text-sm pb-5'>Ingresa una nueva contraseña </p>
 
                         <Input {...register("password")} label='Nueva contraseña' type='password' placeholder='escribe tu nueva contraseña'  isInvalid={!!errors.password} errorMessage={errors.password?.message}/>
                         

@@ -8,9 +8,14 @@ import { FormUpdate } from "@/components/organismos/Usuarios/Formupdate";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import { User } from "@/types/Usuario";
 import FormRegisterMasivo from "@/components/organismos/Usuarios/FormRegisterMasivo";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 const UsersTable = () => {
+
+  const {userHasPermission} = usePermissions();
+
   const { users, isLoading, isError, error, addUser, changeState } =
     useUsuario();
 
@@ -89,10 +94,12 @@ const UsersTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Usuarios</h1>
               <div className="flex gap-2">
-                <Buton
-                  text="Gestionar Roles"
-                  onPress={handleGoToRol}
-                />
+                {userHasPermission(1) &&
+                  <Buton
+                    text="Gestionar Roles"
+                    onPress={handleGoToRol}
+                  />
+                }
               </div>
             </div>
           </CardBody>
@@ -128,6 +135,30 @@ const UsersTable = () => {
         <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
           <FormRegisterMasivo/>
         </Modall>
+      <Modall
+        ModalTitle="Editar Usuario"
+        isOpen={IsOpenUpdate}
+        onOpenChange={handleCloseUpdate}
+      >
+        {selectedUser && (
+          <FormUpdate
+            Users={usersWithKey ?? []}
+            userId={selectedUser.idUsuario as number}
+            id="FormUpdate"
+            onclose={handleCloseUpdate}
+          />
+        )}
+      </Modall>
+            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+                {selectedUser && (
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.idUsuario as number} id="FormUpdate" onclose={handleCloseUpdate} />
+                )}
+
+            </Modall>
+
+        <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
+          <FormRegisterMasivo/>
+        </Modall>
 
       {usersWithKey && (
         <Globaltable
@@ -137,8 +168,12 @@ const UsersTable = () => {
           onDelete={handleState}
           extraHeaderContent={
             <div className="flex gap-2">
-              <Buton onPress={() => setIsOpen(true)}>Añadir usuario</Buton>
-              <Buton onPress={() => setIsOpenMasivo(true)}>Subir masivamente</Buton>
+              {userHasPermission(1) &&
+                <Buton onPress={() => setIsOpen(true)}>Añadir usuario</Buton>
+              }
+              {userHasPermission(2) &&
+                <Buton onPress={() => setIsOpenMasivo(true)}>Subir masivamente</Buton>
+              }
             </div>
           }
         />

@@ -57,6 +57,7 @@ const CategoriasTable = () => {
   // Definir las columnas de la tabla
   const columns: TableColumn<Categoria>[] = [
     { key: "nombre", label: "Nombre" },
+    { key: "codigoUNPSC", label: "Codigo" },
     {
       key: "createdAt",
       label: "Fecha Creacion",

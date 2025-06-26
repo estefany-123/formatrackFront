@@ -41,7 +41,7 @@ export const MovimientoTable = () => {
   const handleAddMovimiento = async (movimiento: Movimiento) => {
     try {
       await addMovimiento(movimiento);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose(); 
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
     }

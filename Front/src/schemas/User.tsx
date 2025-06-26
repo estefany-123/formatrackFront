@@ -5,25 +5,25 @@ export const UserUpdateSchema = z.object({
         .number().optional(),
     nombre: z
         .string()
-        .min(1, { message: "Nombre es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Nombre es requerido" })
+        .min(5, { message: "Longitud minima de 3" }),
 
     apellido: z
         .string()
-        .min(1, { message: "Apellido es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Apellido es requerido" })
+        .min(5, { message: "Longitud minima de 3" }),
     edad: z
         .number({ message: "Edad es requerida y debe ser un numero" }),
 
     telefono: z
         .string({ required_error: "Telefono es requerido" })
-        .min(1, { message: "Longitud minima de 1" }),
+        .min(10, { message: "Longitud minima de 1" }),
 
     correo: z
         .string()
         .email({ message: "Correo es requerido" }),
     cargo: z
-        .string().min(1,{ message: "Cargo es requerido" }).optional(),
+        .string().min(3,{ message: "Cargo es requerido" }).optional(),
 })
 
 export type UserUpdate = z.infer<typeof UserUpdateSchema>

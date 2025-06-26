@@ -9,6 +9,9 @@ import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import FormularioRolPermiso from "@/components/organismos/RolPermiso/FormRegister";
+import { usePermisos } from "@/hooks/permisos/usePermisos";
+import { useRolPermiso } from "@/hooks/RolPermiso/useRolPermiso";
 
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } = useRol();
@@ -20,6 +23,21 @@ export const RolTable = () => {
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedRol, setSelectedRol] = useState<Rol | null>(null);
+  const [rolParaPermisos, setRolParaPermisos] = useState<number | null>(null);
+  const [showPermisosModal, setShowPermisosModal] = useState(false);
+
+  const { permiso } = usePermisos();
+  const { addRolPermiso } = useRolPermiso();
+
+  const handleAsignarPermisos = (idRol: number) => {
+    setRolParaPermisos(idRol);
+    setShowPermisosModal(true);
+  };
+
+  const handleCerrarPermisos = () => {
+    setShowPermisosModal(false);
+    setRolParaPermisos(null);
+  };
 
   const navigate = useNavigate();
 
@@ -86,6 +104,17 @@ export const RolTable = () => {
       ),
     },
     { key: "estado", label: "Estado" },
+    {
+      key: "asignarPermisos",
+      label: "Permisos",
+      render: (rol: Rol) => (
+        <Buton
+          text="Asignar"
+          onPress={() => handleAsignarPermisos(rol.idRol)}
+          className="bg-indigo-600 text-white"
+        />
+      ),
+    },
   ];
 
   if (isLoading) {
@@ -150,6 +179,26 @@ export const RolTable = () => {
             rolId={selectedRol.idRol as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
+          />
+        )}
+      </Modall>
+
+      <Modall
+        ModalTitle="Asignar Permisos"
+        isOpen={showPermisosModal}
+        onOpenChange={handleCerrarPermisos}
+      >
+        {typeof rolParaPermisos === "number" && (
+          <FormularioRolPermiso
+            id={rolParaPermisos}
+            onClose={handleCerrarPermisos}
+            addData={addRolPermiso}
+            permisos={(permiso ?? []).filter(
+              (p): p is { idPermiso: number; permiso: string } =>
+                typeof p.idPermiso === "number" && typeof p.permiso === "string"
+            )}
+            roles={rolesWithKey ?? []}
+            fkRolDefault={rolParaPermisos}
           />
         )}
       </Modall>

@@ -4,8 +4,9 @@ import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 import { Form } from "@heroui/form";
-import { addToast, Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Checkbox, Input, Select, SelectItem } from "@heroui/react";
 import { ElementoCreate, ElementoCreateSchema } from "@/schemas/Elemento";
+import { useState } from "react";
 
 type FormularioProps = {
   addData: (elemento: ElementoCreate) => Promise<{ idElemento: number }>;
@@ -29,15 +30,19 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const { unidades } = useUnidad();
   const { categorias } = useCategoria();
   const { caracteristicas } = useCaracteristica();
-  
+
   const tipoElemento = watch("tipoElemento");
+  const [tieneCaracteristica, setTieneCaracteristica] = useState(false);
 
   const onSubmit = async (data: ElementoCreate) => {
     try {
-       await addData({
+      await addData({
         ...data,
         estado: data.estado,
         tipoElemento: data.tipoElemento as "perecedero" | "noPerecedero",
+        fkCaracteristica: tieneCaracteristica
+          ? data.fkCaracteristica
+          : undefined,
       });
 
       onClose();
@@ -52,7 +57,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       console.error("Error al guardar el elemento:", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -214,40 +219,42 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           </div>
         )}
       />
-      <Controller
-        control={control}
-        name="fkCaracteristica"
-        render={({ field }) => (
-          <div className="w-full">
+      <Checkbox
+        isSelected={tieneCaracteristica}
+        onChange={(e) => setTieneCaracteristica(e.target.checked)}
+      >
+        ¿Posee características?
+      </Checkbox>
+
+      {tieneCaracteristica && (
+        <Controller
+          control={control}
+          name="fkCaracteristica"
+          render={({ field }) => (
             <Select
-              label="Caracteristica"
+              label="Característica"
               {...field}
               className="w-full"
-              placeholder="Selecciona una caracteristica..."
-              aria-label="Seleccionar Caracteristica"
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                field.onChange(value);
-              }}
+              placeholder="Selecciona una característica..."
+              onChange={(e) => field.onChange(Number(e.target.value))}
               isInvalid={!!errors.fkCaracteristica}
               errorMessage={errors.fkCaracteristica?.message}
             >
               {caracteristicas?.length ? (
                 caracteristicas.map((cat) => (
-                  <SelectItem key={cat.idCaracteristica} textValue={cat.nombre}>
+                  <SelectItem key={cat.idCaracteristica}>
                     {cat.nombre}
                   </SelectItem>
                 ))
               ) : (
                 <SelectItem isDisabled>
-                  No hay categorías disponibles
+                  No hay características disponibles
                 </SelectItem>
               )}
             </Select>
-          </div>
-        )}
-      />
-      
+          )}
+        />
+      )}
     </Form>
   );
 }
