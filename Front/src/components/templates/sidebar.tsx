@@ -60,6 +60,13 @@ export default function Sidebar() {
 
   const { permissions } = useAuth();
 
+  const mappingItems = [{
+    id: 0,
+    nombre: "Home",
+    icono: "HomeIcon",
+    href: "/"
+  },...permissions];
+
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
@@ -97,7 +104,7 @@ export default function Sidebar() {
         </button>
       </div>
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-        {permissions.map((item) => {
+        {mappingItems.map((item) => {
           const Icono = iconsConfig[item.icono] ?? BookOpenIcon;
           return(
           <div key={item.nombre}>
