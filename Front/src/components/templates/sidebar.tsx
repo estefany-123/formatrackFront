@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import iconsConfig from "@/config/iconsConfig";
 import {
+  ArrowRightStartOnRectangleIcon,
   // HomeIcon,
   // UserIcon,
   // CubeIcon,
@@ -17,6 +18,7 @@ import {
   Bars3Icon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
+import useLogin from "@/hooks/Usuarios/useLogin";
 
 // const menuItems = [
 //   { nombre: "Inicio", icono: HomeIcon, href: "/" },
@@ -79,6 +81,9 @@ export default function Sidebar() {
     );
   };
 
+    const { logout } = useLogin();
+  
+
   return (
     <aside
       className={`h-screen ${
@@ -117,6 +122,8 @@ export default function Sidebar() {
                   : "hover:bg-blue-600 text-black-300"
               }`}
             >
+              
+              
               <Icono className="w-6 h-6" />
               {!collapsed && <span>{item.nombre}</span>}
             </Link>
@@ -137,12 +144,19 @@ export default function Sidebar() {
                     <SubIcono className="w-6 h-6" />
                     {!collapsed && <span>{subItem.nombre}</span>}
                   </Link>
+                 
                 )})}
               </div>
+              
             )}
           </div>
+           
         )})}
+
       </nav>
+      <div className="flex">
+        <ArrowRightStartOnRectangleIcon onClick={logout} height={26} className={`hover:text-red-500 cursor-pointer transition mb-4 ${collapsed ? 'mx-auto' : 'ms-auto me-6'}`} />
+      </div>
     </aside>
   );
 }
