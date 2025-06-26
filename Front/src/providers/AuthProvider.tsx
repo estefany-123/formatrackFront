@@ -39,7 +39,6 @@ export default function AuthProvider({children}:{children : React.ReactNode}) {
             setPerfil(perfil);
             setIdUser(idUsuario);
             setAuthenticated(true);
-            console.log("Esto es idusuario",idUsuario)
         }
         if(permissions){
             setPermissions(permissions);

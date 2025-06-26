@@ -13,6 +13,18 @@ export type User = {
     fkRol?: number;
 }
 
+export type Perfil={
+    documento:number,
+    edad:number,
+    nombre : string,
+    apellido:string,
+    telefono : string,
+    correo : string,
+    perfil: string,
+    fkRol:number
+
+}
+
 export type postUser = {
     documento?: number;
     nombre: string;
