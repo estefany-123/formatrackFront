@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import iconsConfig from "@/config/iconsConfig";
 import {
+  ArrowRightStartOnRectangleIcon,
   // HomeIcon,
   // UserIcon,
   // CubeIcon,
@@ -17,6 +18,7 @@ import {
   Bars3Icon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
+import useLogin from "@/hooks/Usuarios/useLogin";
 
 // const menuItems = [
 //   { nombre: "Inicio", icono: HomeIcon, href: "/" },
@@ -60,6 +62,13 @@ export default function Sidebar() {
 
   const { permissions } = useAuth();
 
+  const mappingItems = [{
+    id: 0,
+    nombre: "Home",
+    icono: "HomeIcon",
+    href: "/"
+  },...permissions];
+
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
@@ -71,6 +80,9 @@ export default function Sidebar() {
         : [...prev, name]
     );
   };
+
+    const { logout } = useLogin();
+  
 
   return (
     <aside
@@ -97,7 +109,7 @@ export default function Sidebar() {
         </button>
       </div>
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-        {permissions.map((item) => {
+        {mappingItems.map((item) => {
           const Icono = iconsConfig[item.icono] ?? BookOpenIcon;
           return(
           <div key={item.nombre}>
@@ -110,6 +122,8 @@ export default function Sidebar() {
                   : "hover:bg-blue-600 text-black-300"
               }`}
             >
+              
+              
               <Icono className="w-6 h-6" />
               {!collapsed && <span>{item.nombre}</span>}
             </Link>
@@ -130,12 +144,19 @@ export default function Sidebar() {
                     <SubIcono className="w-6 h-6" />
                     {!collapsed && <span>{subItem.nombre}</span>}
                   </Link>
+                 
                 )})}
               </div>
+              
             )}
           </div>
+           
         )})}
+
       </nav>
+      <div className="flex">
+        <ArrowRightStartOnRectangleIcon onClick={logout} height={26} className={`hover:text-red-500 cursor-pointer transition mb-4 ${collapsed ? 'mx-auto' : 'ms-auto me-6'}`} />
+      </div>
     </aside>
   );
 }

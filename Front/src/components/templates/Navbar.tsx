@@ -36,7 +36,6 @@ export function Nav({ children }: NavProps) {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const { nombre, perfil } = useAuth();
-  const { logout } = useLogin();
   const { users } = useUsuario();
 
   // const {
@@ -63,7 +62,7 @@ export function Nav({ children }: NavProps) {
 
   return (
     <>
-      <Navbar isBordered>
+      <Navbar>
         <NavbarContent justify="start">
           <NavbarBrand className="mr-4">
             <FormatrackLogo />
@@ -74,7 +73,7 @@ export function Nav({ children }: NavProps) {
 
         </NavbarContent>
 
-        <NavbarContent as="div" className="items-center gap-4" justify="center">
+        <div className="flex items-center gap-4 ms-auto">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <button className="relative text-gray-700 dark:text-white">
@@ -112,29 +111,16 @@ export function Nav({ children }: NavProps) {
           </Dropdown>
           <div>{children}</div>
 
-
-
-        </NavbarContent>
-
-        <NavbarContent justify="end" className="gap-3 pr-2">
-
           <User
             name={nombre}
             avatarProps={{
-              src: `http://localhost:3000/perfiles/${perfil ?? 'defaultPerfil.png'}`,
+              src: `http://localhost:3000/img/perfiles/${perfil ?? 'defaultPerfil.png'}`,
               onClick: () => navigate('/perfil'), 
               isBordered: true
             }}
-
           />
 
-
-
-
-
-          <ArrowRightStartOnRectangleIcon onClick={logout} height={24} className="hover:text-red-500 cursor-pointer transition" />
-
-        </NavbarContent>
+        </div>
 
       </Navbar>
 
