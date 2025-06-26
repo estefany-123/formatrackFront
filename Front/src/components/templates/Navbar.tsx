@@ -114,7 +114,7 @@ export function Nav({ children }: NavProps) {
           <User
             name={nombre}
             avatarProps={{
-              src: `http://localhost:3000/perfiles/${perfil ?? 'defaultPerfil.png'}`,
+              src: `http://localhost:3000/img/perfiles/${perfil ?? 'defaultPerfil.png'}`,
               onClick: () => navigate('/perfil'), 
               isBordered: true
             }}
