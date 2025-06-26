@@ -21,7 +21,9 @@ export type Perfil={
     telefono : string,
     correo : string,
     perfil: string,
-    fkRol:number
+    fkRol: {
+        nombre: string
+    }
 
 }
 

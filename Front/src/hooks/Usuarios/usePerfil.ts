@@ -3,9 +3,9 @@ import { Perfil } from "@/types/Usuario";
 import { useEffect, useState } from "react";
 
 
-export function usePefil(){
+export function usePerfil(){
 
-    const [perfil,setPefil] = useState<Perfil | undefined>(undefined);
+    const [perfil,setPerfil] = useState<Perfil | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -13,9 +13,7 @@ export function usePefil(){
         async function getProfile(){
             try{
                 const perfil = await getPerfil();
-                setPefil(perfil);
-                console.log(perfil)
-                console.log("desde el use",perfil.correo)
+                setPerfil(perfil);
                 setIsLoading(false)
             }catch(error){
                 console.log(error);
@@ -26,5 +24,5 @@ export function usePefil(){
         getProfile();
     },[]);
 
-    return { perfil, isLoading, error}
+    return { perfil, isLoading, error, setPerfil}
 }
