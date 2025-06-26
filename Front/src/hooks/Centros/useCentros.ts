@@ -36,8 +36,9 @@ export function useCentro() {
   };
 
   const updateCentroMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: PutCentro }) =>
-      updateCentro(id, data),
+    mutationFn: ({ id, data }: { id: number; data: PutCentro }) =>{
+      const {idCentro, ...resto} = data
+      return updateCentro(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["centros"],

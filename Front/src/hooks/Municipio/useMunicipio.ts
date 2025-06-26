@@ -37,8 +37,9 @@ export function useMunicipio() {
   };
 
   const updateMunicipioMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdMunicipio }) =>
-      UpMunicipio(id, data),
+    mutationFn: ({ id, data }: { id: number; data: UpdMunicipio }) =>{
+      const {idMunicipio, ...resto} = data
+      return UpMunicipio(id, resto)},
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["municipio"],

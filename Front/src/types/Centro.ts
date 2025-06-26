@@ -8,6 +8,6 @@ export type Centro = {
 }
 
 export type PutCentro = {
-    idCentro : number,
+    idCentro ?: number,
     nombre : string
 }
