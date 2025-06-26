@@ -3,12 +3,13 @@ import { Card , CardBody } from "@heroui/react";
 
 
 type Props = {
-    children : React.ReactNode
+    children : React.ReactNode,
+    className? : string,
 }
 
-function Card1({children}: Props) {
+function Card1({children,className}: Props) {
   return (
-    <Card className='border-collapse flex w-2/4'>
+    <Card className={`border-collapse flex ${className}`}>
         <CardBody>
             {children}
         </CardBody>

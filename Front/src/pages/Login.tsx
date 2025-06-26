@@ -9,7 +9,7 @@ type Props = {}
 function Login({ }: Props) {
 
   const { login, isError, error } = useLogin();
-  const {register, handleSubmit, formState : { errors }, setValue} = useForm({
+  const {register, handleSubmit, formState : { errors }} = useForm({
     resolver :  zodResolver(LoginSchema),
     mode:"onChange"
   });
@@ -27,10 +27,10 @@ function Login({ }: Props) {
             <form onSubmit={handleSubmit(login)} className="space-y-4">
               <h1 className="text-2xl text-center text-blue-500 ">INICIO DE SESION</h1>
 
-              <Input label="Numero de documento" placeholder="Documento" type="text"  {...register("documento")} isInvalid={!!errors.documento}
+              <Input label="Numero de documento" placeholder="Documento" type="text" autoComplete='off'  {...register("documento")} isInvalid={!!errors.documento}
                 errorMessage={errors.documento?.message} />
               
-              <Input {...register("password")} label="Contraseña" placeholder="Password" type="password" isInvalid={!!errors.password}
+              <Input {...register("password")} label="Contraseña" placeholder="Password" type="password" autoComplete='off' isInvalid={!!errors.password}
                 errorMessage={errors.password?.message} />
               
 

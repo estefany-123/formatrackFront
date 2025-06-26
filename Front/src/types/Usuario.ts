@@ -36,7 +36,7 @@ export type putUser = {
 }
 
 export type LoginCrede = {
-    documento : number,
+    documento : string,
     password : string
 }
 
@@ -47,8 +47,8 @@ export type LoginRes = {
 }
 
 export type resetPassword = {
-    token:string,
     password:string
+    confirmPassword:string
 }
 
 export type forgotPassword = {

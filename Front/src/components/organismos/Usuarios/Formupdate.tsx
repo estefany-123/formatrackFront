@@ -21,7 +21,7 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UserUpdate>({
     resolver: zodResolver(UserUpdateSchema),
     mode: "onChange",
@@ -97,12 +97,12 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
         isInvalid={!!errors.cargo}
         errorMessage={errors.cargo?.message}
       />
-        <Buton
-          text="Guardar"
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full rounded-xl"
-        />
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

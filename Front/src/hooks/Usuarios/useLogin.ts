@@ -12,7 +12,7 @@ export default function useLogin(){
 
     const [isError,setIsError] = useState<boolean>(false);
     const [error,setError] = useState<string | undefined>(undefined);
-    const {setAuthenticated, setNombre} = useAuth();
+    const {setAuthenticated, setNombre, setPerfil,setIdUser} = useAuth();
 
     const navigate = useNavigate();
 
@@ -20,13 +20,17 @@ export default function useLogin(){
         try{
            
             const response  = await postLogin(data);
+            console.log("datos que se envian al back",typeof data.documento);
              console.log(response)
             const token = response.access_token;
             cookies.set("token",token);
             //Auth
-            const {nombre,apellido} : {nombre : string, apellido : string}= jwtDecode(token);
+            const {nombre,apellido,perfil,iduser} : {nombre : string, apellido : string, perfil: string,iduser:number}= jwtDecode(token);
             setNombre(`${nombre} ${apellido}`);
             setAuthenticated(true);
+            setPerfil(perfil);
+            setIdUser(iduser)
+            console.log("iduser desde uselogin",iduser)
             //Error handling
             setIsError(false);
             setError(undefined);
