@@ -12,13 +12,15 @@ export default function useLogin(){
 
     const [isError,setIsError] = useState<boolean>(false);
     const [error,setError] = useState<string | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {setAuthenticated, setNombre, setPerfil,setIdUser,setPermissions} = useAuth();
 
     const navigate = useNavigate();
 
     async function login(data : Credenciales){
+        setIsError(false);
+        setIsLoading(true);
         try{
-           
             const response  = await postLogin(data);
             console.log("datos que se envian al back",typeof data.documento);
              console.log(response)
@@ -41,9 +43,12 @@ export default function useLogin(){
             navigate("/");
         }
         catch(error){
-            console.error("No se pudo iniciar sesión",error);
+            const errorMessage = error.response.data.response.message;
             setIsError(true);
-            setError("Error iniciando sesión");
+            setError(errorMessage);
+        }
+        finally{
+            setIsLoading(false);
         }
     }
 
@@ -59,6 +64,6 @@ export default function useLogin(){
         }
     }
 
-    return{login,isError,error,logout};
+    return{login,isError,error,logout,isLoading};
 }
 

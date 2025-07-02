@@ -1,5 +1,5 @@
 import useLogin from "@/hooks/Usuarios/useLogin"
-import { Card, CardBody, Input, Button } from "@heroui/react"
+import { Card, CardBody, Input, Button, Spinner } from "@heroui/react"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schemas/User";
@@ -8,7 +8,7 @@ type Props = {}
 
 function Login({ }: Props) {
 
-  const { login, isError, error } = useLogin();
+  const { login, isError, error, isLoading } = useLogin();
   const {register, handleSubmit, formState : { errors }} = useForm({
     resolver :  zodResolver(LoginSchema),
     mode:"onChange"
@@ -33,12 +33,13 @@ function Login({ }: Props) {
               <Input {...register("password")} label="Contraseña" placeholder="Password" type="password" autoComplete='off' isInvalid={!!errors.password}
                 errorMessage={errors.password?.message} />
               
+              {isError && <p className="text-red-500 text-center">{error}</p>}
+              {isLoading && <Spinner className="flex justify-center" />}
 
-              <p className="text-center"><a href="/forgotPass">He olvidado mi contraseña</a></p>
+              <p className="text-end text-blue-400"><a href="/forgotPass">¿Has olvidado tu contraseña?</a></p>
               <div className="flex">
                 <Button color="primary" type="submit" className="text-white px-8 mx-auto">Ingresar</Button>
               </div>
-              {isError && <p>{error}</p>}
             </form>
           </CardBody>
         </Card>
