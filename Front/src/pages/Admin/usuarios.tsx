@@ -14,7 +14,7 @@ import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 const UsersTable = () => {
 
-  const {userHasPermission} = usePermissions();
+  const { userHasPermission } = usePermissions();
 
   const { users, isLoading, isError, error, addUser, changeState } =
     useUsuario();
@@ -27,7 +27,7 @@ const UsersTable = () => {
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const navigate = useNavigate();
-  
+
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
     setSelectedUser(null);
@@ -87,14 +87,15 @@ const UsersTable = () => {
     }));
 
   return (
-    <div className="p-4">
+
+    <div className="p-4"> 
       <div className="flex pb-4 pt-4">
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Usuarios</h1>
               <div className="flex gap-2">
-                {userHasPermission(1) &&
+                {userHasPermission(34) && //listar roles
                   <Buton
                     text="Gestionar Roles"
                     onPress={handleGoToRol}
@@ -105,6 +106,7 @@ const UsersTable = () => {
           </CardBody>
         </Card>
       </div>
+      
       <Modall
         ModalTitle="Agregar Usuario"
         isOpen={isOpen}
@@ -149,13 +151,14 @@ const UsersTable = () => {
         <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
           <FormRegisterMasivo/>
         </Modall>
-
-      {usersWithKey && (
+      
+      
+      {userHasPermission(3) && usersWithKey && (
         <Globaltable
-          data={usersWithKey}
+          data={usersWithKey} 
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={handleState}
+          onEdit={userHasPermission(4) ? handleEdit : undefined}
+          onDelete={userHasPermission(5) ? handleState : undefined}
           extraHeaderContent={
             <div className="flex gap-2">
               {userHasPermission(1) &&
@@ -168,6 +171,7 @@ const UsersTable = () => {
           }
         />
       )}
+   
     </div>
   );
 };

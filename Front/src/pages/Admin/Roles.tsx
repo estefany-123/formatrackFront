@@ -9,9 +9,13 @@ import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } = useRol();
+
+    const { userHasPermission } = usePermissions();
+  
 
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
