@@ -1,5 +1,6 @@
 import { postMassiveUsuarios } from "@/axios/Usuarios/postMassiveUsuarios";
 import Buton from "@/components/molecules/Button";
+import { Button } from '@heroui/button'
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { addToast, useModalContext } from "@heroui/react";
@@ -45,7 +46,7 @@ export default function FormRegisterMasivo(){
 
     return(
         <Form onSubmit={onSubmit} className="flex flex-col gap-6">
-
+            <a href={`${import.meta.env.VITE_API_CLIENT}img/excel/FORMATO EXCEL.xlsx`} download><Button variant="bordered" color="success">Descargar formato</Button></a>
             <Input onChange={handleFileChange} type="file" accept=".xlsx,.xls" />
             {file && <p>Selected file: {file.name}</p>}
 

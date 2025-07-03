@@ -16,6 +16,9 @@ import { useRolPermiso } from "@/hooks/RolPermiso/useRolPermiso";
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } = useRol();
 
+    const { userHasPermission } = usePermissions();
+  
+
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);

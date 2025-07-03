@@ -7,7 +7,7 @@ import {
 } from "@heroui/modal";
 
 type PropsModal = {
-        ModalTitle: string
+        ModalTitle?: string
         children: React.ReactNode
         isOpen?: boolean
         onOpenChange?: () => void
