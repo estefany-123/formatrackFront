@@ -119,7 +119,7 @@ export const RolTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Roles</h1>
               <div className="flex gap-2">
-                <Buton text="Usuarios" onPress={handleGoToUsuario} />
+                <Buton text="Usuarios" onPress={handleGoToUsuario} /> //no le puse por el usuario
               </div>
             </div>
           </CardBody>
@@ -158,14 +158,18 @@ export const RolTable = () => {
         )}
       </Modall>
 
-      {rolesWithKey && (
+      {userHasPermission(34) && rolesWithKey && (
         <Globaltable
           data={rolesWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={(rol) => handleState(rol.idRol)}
+          onEdit={userHasPermission(35) ?handleEdit : undefined}
+          onDelete={userHasPermission(36) ? (rol) => handleState(rol.idRol): undefined}
           extraHeaderContent={
-            <Buton text="Nuevo rol" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(33) && 
+              <Buton text="Nuevo rol" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}

@@ -10,8 +10,12 @@ import { FormUpdate } from "@/components/organismos/Movimientos/FormUpdate";
 import { Chip } from "@heroui/chip";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, CardBody } from "@heroui/react";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 export const MovimientoTable = () => {
+
+    const { userHasPermission } = usePermissions();
+  
   const { movimientos, isLoading, isError, error, addMovimiento } =
     useMovimiento();
 
@@ -154,18 +158,22 @@ export const MovimientoTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Movimientos</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
-                  onPress={handleGoToTipo}
-                >
+                {userHasPermission(72) && 
+                  <Button
+                    className="text-white bg-blue-700"
+                    onPress={handleGoToTipo}
+                  >
                   Gestionar Tipos Movimiento
                 </Button>
+                }
+                {userHasPermission(15) && 
                 <Button
                   className="text-white bg-blue-700"
                   onPress={handleGoToSitio}
                 >
                   Gestionar Sitios
                 </Button>
+                }
               </div>
             </div>
           </CardBody>
@@ -206,14 +214,18 @@ export const MovimientoTable = () => {
         )}
       </Modall>
 
-      {MovimientoWithKey && (
+      {userHasPermission(23) && MovimientoWithKey && (
         <Globaltable
           data={MovimientoWithKey}
           columns={columns}
-          onEdit={handleEdit}
+          onEdit={userHasPermission(24) ? handleEdit : undefined}
           showEstado={false}
           extraHeaderContent={
-            <Buton text="Nuevo Movimiento" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(22) &&
+              <Buton text="Nuevo Movimiento" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}
