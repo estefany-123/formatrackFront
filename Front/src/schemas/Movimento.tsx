@@ -17,10 +17,8 @@ export const MovimientoUpdateSchema = z.object({
   horaSalida: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: "La hora debe tener el formato HH:mm (24h)",
   }),
-  
 
   fechaDevolucion: z.string().nullable().optional(),
-
 });
 
 export type MovimientoUpdate = z.infer<typeof MovimientoUpdateSchema>;
@@ -57,6 +55,8 @@ export const MovimientoCreateSchema = z.object({
   fechaDevolucion: z.string().nullable().optional(),
 
   fkUsuario: z.number({ message: "Usuario es requerido" }),
+
+  lugarDestino: z.string({ message: "lugarDestino es requerido" }),
 
   fkTipoMovimiento: z.number({ message: "Tipo Novimiento es requerido" }),
 

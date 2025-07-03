@@ -59,7 +59,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const [codigosDisponibles, setCodigosDisponibles] = useState<string[]>([]);
 
   const onSubmit = async (data: MovimientoCreate) => {
-    const pyload = mapMovimiento(data)
+    const pyload = mapMovimiento(data);
     console.log("Payload enviado al backend:", data);
     try {
       await addData(pyload);
@@ -175,6 +175,15 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             ))}
           </Select>
         )}
+      />
+
+      <Input
+        label="Destino"
+        placeholder="Destino"
+        type="text"
+        {...register("lugarDestino")}
+        isInvalid={!!errors.lugarDestino}
+        errorMessage={errors.lugarDestino?.message}
       />
 
       <Controller

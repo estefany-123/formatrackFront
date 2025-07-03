@@ -12,15 +12,18 @@ export interface MovimientoPostData {
   devolutivo?: boolean;
   noDevolutivo?: boolean;
   createdAt?: string;
+  lugarDestino?: string;
   updatedAt?: string;
   fkUsuario?: number;
   fkTipoMovimiento?: number;
   fkSitio?: number;
+  codigos?: string[];
+  fechaDevolucion?: Date;
   fkInventario?: number;
 }
 
-export async function postMovimiento(data:MovimientoPostData):Promise<any> {
-  const {idMovimiento, ...resto} = data
-    const res = await axiosAPI.post(`movimientos`,resto);
-    return res.data
+export async function postMovimiento(data: MovimientoPostData): Promise<any> {
+  const { idMovimiento, ...resto } = data;
+  const res = await axiosAPI.post(`movimientos`, resto);
+  return res.data;
 }

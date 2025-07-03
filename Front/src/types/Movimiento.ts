@@ -8,11 +8,12 @@ export type Movimiento = {
   aceptado?: boolean;
   enProceso?: boolean;
   cancelado?: boolean;
+  lugarDestino?: string;
   devolutivo?: boolean;
   noDevolutivo?: boolean;
   fechaDevolucion?: string | null;
-  createdAt?:string;
-  updatedAt?:string;
+  createdAt?: string;
+  updatedAt?: string;
   fkUsuario?: number;
   fkTipoMovimiento?: number;
   fkSitio?: number;
