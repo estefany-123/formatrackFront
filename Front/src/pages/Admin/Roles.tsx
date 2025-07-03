@@ -12,6 +12,7 @@ import FormularioRolPermiso from "@/components/organismos/RolPermiso/FormRegiste
 import { usePermisos } from "@/hooks/permisos/usePermisos";
 import { useRolPermiso } from "@/hooks/RolPermiso/useRolPermiso";
 import FormularioRoles from "@/components/organismos/Roles/FormRegister";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } = useRol();
@@ -113,7 +114,7 @@ export const RolTable = () => {
       render: (rol: Rol) => (
         <Buton
           text="Asignar"
-          onPress={() => handleAsignarPermisos(rol.idRol)}
+          onPress={() => handleAsignarPermisos(rol.idRol as number)}
         />
       ),
     },

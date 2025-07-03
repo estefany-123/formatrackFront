@@ -18,7 +18,6 @@ export interface MovimientoPostData {
   fkUsuario?: number;
   fkTipoMovimiento?: number;
   fkSitio?: number;
-  codigos?: string[];
   fechaDevolucion?: Date;
   fkInventario?: number;
   codigos?: CodigoInventario[];

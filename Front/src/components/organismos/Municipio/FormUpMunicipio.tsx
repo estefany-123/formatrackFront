@@ -36,7 +36,7 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
     console.log("submiting...");
     console.log(data);
     try {
-      await updateMunicipio(data.idMunicipio, data);
+      await updateMunicipio(data.idMunicipio as number, data);
       console.log("Sended success");
       onclose();
       addToast({

@@ -39,16 +39,16 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     resolver: zodResolver(MovimientoCreateSchema),
     mode: "onChange",
     defaultValues: {
-      cantidad:0,
+      cantidad: 0,
       estado: true,
       aceptado: false,
       enProceso: true,
       cancelado: false,
       devolutivo: false,
       noDevolutivo: true,
-      horaIngreso:undefined,
-      horaSalida:undefined,
-      fechaDevolucion:undefined,
+      horaIngreso: undefined,
+      horaSalida: undefined,
+      fechaDevolucion: undefined,
       codigos: [],
     },
   });
@@ -134,6 +134,13 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           {...register("descripcion")}
           isInvalid={!!errors.descripcion}
           errorMessage={errors.descripcion?.message}
+        />
+        <Input
+          label="Destino"
+          type="text"
+          {...register("lugarDestino")}
+          isInvalid={!!errors.lugarDestino}
+          errorMessage={errors.lugarDestino?.message}
         />
 
         {/* Hora dinámica según tipo de movimiento */}

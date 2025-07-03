@@ -71,7 +71,7 @@ export const MovimientoCreateSchema = z.object({
 
   fkUsuario: z.number({ message: "Usuario es requerido" }),
 
-  lugarDestino: z.string({ message: "lugarDestino es requerido" }),
+  lugarDestino: z.string({ message: "lugarDestino es requerido"}),
 
   fkTipoMovimiento: z.number({ message: "Tipo Novimiento es requerido" }),
 

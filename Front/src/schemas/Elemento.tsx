@@ -31,7 +31,7 @@ imagenElemento: z
 export type ElementoUpdate = z.infer<typeof ElementoUpdateSchema>;
 
 export const ElementoCreateSchema = z.object({  
-  idElemento: z.number(),
+  idElemento: z.number().optional(),
   nombre: z
     .string()
     .min(1, { message: "Nombre es  requerido" })

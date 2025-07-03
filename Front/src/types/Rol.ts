@@ -1,5 +1,5 @@
 export type Rol = {
-  idRol: number;
+  idRol?: number;
   nombre: string;
   estado?: boolean;
   createdAt?: string;

@@ -9,6 +9,7 @@ import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/areas/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioArea from "@/components/organismos/areas/FormRegister";
 
 const AreaTable = () => {
 

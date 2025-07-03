@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSitiosConMayorStock, useUsuariosMasMovimientos, useElementosPorCaducar, useHistorialMovimientos } from "@/hooks/Reportes/useReportes";
 import { ReportSelector } from "@/components/ReportSelector";
 import { ReportViewer } from "@/components/ReportViewer";
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 
 export default function ReportesPage() {
   const [reporteSeleccionado, setReporteSeleccionado] = useState<string | null>(null);
