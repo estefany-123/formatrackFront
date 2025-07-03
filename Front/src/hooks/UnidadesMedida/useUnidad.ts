@@ -3,6 +3,7 @@ import { getUnidad } from "@/axios/UnidadesMedida/getUnidad";
 import { postUnidad } from "@/axios/UnidadesMedida/postUnidad";
 import { putUnidad } from "@/axios/UnidadesMedida/putUnidad";
 import { Unidad } from "@/types/Unidad";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useUnidad() {
@@ -36,16 +37,15 @@ export function useUnidad() {
   };
 
   const updateUnidadMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Unidad }) =>{
-      
-    const { idUnidad, ...resto } = data;
-    return putUnidad(id, resto);
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({
-      queryKey: ["unidades"],
-    });
-  },
+    mutationFn: ({ id, data }: { id: number; data: Unidad }) => {
+      const { idUnidad, ...resto } = data;
+      return putUnidad(id, resto);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["unidades"],
+      });
+    },
 
     onError: (error) => {
       console.error("Error al actualizar:", error);
@@ -54,8 +54,13 @@ export function useUnidad() {
 
   const changeStateMutation = useMutation({
     mutationFn: deleteUnidad,
-
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["unidades"],
       });

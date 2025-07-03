@@ -40,7 +40,7 @@ export const FormUpdate = ({ caracteristicas, caracteristicaId, id, onclose }: P
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
-        description: "Tipo Movimiento actualizado correctamente",
+        description: "Caracteristica actualizada correctamente",
         color: "primary",
         timeout: 3000,
         shouldShowTimeoutProgress: true,

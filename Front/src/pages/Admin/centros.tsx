@@ -89,7 +89,7 @@ const CentrosTable = () => {
         </span>
       ),
     },
-    { key: "estado", label: "estado" },
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {

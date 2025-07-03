@@ -34,7 +34,8 @@ export function useCodigoInventario() {
 
   const updateCodigoMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: CodigoInventario }) => {
-      return putCodigoInventario(id, data);
+      const {idCodigoInventario, ...resto} = data
+      return putCodigoInventario(id, resto);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["codigosInventario"] });

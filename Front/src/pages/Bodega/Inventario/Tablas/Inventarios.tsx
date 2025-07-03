@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
-import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import {
   Inventario,
@@ -13,6 +12,7 @@ import {
 import { FormAgregateStock } from "@/components/organismos/Inventarios/FormAgregateStock";
 import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
 import { CodigoInventario } from "../../CodigoInventario";
+import FormularioInventario from "@/components/organismos/Inventarios/FormRegister";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -176,13 +176,14 @@ export const InventariosTable = ({
         <div>
           <Buton
             text="Agregar stock"
+            className="mr-2"
             onPress={() =>
               handleOpenAddStock(inventario as InventarioConElemento)
             }
           />
           <Buton
             text="Ver códigos"
-            className="bg-gray-600 hover:bg-gray-700 text-white"
+            className="bg-green-600 hover:bg-gray-700 text-white"
             onPress={() =>
               handleOpenCodigos(inventario as InventarioConElemento)
             }
@@ -232,7 +233,7 @@ export const InventariosTable = ({
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioInventario
           id="inventario-form"
           addData={handleAddInventario}
           onClose={handleClose}

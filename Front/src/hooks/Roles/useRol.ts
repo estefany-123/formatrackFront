@@ -3,6 +3,7 @@ import { getRol } from "@/axios/Roles/getRol";
 import { postRol } from "@/axios/Roles/postRol";
 import { putRol } from "@/axios/Roles/putRol";
 import { Rol } from "@/types/Rol";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useRol() {
@@ -53,6 +54,12 @@ export function useRol() {
   const changeStateMutation = useMutation({
     mutationFn: deleteRol,
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["roles"],
       });

@@ -10,18 +10,26 @@ type Props = {
   onClose: () => void;
 };
 
-export const CodigoInventario = ({ idInventario, onClose }: Props) => {
+export const CodigoInventario = ({ idInventario }: Props) => {
   const { getCodigosPorInventario } = useCodigoInventario();
   const [codigos, setCodigos] = useState<CodigoInventarioUpdate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [codigoIdSeleccionado, setCodigoIdSeleccionado] = useState<number | null>(null);
+  const [codigoIdSeleccionado, setCodigoIdSeleccionado] = useState<
+    number | null
+  >(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
-  const cargarCodigos = () => {
-    const data = getCodigosPorInventario(idInventario);
-    console.log("🔍 Códigos encontrados por inventario:", data);
-    setCodigos(data);
-    setIsLoading(false);
+  const cargarCodigos = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getCodigosPorInventario(idInventario);
+      console.log("🔍 Códigos encontrados por inventario:", data);
+      setCodigos(data);
+    } catch (error) {
+      console.error("Error al cargar códigos:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAbrirEdicion = (idCodigo: number) => {
@@ -51,15 +59,15 @@ export const CodigoInventario = ({ idInventario, onClose }: Props) => {
         </p>
       ) : (
         <ul className="space-y-2">
-          {codigos.map((codigo) => (
+          {codigos.map((codigo, index) => (
             <li
-              key={codigo.idCodigoInventario}
+              key={codigo.idCodigoInventario ?? `temp-${index}`}
               className="flex justify-between items-center border p-2 rounded"
             >
               <span>{codigo.codigo}</span>
               <Buton
                 text="Editar"
-                className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                className="text-sm  px-3 py-1 rounded-xl"
                 onPress={() => handleAbrirEdicion(codigo.idCodigoInventario!)}
               />
             </li>

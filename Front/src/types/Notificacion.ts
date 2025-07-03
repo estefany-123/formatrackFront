@@ -1,10 +1,21 @@
-export type Notificacion = {
-  id_notificacion: number;
-  titulo: string;
-  mensaje: string;
-  en_proceso: boolean;
-  fk_movimiento: number;
-  fk_solicitud: number;
-}
+export type NotificacionEstado = "aceptado" | "rechazado" | "pendiente" | null;
 
-export type Respuesta = "aceptar" | "cancelar";
+export type Notificacion = {
+  idNotificacion: number;
+  titulo: string;
+  mensaje: string | null;
+  leido: boolean;
+  requiereAccion: boolean;
+  estado: NotificacionEstado;
+  data: {
+    idMovimiento?: number;
+    idElemento?: number;
+    [key: string]: any;
+  } | null;
+  createdAt: string;
+  fkUsuario: {
+    idUsuario: number;
+    nombre: string;
+
+};
+}

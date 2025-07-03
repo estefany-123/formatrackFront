@@ -10,7 +10,7 @@ type FormularioProps = {
   id: string;
 };
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function FormularioCaracteristicas({ addData, onClose, id }: FormularioProps) {
   const {
     register,
     handleSubmit,
@@ -26,7 +26,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       onClose();
       addToast({
         title: "Registro Exitoso",
-        description: "Tipo Movimiento agregado correctamente",
+        description: "Caracteristica agregado correctamente",
         color: "success",
         timeout: 3000,
         shouldShowTimeoutProgress: true,

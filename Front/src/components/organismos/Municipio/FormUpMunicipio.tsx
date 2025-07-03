@@ -5,6 +5,7 @@ import { useMunicipio } from "@/hooks/Municipio/useMunicipio";
 import { MunicipioUP, MunicipioUPSchema } from "@/schemas/Municipio";
 import { useForm } from "react-hook-form";
 import Buton from "@/components/molecules/Button";
+import { addToast } from "@heroui/react";
 
 type Props = {
   municipios: MunicipioUP[];
@@ -38,6 +39,13 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
       await updateMunicipio(data.idMunicipio, data);
       console.log("Sended success");
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Municipio Actualizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar el municipio", error);
     }
@@ -56,12 +64,12 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-        <Buton
-          text="Guardar"
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full"
-        />
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full"
+      />
     </Form>
   );
 };

@@ -1,6 +1,6 @@
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoriaSchema, Categoria } from "@/schemas/Categorias";
@@ -24,6 +24,9 @@ export default function FormCategorias({
   } = useForm<Categoria>({
     resolver: zodResolver(CategoriaSchema),
     mode: "onChange",
+    defaultValues: {
+      estado: true,
+    },
   });
 
   const onSubmit = async (data: Categoria) => {
@@ -31,6 +34,13 @@ export default function FormCategorias({
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Categoria agregada correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
@@ -50,14 +60,14 @@ export default function FormCategorias({
         isInvalid={!!errors.nombre}
         errorMessage={errors.nombre?.message}
       />
-        <Input
-          label="Codigo"
-          type="text"
-          placeholder="Ingrese el codigo UNPSC"
-          {...register("codigoUNPSC")}
-          isInvalid={!!errors.codigoUNPSC}
-          errorMessage={errors.codigoUNPSC?.message}
-        />
+      <Input
+        label="Codigo"
+        type="text"
+        placeholder="Ingrese el codigo UNPSC"
+        {...register("codigoUNPSC")}
+        isInvalid={!!errors.codigoUNPSC}
+        errorMessage={errors.codigoUNPSC?.message}
+      />
       <Controller
         control={control}
         name="estado"
@@ -68,13 +78,16 @@ export default function FormCategorias({
             {...field}
             value={field.value ? "true" : "false"}
             onChange={(e) => field.onChange(e.target.value === "true")}
+            isInvalid={!!errors.estado}
+            errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-
     </Form>
   );
 }

@@ -4,11 +4,11 @@ import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
-import Formulario from "@/components/organismos/UnidadesMedida/FormRegister";
 import { FormUpdate } from "@/components/organismos/UnidadesMedida/FormUpdate";
 import { Unidad } from "@/types/Unidad";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import FormularioUnidades from "@/components/organismos/UnidadesMedida/FormRegister";
 
 export const UnidadTable = () => {
   const { unidades, isLoading, isError, error, addUnidad, changeState } =
@@ -132,7 +132,7 @@ export const UnidadTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioUnidades
           id="unidad-form"
           addData={handleAddUnidad}
           onClose={handleClose}

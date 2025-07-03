@@ -1,6 +1,6 @@
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/react";
+import { addToast, Select, SelectItem } from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Municipio, MunicipioSchema } from "@/schemas/Municipio";
@@ -24,6 +24,9 @@ export default function FormMunicipios({
   } = useForm<Municipio>({
     resolver: zodResolver(MunicipioSchema),
     mode: "onChange",
+    defaultValues: {
+      estado: true,
+    },
   });
 
   const onSubmit = async (data: Municipio) => {
@@ -31,6 +34,13 @@ export default function FormMunicipios({
     try {
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Municipio agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
     }
@@ -71,6 +81,8 @@ export default function FormMunicipios({
             onChange={(e) => field.onChange(e.target.value === "true")}
             isInvalid={!!errors.estado}
             errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>

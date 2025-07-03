@@ -1,22 +1,22 @@
 import { z } from "zod";
 
 export const MovimientoUpdateSchema = z.object({
-  idMovimiento: z.number(),
+  idMovimiento: z.number().optional(),
 
   descripcion: z
     .string()
     .min(1, { message: "Descripcion es  requerida" })
-    .min(2, { message: "Debe contener como mimimo 2 caracteres" }),
+    .min(2, { message: "Debe contener como mimimo 2 caracteres" }).optional(),
 
   cantidad: z.number({
     required_error: "Cantidad es requerida y debe ser entero",
-  }),
+  }).optional(),
   horaIngreso: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: "La hora debe tener el formato HH:mm (24h)",
-  }),
+  }).optional(),
   horaSalida: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: "La hora debe tener el formato HH:mm (24h)",
-  }),
+  }).optional(),
 
   fechaDevolucion: z.string().nullable().optional(),
 });
@@ -28,17 +28,25 @@ export const MovimientoCreateSchema = z.object({
     .string()
     .min(1, { message: "Descripcion es  requerida" })
     .min(2, { message: "Debe contener como mimimo 2 caracteres" }),
-  cantidad: z.number({
-    required_error: "Cantidad es requerida y debe ser entero",
-  }),
+  cantidad: z
+    .number({
+      required_error: "Cantidad es requerida y debe ser entero",
+    })
+    .optional(),
 
-  horaIngreso: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
-    message: "La hora debe tener el formato HH:mm (24h)",
-  }),
+  horaIngreso: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+      message: "La hora debe tener el formato HH:mm (24h)",
+    })
+    .optional(),
 
-  horaSalida: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
-    message: "La hora debe tener el formato HH:mm (24h)",
-  }),
+  horaSalida: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+      message: "La hora debe tener el formato HH:mm (24h)",
+    })
+    .optional(),
 
   estado: z.boolean({ required_error: "Estado es requerido" }).optional(),
 
@@ -52,7 +60,14 @@ export const MovimientoCreateSchema = z.object({
 
   noDevolutivo: z.boolean().optional(),
 
-  fechaDevolucion: z.string().nullable().optional(),
+  fechaDevolucion: z
+    .string()
+    .nullable()
+    .optional()
+    .refine(
+      (val) => !val || (typeof val === "string" && !isNaN(Date.parse(val))),
+      { message: "Fecha inválida" }
+    ),  
 
   fkUsuario: z.number({ message: "Usuario es requerido" }),
 

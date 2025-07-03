@@ -5,6 +5,7 @@ import { Form } from "@heroui/form";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Buton from "@/components/molecules/Button";
+import { addToast } from "@heroui/react";
 
 type FormuProps = {
   Users: (UserUpdate & { idUsuario: number })[];
@@ -42,7 +43,19 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
     try {
       await updateUser(data.idUsuario, data);
       onclose();
+      addToast({
+        title: "Actualiacion Exitosa",
+        description: "Usuario actualizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
+      addToast({
+        title: "Error al actualizar el usuario",
+        description: "Hubo un error intentando actualizar el usuario",
+        color: "danger",
+      });
       console.log("Error al actualizar el usuario : ", error);
     }
   };

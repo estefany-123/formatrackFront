@@ -6,6 +6,7 @@ import { CentroUpdate, CentroUpdateSchema } from "@/schemas/Centro";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@heroui/input";
 import Buton from "@/components/molecules/Button";
+import { addToast } from "@heroui/react";
 
 type Props = {
   centros: (Centro & { key: string })[];
@@ -39,6 +40,13 @@ const FormUpCentro = ({ centroId, id, onclose }: Props) => {
       await UpCentro(data.idCentro, data);
       console.log("Sended success");
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Centro Actualizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar el centro", error);
     }

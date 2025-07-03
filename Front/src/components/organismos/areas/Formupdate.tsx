@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AreaUpdateSchema, AreaUpdate } from "@/schemas/Area";
 import { useAreas } from "@/hooks/areas/useAreas";
-import { Button } from "@heroui/button";
 import { addToast } from "@heroui/react";
 import Buton from "@/components/molecules/Button";
 

@@ -22,6 +22,7 @@ export const FormUpdate = ({ codigos, codigoId, id, onClose }: Props) => {
 
   const foundCodigo = getCodigoInventarioById(codigoId, codigos) as CodigoInventarioUpdate;
 
+  console.log("foundCodigo:", foundCodigo);
   const {
     register,
     handleSubmit,

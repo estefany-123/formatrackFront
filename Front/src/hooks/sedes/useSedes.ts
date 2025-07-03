@@ -3,6 +3,7 @@ import { getSede } from "@/axios/Sedes/getSede";
 import { postSede } from "@/axios/Sedes/postSede";
 import { putSede } from "@/axios/Sedes/putSede";
 import { Sede } from "@/types/sedes";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useSede() {
@@ -54,6 +55,12 @@ export function useSede() {
     mutationFn:deleteSede,
 
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["sedes"],
       });

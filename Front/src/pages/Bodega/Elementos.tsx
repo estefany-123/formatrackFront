@@ -5,12 +5,12 @@ import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";
-import Formulario from "@/components/organismos/Elementos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Elementos/FormUpdate";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { ElementoCreate } from "@/schemas/Elemento";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioElementos from "@/components/organismos/Elementos/FormRegister";
 
 export const ElementosTable = () => {
 
@@ -196,7 +196,7 @@ export const ElementosTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioElementos
           id="element-form"
           addData={handleAddElemento}
           onClose={handleClose}

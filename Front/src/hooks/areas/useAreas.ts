@@ -3,6 +3,7 @@ import { getArea } from "@/axios/Areas/getArea";
 import { postArea } from "@/axios/Areas/postArea";
 import { putArea } from "@/axios/Areas/putArea";
 import { Area } from "@/types/area";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useAreas() {
@@ -38,8 +39,9 @@ export function useAreas() {
 
   const updateAreaMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Area }) => {
-      const {idArea, ...resto}=data;
-      return putArea(id, resto)},
+      const { idArea, ...resto } = data;
+      return putArea(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["areas"],
@@ -54,6 +56,12 @@ export function useAreas() {
   const changeStateMutation = useMutation({
     mutationFn: deleteArea,
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["areas"],
       });

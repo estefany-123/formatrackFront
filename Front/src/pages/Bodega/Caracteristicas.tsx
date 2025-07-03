@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 import { Caracteristica } from "@/types/Caracteristica";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/Caracteristicas/FormRegister";
 import { FormUpdate } from "@/components/organismos/Caracteristicas/FormUpdate";
+import FormularioCaracteristicas from "@/components/organismos/Caracteristicas/FormRegister";
 
 export const CaracteristicasTable = () => {
   const { caracteristicas, isLoading, isError, error, addCaracteristica } =
@@ -37,6 +37,7 @@ export const CaracteristicasTable = () => {
   const handleAddCaracteristicas = async (caracteristica: Caracteristica) => {
     try {
       await addCaracteristica(caracteristica);
+      
       handleClose(); // Cerrar el modal después de darle agregar usuario
     } catch (error) {
       console.error("Error al agregar el caracteristica de movimiento:", error);
@@ -47,6 +48,7 @@ export const CaracteristicasTable = () => {
     setSelectedCaracteristicas(caracteristica);
     setIsOpenUpdate(true);
   };
+console.log("Características recibidas:", caracteristicas);
 
   // Definir las columnas de la tabla
   const columns: TableColumn<Caracteristica>[] = [
@@ -121,7 +123,7 @@ export const CaracteristicasTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioCaracteristicas
           id="caracteristica-form"
           addData={handleAddCaracteristicas}
           onClose={handleClose}
