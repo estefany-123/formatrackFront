@@ -1,8 +1,9 @@
 import useLogin from "@/hooks/Usuarios/useLogin"
-import { Card, CardBody, Input, Button } from "@heroui/react"
+import { Card, CardBody, Input } from "@heroui/react"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schemas/User";
+import Buton from "@/components/molecules/Button";
 
 type Props = {}
 
@@ -25,7 +26,7 @@ function Login({ }: Props) {
         <Card className="shadow-lg shadow-blue-500/50 w-1/2 mx-auto">
           <CardBody className="">
             <form onSubmit={handleSubmit(login)} className="space-y-4">
-              <h1 className="text-2xl text-center text-blue-500 ">INICIO DE SESION</h1>
+              <h1 className="text-2xl text-center text-blue-700 ">INICIO DE SESION</h1>
 
               <Input label="Numero de documento" placeholder="Documento" type="text" autoComplete='off'  {...register("documento")} isInvalid={!!errors.documento}
                 errorMessage={errors.documento?.message} />
@@ -34,9 +35,9 @@ function Login({ }: Props) {
                 errorMessage={errors.password?.message} />
               
 
-              <p className="text-center"><a href="/forgotPass">He olvidado mi contraseña</a></p>
+              <p className="text-center"><a className=" text-blue-600 hover:text-blue-700 cursor-pointer" href="/forgotPass">He olvidado mi contraseña</a></p>
               <div className="flex">
-                <Button color="primary" type="submit" className="text-white px-8 mx-auto">Ingresar</Button>
+                <Buton type="submit" className="text-white px-8 mx-auto">Ingresar</Buton>
               </div>
               {isError && <p>{error}</p>}
             </form>

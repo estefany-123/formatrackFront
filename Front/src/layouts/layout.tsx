@@ -3,9 +3,11 @@ import Sidebar from "@/components/templates/sidebar";
 import { Nav } from "@/components/templates/Navbar";
 import { DarkMode } from "@/components/molecules/DarkMode";
 import { useState } from "react";
+import NotificacionesPanel from "@/components/templates/NotificacionesPanel";
 
 export default function Layout() {
-  const [, setIsNotifOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+
   return (
     <div className="flex h-screen overflow-hidden dark:bg-zinc-900 text-black dark:text-white">
       <Sidebar />
@@ -14,6 +16,12 @@ export default function Layout() {
           <DarkMode />
         </Nav>
         <Outlet />
+
+        {/* Panel de notificaciones */}
+        <NotificacionesPanel
+          open={isNotifOpen}
+          onClose={() => setIsNotifOpen(false)}
+        />
       </main>
     </div>
   );

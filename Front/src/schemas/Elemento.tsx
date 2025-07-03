@@ -14,20 +14,24 @@ export const ElementoUpdateSchema = z.object({
     .min(2, { message: "Longitud minima 2" }),
 
 imagenElemento: z
-    .any()
-    .optional()
-    .refine(
-      (file) =>
-        file === undefined || file instanceof File || typeof file === "string",
-      {
-        message: "La imagen debe ser un archivo o una URL válida",
-      }
-    ).optional(),
+  .any()
+  .refine(
+    (file) =>
+      file === undefined ||
+      file instanceof File ||
+      (typeof file === "string" &&
+        (file.startsWith("http") || file.startsWith("/"))),
+    {
+      message: "Debe ser un archivo o una URL o ruta válida",
+    }
+  )
+  .optional(),
 });
 
 export type ElementoUpdate = z.infer<typeof ElementoUpdateSchema>;
 
 export const ElementoCreateSchema = z.object({  
+  idElemento: z.number(),
   nombre: z
     .string()
     .min(1, { message: "Nombre es  requerido" })
@@ -48,7 +52,6 @@ export const ElementoCreateSchema = z.object({
 
 imagenElemento: z
     .any()
-    .optional()
     .refine(
       (file) =>
         file === undefined || file instanceof File || typeof file === "string",

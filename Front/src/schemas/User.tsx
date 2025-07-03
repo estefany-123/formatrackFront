@@ -6,24 +6,23 @@ export const UserUpdateSchema = z.object({
     nombre: z
         .string()
         .min(5, { message: "Nombre es requerido" })
-        .min(5, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Longitud minima de 5" }),
 
     apellido: z
         .string()
         .min(5, { message: "Apellido es requerido" })
-        .min(5, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Longitud minima de 5" }),
     edad: z
         .number({ message: "Edad es requerida y debe ser un numero" }),
-
     telefono: z
         .string({ required_error: "Telefono es requerido" })
-        .min(10, { message: "Longitud minima de 1" }),
+        .min(10, { message: "Longitud minima de 10" }),
 
     correo: z
         .string()
         .email({ message: "Correo es requerido" }),
     cargo: z
-        .string().min(3,{ message: "Cargo es requerido" }).optional(),
+        .string().min(3,{ message:"Cargo es requerido"}).optional(),
 })
 
 export type UserUpdate = z.infer<typeof UserUpdateSchema>
@@ -32,7 +31,7 @@ export const UserSchema = z.object({
         
     documento: z
         .number({ message: "Documento es requerido y debe ser un numero" })
-        .min(10, { message: "Longitud minima de 10" }),
+        .min(8, { message: "Longitud minima de 8"}),
 
     nombre: z
         .string()
@@ -40,30 +39,29 @@ export const UserSchema = z.object({
         .min(5, { message: "Longitud minima de 5" }),
 
     apellido: z
-        .string({ required_error: "Apellido es requerido" })
+        .string()
+        .min(1, { message: "Apellido es requerido" })
         .min(5, { message: "Longitud minima de 5" }),
     edad: z
         .number({ message: "Edad es requerido" })
-        .min(1, { message: "Longitud minima de 1" }),
+        .min(2, { message: "Longitud minima de 2" }),
 
     telefono: z
-        .string({ required_error: "Telefono es requerido" })
+        .string({ message: "Telefono es requerido" })
         .min(10, { message: "Longitud minima de 10" }),
-
     correo: z
         .string()
         .email({ message: "Correo es requerido" }),
-
     estado: z
         .boolean({ required_error: "Estado es requerido" }),
     cargo: z
-        .string()
-        .min(6, { message: "Cargo es requerido" }),
+        .string({message: "Cargo es requerido"})
+        .min(3, { message: "Cargo es requerido" }),
     password: z
         .string({message:"Contraseña es obligatoria"})
-        .min(8, { message: "Contraseña es requerida" }),
+        .min(8, { message: "Contraseña es requerida, minimo 8 caracteres" }),
     fkRol: z
-        .number({ message: "Rol es requerido y debe ser un numero" })
+        .number({ message: "Rol es requerido" })
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -72,7 +70,7 @@ export type User = z.infer<typeof UserSchema>
 export const LoginSchema = z.object({
     documento: z
         .string({ required_error: "Documento es requerido"})
-        .min(10, { message: "Debe tener exactamente 10 dígitos" })
+        .min(8, { message: "Debe tener minimo 8 dígitos" })
         .regex(/^\d+$/, { message: "Debe contener solo números" }),
     password: z
         .string()
@@ -90,7 +88,7 @@ export const tokenSchema = z.object({
         .optional(),
     documento: z
         .string({ required_error: "Documento es requerido"})
-        .min(10, { message: "Debe tener exactamente 10 dígitos" })
+        .min(8, { message: "Debe tener como minimo 8 dígitos" })
         .regex(/^\d+$/, { message: "Debe contener solo números" }),
     password: z 
         .string({ required_error: "Contraseña es requerido" }),

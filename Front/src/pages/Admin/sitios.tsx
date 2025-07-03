@@ -2,13 +2,13 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/Sitios/FormRegister";
 import { useState } from "react";
 import { FormUpdate } from "@/components/organismos/Sitios/Formupdate";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { ListarSitios, Sitios } from "@/types/sitios";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import FormularioSitio from "@/components/organismos/Sitios/FormRegister";
 
 const SitiosTable = () => {
   const { sitios, isLoading, isError, error, addSitio, changeState } =
@@ -125,7 +125,7 @@ const SitiosTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioSitio
           id="sitio-form"
           addData={handleAddSitio}
           onClose={handleClose}

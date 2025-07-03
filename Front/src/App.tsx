@@ -15,9 +15,6 @@ import CentrosTable from "./pages/Admin/centros";
 import MunicipiosTable from "./pages/Admin/municipio";
 import SitiosTable from "./pages/Admin/sitios";
 import TipoSitioTable from "./pages/Admin/tipoSitio";
-import PermisoTable from "./pages/Admin/permisos";
-import RutasTable from "./pages/Admin/rutas";
-import ModulosTable from "./pages/Admin/modulo";
 import { ElementosTable } from "./pages/Bodega/Elementos";
 import { MovimientoTable } from "./pages/Bodega/Movimientos";
 import { TipoMovimientoTable } from "./pages/Bodega/TiposMovimiento";
@@ -28,6 +25,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
+import ReportesPage from "./pages/Reportes/Reportes";
+// import ReportesPage from "./pages/Reportes/Reportes";
 
 function App() {
   return (
@@ -46,9 +45,6 @@ function App() {
           <Route path="admin/municipios" element={<MunicipiosTable />} />
           <Route path="admin/sitios" element={<SitiosTable />} />
           <Route path="admin/tiposSitio" element={<TipoSitioTable />} />
-          <Route path="admin/permisos" element={<PermisoTable />} />
-          <Route path="admin/rutas" element={<RutasTable />} />
-          <Route path="admin/modulos" element={<ModulosTable />} />
           <Route path="bodega/elementos" element={<ElementosTable />} />
           <Route path="bodega/movimientos" element={<MovimientoTable />} />
           <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
@@ -66,14 +62,13 @@ function App() {
             element={<InventarioSitio />}
           />
         </Route>
+        <Route path="reportes" element={<ReportesPage/>}></Route>
       </Route>
       
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/perfil" element={<Perfil />} />
-
-
     </Routes>
   );
 }

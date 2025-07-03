@@ -1,14 +1,14 @@
 export type Categoria = {
   idCategoria?: number;
-  nombre?: string;
+  nombre: string;
   estado?: boolean;
-  codigoUNPSC?: string;
+  codigoUNPSC: string;
   createdAt?: string;
   updatedAt?: string;
 };
 
 export type UpCategoria = {
   idCategoria?: number;
-  nombre?: string;
-  codigoUNPSC?: string
+  nombre: string;
+  codigoUNPSC: string
 };

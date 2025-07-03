@@ -36,7 +36,7 @@ const MunicipiosTable = () => {
   };
 
   const handleState = async (municipios: Municipio) => {
-    await changeState(municipios.idMunicipio);
+    await changeState(municipios.idMunicipio as number);
     console.log(municipios.idMunicipio);
   };
 
@@ -150,7 +150,7 @@ const MunicipiosTable = () => {
         {selectedMunicipio && (
           <FormUpMunicipio
             municipios={municipiosWithKey ?? []}
-            municipioId={selectedMunicipio.idMunicipio}
+            municipioId={selectedMunicipio.idMunicipio as number}
             id="FormUpMuni"
             onclose={handleCloseUpdate}
           />

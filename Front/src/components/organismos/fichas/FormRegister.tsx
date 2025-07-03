@@ -5,6 +5,11 @@ import { Input } from "@heroui/input";
 import { addToast, Select, SelectItem } from "@heroui/react";
 import { usePrograma } from "@/hooks/programas/usePrograma";
 import { FichaCreate, fichaCreateSchema } from "@/schemas/fichas";
+import { useState } from "react";
+import Buton from "@/components/molecules/Button";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import Modal from "../modal";
+import FormularioPrograma from "../Programas/FormRegister";
 
 type FormularioProps = {
   addData: (ficha: FichaCreate) => Promise<void>;
@@ -12,7 +17,11 @@ type FormularioProps = {
   id: string;
 };
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function FormularioFichas({
+  addData,
+  onClose,
+  id,
+}: FormularioProps) {
   const {
     control,
     register,
@@ -21,9 +30,16 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<FichaCreate>({
     resolver: zodResolver(fichaCreateSchema),
     mode: "onChange",
+    defaultValues: {
+      estado: true,
+    },
   });
 
-  const { programas } = usePrograma();
+  const { programas, addPrograma } = usePrograma();
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClose = () => setShowModal(false);
 
   const onSubmit = async (data: FichaCreate) => {
     try {
@@ -42,6 +58,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   };
   console.log("Errores", errors);
   return (
+    <>
     <Form
       id={id}
       onSubmit={handleSubmit(onSubmit)}
@@ -68,6 +85,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             onChange={(e) => field.onChange(e.target.value === "true")}
             isInvalid={!!errors.estado}
             errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
@@ -79,7 +98,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         control={control}
         name="fkPrograma"
         render={({ field }) => (
-          <div className="w-full">
+          <div className="w-full flex">
             <Select
               label="Programa"
               placeholder="Selecciona un programa"
@@ -90,18 +109,42 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
               errorMessage={errors.fkPrograma?.message}
             >
               {programas?.length ? (
-                programas.map((programa) => (
-                  <SelectItem key={programa.idPrograma}>
-                    {programa.nombre}
-                  </SelectItem>
-                ))
+                programas
+                  .filter((p) => p.estado === true)
+                  .map((programa) => (
+                    <SelectItem key={programa.idPrograma}>
+                      {programa.nombre}
+                    </SelectItem>
+                  ))
               ) : (
                 <SelectItem isDisabled>No hay programas disponibles</SelectItem>
               )}
             </Select>
+            <Buton
+              type="button"
+              className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl "
+              onPress={() => setShowModal(true)}
+            >
+              <PlusCircleIcon />
+            </Buton>
           </div>
         )}
       />
     </Form>
+    <Modal
+            ModalTitle="Agregar Programa"
+            isOpen={showModal}
+            onOpenChange={handleClose}
+          >
+            <FormularioPrograma
+              id="programa"
+              onClose={() => setShowModal(false)}
+              addData={async (data) => {
+                await addPrograma(data);
+              }}
+            />
+            <Buton form="programa" text="Guardar" type="submit" />
+          </Modal>
+    </>
   );
 }

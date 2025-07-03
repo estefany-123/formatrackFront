@@ -2,13 +2,13 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/Programas/FormRegister";
 import { useState } from "react";
 import { usePrograma } from "@/hooks/programas/usePrograma";
 import { Pformacion } from "@/types/programaFormacion";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
+import FormularioPrograma from "@/components/organismos/Programas/FormRegister";
 
 const ProgramasTable = () => {
   const { programas, isLoading, isError, error, addPrograma, changeState } =
@@ -131,7 +131,7 @@ const ProgramasTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioPrograma
           id="programa-form"
           addData={handleAddPrograma}
           onClose={handleClose}

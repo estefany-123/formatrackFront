@@ -1,5 +1,5 @@
 import { Form } from "@heroui/form";
-import { addToast, Select, SelectItem, Checkbox, Button } from "@heroui/react";
+import { addToast, Select, SelectItem, Checkbox } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -7,13 +7,13 @@ import {
   RolPermisoSchema,
   RolPermisoPost,
 } from "@/schemas/RolPermiso";
+import Buton from "@/components/molecules/Button";
 
 type Props = {
   addData: (data: RolPermisoPost) => Promise<any>;
   onClose: () => void;
   id?: number;
   permisos: { idPermiso: number; permiso: string }[];
-  roles: { idRol: number; nombre: string }[];
   fkRolDefault?: number;
 };
 
@@ -22,8 +22,7 @@ export default function FormularioRolPermiso({
   onClose,
   id,
   permisos,
-  roles,
-  fkRolDefault
+  fkRolDefault,
 }: Props) {
   const {
     control,
@@ -79,7 +78,6 @@ export default function FormularioRolPermiso({
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4"
     >
-      {/* ✅ Sección de permisos */}
       <div>
         <label className="font-semibold">Permisos disponibles</label>
         <div className="grid grid-cols-2 gap-2 border p-2 rounded max-h-[200px] overflow-y-auto">
@@ -98,7 +96,6 @@ export default function FormularioRolPermiso({
         )}
       </div>
 
-      {/* ✅ Select de estado */}
       <Controller
         control={control}
         name="estado"
@@ -111,38 +108,19 @@ export default function FormularioRolPermiso({
             onChange={(e) => field.onChange(e.target.value === "true")}
             isInvalid={!!errors.estado}
             errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-
-<Controller
-  control={control}
-  name="fkRol"
-  render={({ field }) => (
-    <Select
-      label="Rol"
-      placeholder="Selecciona un rol"
-      {...field}
-      value={field.value !== undefined ? String(field.value) : ""}
-      onChange={(e) => field.onChange(Number(e.target.value))}
-      isInvalid={!!errors.fkRol}
-      errorMessage={errors.fkRol?.message} // Opcional: si quieres que no se pueda cambiar
-    >
-      {roles?.map((rol) => (
-        <SelectItem key={rol.idRol} textValue={rol.idRol.toString()}>
-          {rol.nombre}
-        </SelectItem>
-      ))}
-    </Select>
-  )}
-/>
-
-      <Button type="submit" className="w-full bg-indigo-600 text-white">
-        Guardar
-      </Button>
+      <Buton
+        text="Guardar"
+        type="submit"
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 }

@@ -10,7 +10,11 @@ type FormularioProps = {
   id: string;
 };
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function FormularioTiposMovimiento({
+  addData,
+  onClose,
+  id,
+}: FormularioProps) {
   const {
     control,
     register,
@@ -19,6 +23,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<TipoCreate>({
     resolver: zodResolver(TipoCreateSchema),
     mode: "onChange",
+    defaultValues: {
+      estado: true,
+    },
   });
 
   const onSubmit = async (data: TipoCreate) => {
@@ -36,7 +43,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       console.error("Error al guardar:", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -63,6 +70,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             onChange={(e) => field.onChange(e.target.value === "true")}
             isInvalid={!!errors.estado}
             errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>

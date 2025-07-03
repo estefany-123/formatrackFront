@@ -10,7 +10,7 @@ type FormularioProps = {
   id: string;
 };
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function FormularioUnidades({ addData, onClose, id }: FormularioProps) {
   const {
     control,
     register,
@@ -19,6 +19,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<UnidadCreate>({
     resolver: zodResolver(UnidadCreateSchema),
     mode: "onChange",
+    defaultValues:{
+      estado:true
+    }
   });
 
   const onSubmit = async (data: UnidadCreate) => {
@@ -63,13 +66,14 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             onChange={(e) => field.onChange(e.target.value === "true")}
             isInvalid={!!errors.estado}
             errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>
           </Select>
         )}
       />
-
     </Form>
   );
 }

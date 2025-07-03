@@ -2,9 +2,9 @@ import { axiosAPI } from "../axiosAPI"
 import { Caracteristica } from "@/types/Caracteristica"
 
 export async function updateCategoria(
-  id_caracteristica: number,
+  idCaracteristica: number,
   data: Caracteristica
 ): Promise<any> {
-  const response = await axiosAPI.patch(`caracteristicas/update/${id_caracteristica}`, data);
+  const response = await axiosAPI.patch(`caracteristicas/update/${idCaracteristica}`, data);
   return response.data;
 }

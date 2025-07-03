@@ -4,7 +4,6 @@ import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useRol } from "@/hooks/Roles/useRol";
-import Formulario from "@/components/organismos/Roles/FormRegister";
 import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
 import { Card, CardBody } from "@heroui/react";
@@ -12,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import FormularioRolPermiso from "@/components/organismos/RolPermiso/FormRegister";
 import { usePermisos } from "@/hooks/permisos/usePermisos";
 import { useRolPermiso } from "@/hooks/RolPermiso/useRolPermiso";
+import FormularioRoles from "@/components/organismos/Roles/FormRegister";
 
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } = useRol();
@@ -111,7 +111,6 @@ export const RolTable = () => {
         <Buton
           text="Asignar"
           onPress={() => handleAsignarPermisos(rol.idRol)}
-          className="bg-indigo-600 text-white"
         />
       ),
     },
@@ -155,7 +154,7 @@ export const RolTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioRoles
           id="rol-form"
           addData={handleAddRol}
           onClose={handleClose}
@@ -197,7 +196,6 @@ export const RolTable = () => {
               (p): p is { idPermiso: number; permiso: string } =>
                 typeof p.idPermiso === "number" && typeof p.permiso === "string"
             )}
-            roles={rolesWithKey ?? []}
             fkRolDefault={rolParaPermisos}
           />
         )}

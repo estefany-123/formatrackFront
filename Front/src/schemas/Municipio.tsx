@@ -16,7 +16,7 @@ export type Municipio = z.infer<typeof MunicipioSchema>
 
 export const MunicipioUPSchema = z.object({
     idMunicipio : z
-        .number().optional(),
+        .number(),
     nombre : z
         .string().min(1,{message:"Nombre es requerido"}).min(1,{message:"Minimo 5 caracteres"})
 })
