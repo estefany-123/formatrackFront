@@ -26,6 +26,14 @@ export type Perfil={
     }
 
 }
+export type UpPerfil={
+    nombre:string,
+    apellido:string,
+    edad:number,
+    telefono:string,
+    correo:string,
+    password:string
+}
 
 export type postUser = {
     documento?: number;
