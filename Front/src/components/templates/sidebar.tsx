@@ -4,59 +4,10 @@ import { useAuth } from "@/providers/AuthProvider";
 import iconsConfig from "@/config/iconsConfig";
 import {
   ArrowRightStartOnRectangleIcon,
-  // HomeIcon,
-  // UserIcon,
-  // CubeIcon,
-  // DocumentChartBarIcon,
-  // ArrowsRightLeftIcon,
-  // BuildingOfficeIcon,
-  // ClipboardDocumentListIcon,
-  // ArchiveBoxIcon,
-  // GlobeAmericasIcon,
-  // TagIcon,
-  // ClipboardDocumentCheckIcon,
   Bars3Icon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
 import useLogin from "@/hooks/Usuarios/useLogin";
-
-// const menuItems = [
-//   { nombre: "Inicio", icono: HomeIcon, href: "/" },
-
-//   {
-//     nombre: "Admin",
-//     icono: UserIcon,
-//     href: "#",
-//     rutas: [
-//       { nombre: "Usuarios", icono: UserIcon, href: "/admin/usuarios" },
-//       { nombre: "Fichas", icono: TagIcon, href: "/admin/fichas" },
-//       { nombre: "Areas", icono: GlobeAmericasIcon, href: "/admin/areas" },
-//       { nombre: "Sitios", icono: BuildingOfficeIcon, href: "/admin/sitios" },
-//       { nombre: "Permisos", icono: ClipboardDocumentCheckIcon  , href: "/admin/permisos" },
-//     ],
-//   },
-
-//   {
-//     nombre: "Bodega",
-//     icono: ArchiveBoxIcon,
-//     href: "#",
-//     rutas: [
-//       { nombre: "Elementos", icono: CubeIcon, href: "/bodega/elementos" },
-//       {
-//         nombre: "Movimientos",
-//         icono: ArrowsRightLeftIcon,
-//         href: "/bodega/movimientos",
-//       },
-//       {
-//         nombre: "Inventario",
-//         icono: ClipboardDocumentListIcon,
-//         href: "bodega/inventario/areas",
-//       },
-//     ],
-//   },
-
-//   { nombre: "Reportes", icono: DocumentChartBarIcon, href: "/reportes" },
-// ];
 
 export default function Sidebar() {
 
@@ -130,6 +81,7 @@ export default function Sidebar() {
             {item.rutas && openItems.includes(item.nombre) && (
               <div className="pl-6">
                 {item.rutas.map((subItem: any) => {
+                  if(!subItem.listed) return;
                   const SubIcono = iconsConfig[subItem.icono] ?? BookOpenIcon;
                   return(
                   <Link

@@ -13,13 +13,13 @@ import {
 import { FormatrackLogo } from "../atoms/Icons";
 import { ArrowRightStartOnRectangleIcon, BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
-import Modall from "../organismos/modal";
+import { useNavigate } from "react-router-dom";
+
 // import { useNotificaciones } from "@/hooks/Notificaciones/useNotificacion";
-import Cookies from "universal-cookie";
+
 import { useAuth } from "@/providers/AuthProvider";
-import useLogin from "@/hooks/Usuarios/useLogin";
-import { useUsuario } from "@/hooks/Usuarios/useUsuario";
+
+import { usePerfil } from "@/hooks/Usuarios/usePerfil";
 
 type NavProps = {
   en_proceso: string;
@@ -34,9 +34,10 @@ export function Nav({ children }: NavProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notificationes, setNotificationes] = useState<NavProps[]>([]);
   const navigate = useNavigate();
-  const cookies = new Cookies();
-  const { nombre, perfil } = useAuth();
-  const { users } = useUsuario();
+
+  const {setPerfil,perfil,nombre} = useAuth()
+
+  
 
   // const {
   //   notificaciones,
@@ -56,7 +57,9 @@ export function Nav({ children }: NavProps) {
     throw new Error("Function not implemented.");
   }
 
-  const handleGoToPerfil = () => {
+  async function handleGoToPerfil(e:void){
+    const response = await usePerfil();
+    console.log(response)
     navigate("/perfil");
   };
 
@@ -115,7 +118,7 @@ export function Nav({ children }: NavProps) {
             name={nombre}
             avatarProps={{
               src: `http://localhost:3000/img/perfiles/${perfil ?? 'defaultPerfil.png'}`,
-              onClick: () => navigate('/perfil'), 
+              onClick: () => navigate('/perfil'),
               isBordered: true
             }}
           />
