@@ -1,25 +1,30 @@
+import { CodigoInventario } from "@/types/Inventario";
 import { axiosAPI } from "../axiosAPI";
 
 export interface MovimientoPostData {
-  id_movimiento?: number;
+  idMovimiento?: number;
   descripcion: string;
-  cantidad: number;
-  hora_ingreso: string;
-  hora_salida: string;
-  aceptado: boolean;
-  en_proceso: boolean;
-  cancelado: boolean;
-  devolutivo: boolean;
-  no_devolutivo: boolean;
-  created_at?: string;
-  updated_at?: string;
-  fk_usuario: number;
-  fk_tipo_movimiento: number;
-  fk_sitio: number;
-  fk_inventario: number;
+  cantidad?: number;
+  horaIngreso?: string;
+  horaSalida?: string;
+  aceptado?: boolean;
+  enProceso?: boolean;
+  cancelado?: boolean;
+  devolutivo?: boolean;
+  noDevolutivo?: boolean;
+  createdAt?: string;
+  lugarDestino?: string;
+  updatedAt?: string;
+  fkUsuario?: number;
+  fkTipoMovimiento?: number;
+  fkSitio?: number;
+  fechaDevolucion?: Date;
+  fkInventario?: number;
+  codigos?: CodigoInventario[];
 }
 
-export async function postMovimiento(data:MovimientoPostData):Promise<any> {
-    const res = await axiosAPI.post(`movimientos`,data);
-    return res.data
+export async function postMovimiento(data: MovimientoPostData): Promise<any> {
+  const { idMovimiento, ...resto } = data;
+  const res = await axiosAPI.post(`movimientos`, resto);
+  return res.data;
 }

@@ -2,7 +2,6 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/Programas/FormRegister";
 import { useState } from "react";
 import { usePrograma } from "@/hooks/programas/usePrograma";
 import { Pformacion } from "@/types/programaFormacion";
@@ -137,7 +136,7 @@ const ProgramasTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioPrograma
           id="programa-form"
           addData={handleAddPrograma}
           onClose={handleClose}

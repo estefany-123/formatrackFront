@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { InventariosTable } from "@/pages/Bodega/Inventario/Tablas/Inventarios";
 import { useSitios } from "@/hooks/sitios/useSitios";
-import { Button } from "@heroui/button";
+import Buton from "@/components/molecules/Button";
 
 export const InventarioSitio = () => {
   const { sitioId } = useParams();
@@ -19,9 +19,7 @@ export const InventarioSitio = () => {
     <div>
       <Link to={`/bodega/inventario/areas/${sitio.fkArea?.idArea}`}>
         <h2 className="text-lg m-4 font-semibold">
-          <Button className=" bg-blue-600 text-white hover:bg-blue-800 hover:text-white dark:hover:text-white">
-            Regresar
-          </Button>
+          <Buton text="Regresar " className=" hover hover:text-white dark:hover:text-white"/>
         </h2>
       </Link>
       <h1 className="text-2xl font-bold text-center mb-4">

@@ -2,7 +2,6 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/fichas/FormRegister";
 import { useState } from "react";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
@@ -10,6 +9,8 @@ import { Card, CardBody, divider } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioFichas from "@/components/organismos/fichas/FormRegister";
+
 
 const FichasTable = () => {
 
@@ -135,7 +136,7 @@ const FichasTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioFichas
           id="ficha-form"
           addData={handleAddFicha}
           onClose={handleClose}

@@ -1,7 +1,7 @@
 export type Categoria = {
   idCategoria?: number;
   nombre: string;
-  estado: boolean;
+  estado?: boolean;
   codigoUNPSC: string;
   createdAt?: string;
   updatedAt?: string;

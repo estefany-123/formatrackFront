@@ -4,6 +4,7 @@ import { getTipoSitio } from "@/axios/TipoSitio/getTipoSitio";
 import { postTipoSitio } from "@/axios/TipoSitio/postTipoSitio";
 import { updateTipoSitio } from "@/axios/TipoSitio/putTipoSitio";
 import { StateTipoSitio } from "@/axios/TipoSitio/putStateTipoSitio";
+import { addToast } from "@heroui/react";
 
 export function useTipoSitio() {
   const queryClient = useQueryClient();
@@ -35,9 +36,10 @@ export function useTipoSitio() {
   };
 
   const updateTipoMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpTipoSitio }) =>{
-      const {idTipo, ...resto} = data
-      return updateTipoSitio(id, resto)},
+    mutationFn: ({ id, data }: { id: number; data: UpTipoSitio }) => {
+      const { idTipo, ...resto } = data;
+      return updateTipoSitio(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["tipoSitio"],
@@ -52,6 +54,12 @@ export function useTipoSitio() {
   const changeStateMutation = useMutation({
     mutationFn: StateTipoSitio,
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["tipoSitio"],
       });

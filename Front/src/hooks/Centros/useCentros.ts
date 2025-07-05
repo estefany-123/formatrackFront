@@ -4,6 +4,7 @@ import { getCentro } from "@/axios/Centros/getCentros";
 import { postCentros } from "@/axios/Centros/postCentro";
 import { updateCentro } from "@/axios/Centros/putCentro";
 import { StateCentro } from "@/axios/Centros/putStateCentro";
+import { addToast } from "@heroui/react";
 
 export function useCentro() {
   const queryClient = useQueryClient();
@@ -36,8 +37,10 @@ export function useCentro() {
   };
 
   const updateCentroMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: PutCentro }) =>
-      updateCentro(id, data),
+    mutationFn: ({ id, data }: { id: number; data: PutCentro }) => {
+      const { idCentro, ...resto } = data;
+      return updateCentro(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["centros"],
@@ -52,6 +55,12 @@ export function useCentro() {
   const changeStateMutation = useMutation({
     mutationFn: StateCentro,
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["centros"],
       });

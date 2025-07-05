@@ -3,6 +3,7 @@ import { getTipo } from "@/axios/TiposMovimiento/getTipo";
 import { postTipo } from "@/axios/TiposMovimiento/postTipo";
 import { putTipo } from "@/axios/TiposMovimiento/putTipo";
 import { TipoMovimiento } from "@/types/TipoMovimiento";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useTipoMovimiento() {
@@ -36,9 +37,10 @@ export function useTipoMovimiento() {
   };
 
   const updateTipoMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: TipoMovimiento }) =>{
-      const {idTipo, ...resto} = data;
-      return putTipo(id, resto)},
+    mutationFn: ({ id, data }: { id: number; data: TipoMovimiento }) => {
+      const { idTipo, ...resto } = data;
+      return putTipo(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["tipos"],
@@ -52,8 +54,13 @@ export function useTipoMovimiento() {
 
   const changeStateMutation = useMutation({
     mutationFn: deleteTipo,
-
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["tipos"],
       });

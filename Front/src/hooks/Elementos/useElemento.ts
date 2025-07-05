@@ -4,6 +4,7 @@ import { Elemento, postElementos, putElementos } from "@/types/Elemento";
 import { putElemento } from "@/axios/Elementos/putElemento";
 import { deleteElemento } from "@/axios/Elementos/deleteElemento";
 import { getElemento } from "@/axios/Elementos/getElemento";
+import { addToast } from "@heroui/react";
 
 export function useElemento() {
   const queryClient = useQueryClient();
@@ -53,6 +54,12 @@ export function useElemento() {
     mutationFn: deleteElemento,
 
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["elementos"],
       });

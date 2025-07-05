@@ -1,4 +1,4 @@
-import { ArchiveBoxIcon, ArrowsRightLeftIcon, BookOpenIcon, BuildingOfficeIcon, ClipboardDocumentCheckIcon, ClipboardDocumentListIcon, CubeIcon, DocumentChartBarIcon, GlobeAmericasIcon, HomeIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline";
+import { ArchiveBoxIcon, ArrowsRightLeftIcon, BuildingOfficeIcon, ClipboardDocumentCheckIcon, ClipboardDocumentListIcon, CubeIcon, DocumentChartBarIcon, GlobeAmericasIcon, HomeIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline";
 
 const iconsConfig: Record<string, React.ElementType> = {
   UserIcon,
@@ -10,9 +10,8 @@ const iconsConfig: Record<string, React.ElementType> = {
   ArrowsRightLeftIcon,
   ClipboardDocumentListIcon,
   DocumentChartBarIcon,
-  BookOpenIcon,
-  HomeIcon,
-  CubeIcon
+  CubeIcon,
+  HomeIcon
 };
 
 export default iconsConfig;

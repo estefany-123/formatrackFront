@@ -1,25 +1,14 @@
 import { axiosAPI } from "../axiosAPI";
 
 export interface MovimientoPutData {
-  id_movimiento?: number;
+  idMovimiento?: number;
   descripcion: string;
-  cantidad: number;
-  hora_ingreso: string;
-  hora_salida: string;
-  aceptado: boolean;
-  en_proceso: boolean;
-  cancelado: boolean;
-  devolutivo: boolean;
-  no_devolutivo: boolean;
-  created_at?: string;
-  updated_at?: string;
-  fk_usuario: number;
-  fk_tipo_movimiento: number;
-  fk_sitio: number;
-  fk_inventario: number;
+  cantidad?: number;
+  horaIngreso?: string;
+  horaSalida?: string;
 }
 
-export async function putMovimiento(id:number, data:MovimientoPutData):Promise<any> {
-    const res = await axiosAPI.patch(`movimientos/${id}`,data);
+export async function putMovimiento(idMovimiento:number, data:MovimientoPutData):Promise<any> {
+    const res = await axiosAPI.patch(`movimientos/${idMovimiento}`,data);
     return res.data
 }

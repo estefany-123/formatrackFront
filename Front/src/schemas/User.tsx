@@ -5,19 +5,18 @@ export const UserUpdateSchema = z.object({
         .number().optional(),
     nombre: z
         .string()
-        .min(1, { message: "Nombre es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Nombre es requerido" })
+        .min(5, { message: "Longitud minima de 5" }),
 
     apellido: z
         .string()
-        .min(1, { message: "Apellido es requerido" })
-        .min(3, { message: "Longitud minima de 3" }),
+        .min(5, { message: "Apellido es requerido" })
+        .min(5, { message: "Longitud minima de 5" }),
     edad: z
         .number({ message: "Edad es requerida y debe ser un numero" }),
-
     telefono: z
         .string({ required_error: "Telefono es requerido" })
-        .min(1, { message: "Longitud minima de 1" }),
+        .min(10, { message: "Longitud minima de 10" }),
 
     correo: z
         .string()
@@ -66,7 +65,7 @@ export const UserSchema = z.object({
         .number({ message: "Rol es requerido y debe ser un numero" })
 })
 
-export type User = z.infer<typeof UserSchema>
+export type User = z.infer<typeof PerfilSchema>
 
 
 export const PerfilSchema = z.object({

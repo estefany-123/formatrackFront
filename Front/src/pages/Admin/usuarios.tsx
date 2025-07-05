@@ -48,7 +48,7 @@ const UsersTable = () => {
   const handleAddUser = async (user: User) => {
     try {
       await addUser(user);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose(); 
     } catch (error) {
       console.error("Error al agregar el usuario:", error);
     }
@@ -127,6 +127,16 @@ const UsersTable = () => {
         </div>
       </Modall>
 
+            <Modall ModalTitle="Editar Usuario" isOpen={IsOpenUpdate} onOpenChange={handleCloseUpdate}>
+                {selectedUser && (
+                    <FormUpdate Users={usersWithKey ?? []} userId={selectedUser.idUsuario as number} id="FormUpdate" onclose={handleCloseUpdate} />
+                )}
+
+            </Modall>
+
+        <Modall ModalTitle="Subida masiva de usuarios" isOpen={isOpenMasivo} onOpenChange={handleCloseMasivo}>
+          <FormRegisterMasivo/>
+        </Modall>
       <Modall
         ModalTitle="Editar Usuario"
         isOpen={IsOpenUpdate}

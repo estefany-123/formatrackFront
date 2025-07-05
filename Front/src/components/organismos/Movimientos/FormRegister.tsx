@@ -6,14 +6,27 @@ import { useUsuario } from "@/hooks/Usuarios/useUsuario";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { useSitios } from "@/hooks/sitios/useSitios";
-import { useElemento } from "@/hooks/Elementos/useElemento";
-import React, { useState } from "react";
+import { useState } from "react";
 import { MovimientoCreate, MovimientoCreateSchema } from "@/schemas/Movimento";
+import { mapMovimiento } from "@/utils/MapMovimientos";
+import { MovimientoPostData } from "@/axios/Movimentos/postMovimiento";
+import Buton from "@/components/molecules/Button";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import Modal from "../modal";
+import FormularioTiposMovimiento from "../TiposMovimiento/FormRegister";
+import FormularioU from "../Usuarios/FormRegister";
+import FormularioInventario from "../Inventarios/FormRegister";
+import FormularioSitio from "../Sitios/FormRegister";
 
 type FormularioProps = {
-  addData: (movimiento: MovimientoCreate) => Promise<void>;
+  addData: (movimiento: MovimientoPostData) => Promise<void>;
   onClose: () => void;
   id: string;
+};
+
+type CodigoDisponible = {
+  idCodigoInventario: number;
+  codigo: string;
 };
 
 export default function Formulario({ addData, onClose, id }: FormularioProps) {
@@ -25,42 +38,74 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<MovimientoCreate>({
     resolver: zodResolver(MovimientoCreateSchema),
     mode: "onChange",
-    defaultValues:{
+    defaultValues: {
+      cantidad: 0,
       estado: true,
       aceptado: false,
-      en_proceso: true,
+      enProceso: true,
       cancelado: false,
-      devolutivo:false,
-      no_devolutivo:true,
-      fecha_devolucion:null
-    }
+      devolutivo: false,
+      noDevolutivo: true,
+      horaIngreso: undefined,
+      horaSalida: undefined,
+      fechaDevolucion: undefined,
+      codigos: [],
+    },
   });
 
-  const { users, isLoading: loadingUsers, error: errorUsers } = useUsuario();
-  const {
-    tipos,
-    isLoading: loadingTipos,
-    error: errorTipos,
-  } = useTipoMovimiento();
-  const { sitios } = useSitios();
-  const {
-    inventarios,
-    isLoading: loadingInventarios,
-    error: errorInventarios,
-  } = useInventario();
-  const {
-    elementos,
-    isLoading: loadingElementos,
-    error: errorElementos,
-  } = useElemento();
-  const [sitioSeleccionado, setSitioSeleccionado] = React.useState<
+  const { users, addUser } = useUsuario();
+  const { tipos, addTipoMovimiento } = useTipoMovimiento();
+  const { sitios, addSitio } = useSitios();
+  const { inventarios, addInventario } = useInventario();
+  const [sitioSeleccionado, setSitioSeleccionado] = useState<number | null>(
+    null
+  );
+  const [inventarioSeleccionado, setInventarioSeleccionado] = useState<
     number | null
   >(null);
+  const [tipoMovimientoSeleccionado, setTipoMovimientoSeleccionado] = useState<
+    string | null
+  >(null);
   const [isDevolutivo, setIsDevolutivo] = useState(false);
+  const [tieneCaracteristicas, setTieneCaracteristicas] = useState(false);
+  const [codigosDisponibles, setCodigosDisponibles] = useState<
+    CodigoDisponible[]
+  >([]);
+  // console.log("Códigos disponibles que llegan del inventario:", inventarios?.codigos);
+
+  //modales
+  const [showModal, setShowModal] = useState(false);
+  const [showModalTipo, setShowModalTipo] = useState(false);
+  const [showModalSitio, setShowModalSitio] = useState(false);
+  const [showModalInventario, setShowModalInventario] = useState(false);
 
   const onSubmit = async (data: MovimientoCreate) => {
+    const payload = {
+      ...mapMovimiento(data),
+      fechaDevolucion:
+        data.fechaDevolucion && data.fechaDevolucion.trim() !== ""
+          ? new Date(data.fechaDevolucion)
+          : undefined,
+    };
+    console.log("Codigos seleccionados:", data.codigos);
+
+    console.log("Payload enviado al backend:", data);
+    if (
+      tipoMovimientoSeleccionado &&
+      ["salida", "baja", "préstamo"].includes(tipoMovimientoSeleccionado) &&
+      tieneCaracteristicas &&
+      (!payload.codigos || payload.codigos.length === 0)
+    ) {
+      addToast({
+        title: "Error",
+        description: "Debes seleccionar al menos un código",
+        color: "danger",
+        timeout: 3000,
+      });
+      return;
+    }
     try {
-      await addData(data);
+      await addData(payload);
       onClose();
       addToast({
         title: "Registro Exitoso",
@@ -74,257 +119,453 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     }
   };
   console.log("Errores", errors);
+
   return (
-    <Form
-      id={id}
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full space-y-4"
-    >
-      <Input
-        label="Descripción"
-        placeholder="Descripción"
-        type="text"
-        {...register("descripcion")}
-        isInvalid={!!errors.descripcion}
-        errorMessage={errors.descripcion?.message}
-      />
+    <>
+      <Form
+        id={id}
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full space-y-4"
+      >
+        <Input
+          label="Descripción"
+          placeholder="Descripción"
+          type="text"
+          {...register("descripcion")}
+          isInvalid={!!errors.descripcion}
+          errorMessage={errors.descripcion?.message}
+        />
+        <Input
+          label="Destino"
+          type="text"
+          {...register("lugarDestino")}
+          isInvalid={!!errors.lugarDestino}
+          errorMessage={errors.lugarDestino?.message}
+        />
 
-      <Input
-        label="Cantidad"
-        placeholder="Cantidad"
-        type="text"
-        {...register("cantidad", { valueAsNumber: true })}
-        isInvalid={!!errors.cantidad}
-        errorMessage={errors.cantidad?.message}
-      />
+        {/* Hora dinámica según tipo de movimiento */}
+        {tipoMovimientoSeleccionado === "ingreso" ? (
+          <Input
+            label="Hora de Ingreso"
+            type="time"
+            {...register("horaIngreso")}
+            isInvalid={!!errors.horaIngreso}
+            errorMessage={errors.horaIngreso?.message}
+          />
+        ) : tipoMovimientoSeleccionado &&
+          ["salida", "baja", "préstamo"].includes(
+            tipoMovimientoSeleccionado
+          ) ? (
+          <Input
+            label="Hora de Salida"
+            type="time"
+            {...register("horaSalida")}
+            isInvalid={!!errors.horaSalida}
+            errorMessage={errors.horaSalida?.message}
+          />
+        ) : null}
 
-      <Input
-        label="Hora de Ingreso"
-        placeholder="Hora Ingreso"
-        type="time"
-        {...register("hora_ingreso")}
-        isInvalid={!!errors.hora_ingreso}
-        errorMessage={errors.hora_ingreso?.message}
-      />
-
-      <Input
-        label="Hora de Salida"
-        placeholder="Hora Salida"
-        type="time"
-        {...register("hora_salida")}
-        isInvalid={!!errors.hora_salida}
-        errorMessage={errors.hora_salida?.message}
-      />
-
-      <Controller
-        control={control}
-        name="tipo_bien"
-        render={({ field }) => (
-          <Select
-            label="Tipo de Bien"
-            placeholder="Selecciona un tipo"
-            {...field}
-            isInvalid={!!errors.tipo_bien}
-            errorMessage={errors.tipo_bien?.message}
-            onChange={(e) => {
-              const value = e.target.value;
-              field.onChange(value);
-              setIsDevolutivo(value === "devolutivo");
-            }}
-            value={field.value}
-          >
-            <SelectItem key="devolutivo" textValue="Devolutivo">
-              Devolutivo
-            </SelectItem>
-            <SelectItem key="no_devolutivo" textValue="No Devolutivo">
-              No Devolutivo
-            </SelectItem>
-          </Select>
-        )}
-      />
-
-      {isDevolutivo && (
         <Controller
           control={control}
-          name="fecha_devolucion"
+          name="tipo_bien"
           render={({ field }) => (
-            <Input
+            <Select
+              label="Tipo de Bien"
+              placeholder="Selecciona un tipo"
               {...field}
-              type="date"
               onChange={(e) => {
                 const value = e.target.value;
-                field.onChange(value ? value : null);
+                field.onChange(value);
+                setIsDevolutivo(value === "devolutivo");
               }}
-              label="Fecha de Devolución"
-              isInvalid={!!errors.fecha_devolucion}
-              errorMessage={errors.fecha_devolucion?.message}
-              value={field.value ?? ""}
-            />
+              value={field.value}
+              isInvalid={!!errors.tipo_bien}
+              errorMessage={errors.tipo_bien?.message}
+            >
+              <SelectItem key="devolutivo" textValue="Devolutivo">
+                Devolutivo
+              </SelectItem>
+              <SelectItem key="no_devolutivo" textValue="No Devolutivo">
+                No Devolutivo
+              </SelectItem>
+            </Select>
           )}
         />
-      )}
 
-      {!loadingUsers && !errorUsers && users && (
+        {isDevolutivo && (
+          <Controller
+            control={control}
+            name="fechaDevolucion"
+            render={({ field }) => (
+              <Input
+                {...field}
+                type="date"
+                label="Fecha de Devolución"
+                onChange={(e) => field.onChange(e.target.value || null)}
+                isInvalid={!!errors.fechaDevolucion}
+                errorMessage={errors.fechaDevolucion?.message}
+                value={field.value ?? ""}
+              />
+            )}
+          />
+        )}
+
         <Controller
           control={control}
-          name="fk_usuario"
+          name="fkUsuario"
           render={({ field }) => (
-            <div className="w-full">
-              <Select
-                {...field}
-                label="Usuario"
-                placeholder="Selecciona un usuario"
-                aria-label="Seleccionar usuario"
-                className="w-full"
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                isInvalid={!!errors.fk_usuario}
-                errorMessage={errors.fk_usuario?.message}
-              >
-                {users.length ? (
-                  users.map((usuario) => (
+            <>
+              <div className="w-full flex">
+                <Select
+                  label="Usuario"
+                  placeholder="Selecciona un usuario"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  isInvalid={!!errors.fkUsuario}
+                  errorMessage={errors.fkUsuario?.message}
+                >
+                  {(users ?? []).map((usuario) => (
                     <SelectItem
-                      key={usuario.id_usuario}
+                      key={usuario.idUsuario}
                       textValue={usuario.nombre}
                     >
                       {usuario.nombre}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem isDisabled>
-                    No hay usuarios disponibles
-                  </SelectItem>
-                )}
-              </Select>
-              {errors.fk_usuario && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.fk_usuario.message}
-                </p>
-              )}
-            </div>
+                  ))}
+                </Select>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModal(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            </>
           )}
         />
-      )}
 
-      {!loadingTipos && !errorTipos && tipos && (
         <Controller
           control={control}
-          name="fk_tipo_movimiento"
+          name="fkTipoMovimiento"
           render={({ field }) => (
-            <div className="w-full">
-              <Select
-                {...field}
-                label="Tipo de Movimiento"
-                placeholder="Selecciona un tipo de movimiento"
-                aria-label="Seleccionar tipo de movimiento"
-                className="w-full"
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                isInvalid={!!errors.fk_tipo_movimiento}
-                errorMessage={errors.fk_tipo_movimiento?.message}
-              >
-                {tipos.length ? (
-                  tipos.map((tipo) => (
-                    <SelectItem key={tipo.id_tipo} textValue={tipo.nombre}>
+            <>
+              <div className="flex w-full">
+                <Select
+                  label="Tipo de Movimiento"
+                  placeholder="Selecciona un tipo"
+                  {...field}
+                  onChange={(e) => {
+                    const id = Number(e.target.value);
+                    field.onChange(id);
+                    const tipo = tipos?.find((t) => t.idTipo === id);
+                    setTipoMovimientoSeleccionado(
+                      tipo?.nombre.toLowerCase() ?? null
+                    );
+                  }}
+                  isInvalid={!!errors.fkTipoMovimiento}
+                  errorMessage={errors.fkTipoMovimiento?.message}
+                >
+                  {(tipos ?? []).map((tipo) => (
+                    <SelectItem key={tipo.idTipo} textValue={tipo.nombre}>
                       {tipo.nombre}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem isDisabled>
-                    No hay tipos de movimiento disponibles
-                  </SelectItem>
-                )}
-              </Select>
-            </div>
+                  ))}
+                </Select>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModalTipo(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            </>
           )}
         />
-      )}
 
-      <Controller
-        control={control}
-        name="fk_sitio"
-        render={({ field }) => (
-          <div className="w-full">
-            <Select
-              {...field}
-              label="Sitio"
-              placeholder="Selecciona un sitio"
-              aria-label="Seleccionar sitio"
-              className="w-full"
-              onChange={(e) => {
-                const sitioId = Number(e.target.value);
-                field.onChange(sitioId);
-                setSitioSeleccionado(sitioId);
-              }}
-              isInvalid={!!errors.fk_sitio}
-              errorMessage={errors.fk_sitio?.message}
-            >
-              {sitios?.length ? (
-                sitios.map((sitio) => (
-                  <SelectItem key={sitio.id_sitio} textValue={sitio.nombre}>
-                    {sitio.nombre}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem isDisabled>No hay sitios disponibles</SelectItem>
-              )}
-            </Select>
-          </div>
-        )}
-      />
+        <Controller
+          control={control}
+          name="fkSitio"
+          render={({ field }) => (
+            <>
+              <div className="w-full flex">
+                <Select
+                  label="Sitio"
+                  placeholder="Selecciona un sitio"
+                  {...field}
+                  onChange={(e) => {
+                    const sitioId = Number(e.target.value);
+                    field.onChange(sitioId);
+                    setSitioSeleccionado(sitioId);
+                  }}
+                  isInvalid={!!errors.fkSitio}
+                  errorMessage={errors.fkSitio?.message}
+                >
+                  {(sitios ?? []).map((sitio) => (
+                    <SelectItem key={sitio.idSitio} textValue={sitio.nombre}>
+                      {sitio.nombre}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Buton
+                  type="button"
+                  className=" m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModalSitio(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            </>
+          )}
+        />
 
-      {!loadingInventarios &&
-        !errorInventarios &&
-        inventarios &&
-        !loadingElementos &&
-        !errorElementos &&
-        elementos &&
-        sitioSeleccionado && (
+        {sitioSeleccionado && (
           <Controller
             control={control}
-            name="fk_inventario"
+            name="fkInventario"
             render={({ field }) => (
-              <div className="w-full">
-                <Select
-                  {...field}
-                  label="Elemento del Inventario"
-                  placeholder="Selecciona un elemento del inventario"
-                  aria-label="Seleccionar elemento del inventario"
-                  className="w-full"
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  isInvalid={!!errors.fk_inventario}
-                  errorMessage={errors.fk_inventario?.message}
-                >
-                  {inventarios.filter(
-                    (inv) => inv.fk_sitio === sitioSeleccionado
-                  ).length ? (
-                    inventarios
-                      .filter((inv) => inv.fk_sitio === sitioSeleccionado)
+              <>
+                <div className="flex w-full">
+                  <Select
+                    label="Elemento del Inventario"
+                    placeholder="Selecciona un elemento"
+                    {...field}
+                    onChange={(e) => {
+                      const id = Number(e.target.value);
+                      field.onChange(id);
+                      setInventarioSeleccionado(id);
+                      const inventario = (inventarios ?? []).find(
+                        (i) => i.idInventario === id
+                      );
+                      if (
+                        inventario?.codigos &&
+                        Array.isArray(inventario.codigos)
+                      ) {
+                        const disponibles = inventario.codigos.filter(
+                          (c) => !c.uso
+                        );
+                        setCodigosDisponibles(
+                          disponibles.map((c) => ({
+                            idCodigoInventario: c.idCodigoInventario,
+                            codigo: c.codigo,
+                          }))
+                        );
+                        setTieneCaracteristicas(disponibles.length > 0);
+                      } else {
+                        setCodigosDisponibles([]);
+                        setTieneCaracteristicas(false);
+                      }
+                    }}
+                    isInvalid={!!errors.fkInventario}
+                    errorMessage={errors.fkInventario?.message}
+                  >
+                    {(inventarios ?? [])
+
+                      .filter((i) => i.fkSitio.idSitio === sitioSeleccionado)
+                      .filter((i) => i.estado === true)
                       .map((inventario) => {
-                        const elemento = elementos.find(
-                          (e) => e.id_elemento === inventario.fk_elemento
+                        console.log(
+                          "Inventarios del sitio seleccionado:",
+                          inventarios?.filter(
+                            (i) => i.fkSitio.idSitio === sitioSeleccionado
+                          )
                         );
                         return (
                           <SelectItem
-                            key={inventario.id_inventario}
+                            key={inventario.idInventario}
                             textValue={
-                              elemento?.nombre || "Elemento no disponible"
+                              inventario.fkElemento?.nombre ||
+                              "Elemento no disponible"
                             }
                           >
-                            {elemento
-                              ? elemento.nombre
-                              : "Elemento no disponible"}
+                            {inventario.fkElemento?.nombre ||
+                              "Elemento no disponible"}
                           </SelectItem>
                         );
-                      })
-                  ) : (
-                    <SelectItem isDisabled>
-                      No hay elementos disponibles
-                    </SelectItem>
+                      })}
+                  </Select>
+                  <Buton
+                    type="button"
+                    className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                    onPress={() => setShowModalInventario(true)}
+                  >
+                    <PlusCircleIcon />
+                  </Buton>
+                </div>
+              </>
+            )}
+          />
+        )}
+
+        {inventarioSeleccionado &&
+          tipoMovimientoSeleccionado &&
+          ["salida", "baja", "préstamo"].includes(
+            tipoMovimientoSeleccionado
+          ) && (
+            <>
+              {tieneCaracteristicas ? (
+                <Controller
+                  control={control}
+                  name="codigos"
+                  render={({ field }) => (
+                    <div className="space-y-2">
+                      <label className="font-semibold">
+                        Selecciona Códigos
+                      </label>
+                      {codigosDisponibles.map((codigoObj) => (
+                        <div
+                          key={codigoObj.idCodigoInventario}
+                          className="flex items-center gap-2"
+                        >
+                          <input
+                            type="checkbox"
+                            value={codigoObj.codigo}
+                            checked={field.value?.includes(codigoObj.codigo)}
+                            onChange={(e) => {
+                              const updated = e.target.checked
+                                ? [...(field.value ?? []), codigoObj.codigo]
+                                : (field.value ?? []).filter(
+                                    (c) => c !== codigoObj.codigo
+                                  );
+                              field.onChange(updated);
+                            }}
+                          />
+                          <span>{codigoObj.codigo}</span>
+                        </div>
+                      ))}
+                    </div>
                   )}
-                </Select>
+                />
+              ) : (
+                <Input
+                  label="Cantidad"
+                  type="number"
+                  {...register("cantidad", { valueAsNumber: true })}
+                  isInvalid={!!errors.cantidad}
+                  errorMessage={errors.cantidad?.message}
+                />
+              )}
+            </>
+          )}
+
+        {tipoMovimientoSeleccionado === "ingreso" && (
+          <Controller
+            control={control}
+            name="codigos"
+            render={({ field }) => (
+              <div className="space-y-3">
+                <h3 className="text-base font-semibold text-gray-800">
+                  Ingresar Códigos Nuevos
+                </h3>
+
+                <div className="space-y-2">
+                  {(field.value ?? [""]).map((codigo, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200"
+                    >
+                      <Input
+                        className="flex-1"
+                        placeholder={`Código ${index + 1}`}
+                        value={codigo}
+                        onChange={(e) => {
+                          const updated = [...(field.value ?? [])];
+                          updated[index] = e.target.value;
+                          field.onChange(updated);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(field.value ?? [])];
+                          updated.splice(index, 1);
+                          field.onChange(updated);
+                        }}
+                        className="px-3 py-1 text-sm rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => field.onChange([...(field.value ?? []), ""])}
+                    className="px-4 py-2 mt-2 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
+                  >
+                    + Añadir otro código
+                  </button>
+                </div>
               </div>
             )}
           />
         )}
-    </Form>
+      </Form>
+
+      <Modal
+        ModalTitle="Agregar Tipo de Movimiento"
+        isOpen={showModalTipo}
+        onOpenChange={() => setShowModalTipo(false)}
+      >
+        <FormularioTiposMovimiento
+          id="tipoMovimiento"
+          onClose={() => setShowModalTipo(false)}
+          addData={async (data) => {
+            await addTipoMovimiento(data);
+          }}
+        />
+        <Buton form="tipoMovimiento" text="Guardar" type="submit" />
+      </Modal>
+
+      <Modal
+        ModalTitle="Agregar Usuario"
+        isOpen={showModal}
+        onOpenChange={() => setShowModal(false)}
+      >
+        <FormularioU
+          id="usuario"
+          onClose={() => setShowModal(false)}
+          addData={async (data) => {
+            await addUser(data);
+          }}
+        />
+        <Buton form="usuario" text="Guardar" type="submit" />
+      </Modal>
+
+      {/* Modal: Inventario */}
+      <Modal
+        ModalTitle="Agregar Inventario"
+        isOpen={showModalInventario}
+        onOpenChange={() => setShowModalInventario(false)}
+      >
+        <FormularioInventario
+          id="inventario"
+          onClose={() => setShowModalInventario(false)}
+          addData={async (data) => {
+            await addInventario(data);
+          }}
+          idSitio={0}
+        />
+        <Buton form="inventario" text="Guardar" type="submit" />
+      </Modal>
+
+      <Modal
+        ModalTitle="Agregar Sitio"
+        isOpen={showModalSitio}
+        onOpenChange={() => setShowModalSitio(false)}
+      >
+        <FormularioSitio
+          id="sitio"
+          onClose={() => setShowModalSitio(false)}
+          addData={async (data) => {
+            await addSitio(data);
+          }}
+        />
+        <Buton form="sitio" text="Guardar" type="submit" />
+      </Modal>
+    </>
   );
 }

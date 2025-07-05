@@ -1,14 +1,19 @@
+import {
+  AgregateStockData,
+  agregateStock,
+} from "@/axios/Inventarios/agregateStockInventario";
 import { deleteInventario } from "@/axios/Inventarios/deleteInventario";
 import { getInventario } from "@/axios/Inventarios/getInventario";
 import { postInventario } from "@/axios/Inventarios/postInventario";
 import { putInventario } from "@/axios/Inventarios/putInventario";
-import { Inventario } from "@/types/Inventario";
+import { Inventario, InventarioConSitio } from "@/types/Inventario";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function   useInventario() {
+export function useInventario() {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery<Inventario[]>({
+  const { data, isLoading, isError, error } = useQuery<InventarioConSitio[]>({
     queryKey: ["inventarios"],
     queryFn: getInventario,
     staleTime: 1000 * 60 * 5,
@@ -54,6 +59,12 @@ export function   useInventario() {
     mutationFn: deleteInventario,
 
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["inventarios"],
       });
@@ -61,6 +72,16 @@ export function   useInventario() {
 
     onError: (error) => {
       console.error("Error al actualizar estado:", error);
+    },
+  });
+
+  const agregarStockMutation = useMutation({
+    mutationFn: agregateStock,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["inventarios"] });
+    },
+    onError: (error) => {
+      console.error("Error al agregar stock:", error);
     },
   });
 
@@ -76,6 +97,10 @@ export function   useInventario() {
     return changeStateMutation.mutateAsync(idInventario);
   };
 
+  const agregarStockInventario = async (data: AgregateStockData) => {
+    return agregarStockMutation.mutateAsync(data);
+  };
+
   return {
     inventarios: data,
     isLoading,
@@ -85,5 +110,6 @@ export function   useInventario() {
     changeState,
     getInventarioById,
     updateInventario,
+    agregarStockInventario,
   };
 }

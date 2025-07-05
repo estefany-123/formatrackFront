@@ -4,10 +4,10 @@ export type Centro = {
     estado : boolean,
     createdAt?: string
     updatedAt?: string
-    fkMunicipio : number
+    fkMunicipio ?: number
 }
 
 export type PutCentro = {
-    idCentro : number,
+    idCentro ?: number,
     nombre : string
 }

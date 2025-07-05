@@ -3,12 +3,16 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
-import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
-import { Inventario, InventarioConSitio } from "@/types/Inventario";
-import { useElemento } from "@/hooks/Elementos/useElemento";
+import {
+  Inventario,
+  InventarioConElemento,
+  InventarioConSitio,
+} from "@/types/Inventario";
+import { FormAgregateStock } from "@/components/organismos/Inventarios/FormAgregateStock";
 import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
-import usePermissions from "@/hooks/Usuarios/usePermissions";
+import { CodigoInventario } from "../../CodigoInventario";
+import FormularioInventario from "@/components/organismos/Inventarios/FormRegister";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -37,16 +41,34 @@ export const InventariosTable = ({
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [selectedInventario, setSelectedInventario] =
-    useState<Inventario | null>(null);
+  const [selectedInventarioStock, setSelectedInventarioStock] =
+    useState<InventarioConElemento | null>(null);
+  const [isOpenCodigos, setIsOpenCodigos] = useState(false);
+  const [inventarioCodigos, setInventarioCodigos] =
+    useState<InventarioConElemento | null>(null);
+
+  const handleCloseCodigos = () => {
+    setIsOpenCodigos(false);
+    setInventarioCodigos(null);
+  };
+
+  const handleOpenCodigos = (inventario: InventarioConElemento) => {
+    setInventarioCodigos(inventario);
+    setIsOpenCodigos(true);
+  };
 
   const handleCloseUpdate = () => {
     setIsOpenUpdate(false);
-    setSelectedInventario(null);
+    setSelectedInventarioStock(null);
   };
 
   const handleState = async (idInventario: number) => {
     await changeState(idInventario);
+  };
+
+  const handleOpenAddStock = (inventario: InventarioConElemento) => {
+    setSelectedInventarioStock(inventario);
+    setIsOpenUpdate(true);
   };
 
   const handleAddInventario = async (inventario: Inventario) => {
@@ -56,11 +78,6 @@ export const InventariosTable = ({
     } catch (error) {
       console.error("Error al agregar al inventario:", error);
     }
-  };
-
-  const handleEdit = (inventario: Inventario) => {
-    setSelectedInventario(inventario);
-    setIsOpenUpdate(true);
   };
 
   const columns: TableColumn<Inventario>[] = [
@@ -160,11 +177,22 @@ export const InventariosTable = ({
       key: "acciones",
       label: "",
       render: (inventario: Inventario) => (
-        <Buton
-          text="Agregar stock"
-          onPress={() => handleOpenAddStock(inventario)}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-        />
+        <div>
+          <Buton
+            text="Agregar stock"
+            className="mr-2"
+            onPress={() =>
+              handleOpenAddStock(inventario as InventarioConElemento)
+            }
+          />
+          <Buton
+            text="Ver códigos"
+            className="bg-green-600 hover:bg-gray-700 text-white"
+            onPress={() =>
+              handleOpenCodigos(inventario as InventarioConElemento)
+            }
+          />
+        </div>
       ),
     },
   ];
@@ -209,7 +237,7 @@ export const InventariosTable = ({
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioInventario
           id="inventario-form"
           addData={handleAddInventario}
           onClose={handleClose}
@@ -220,7 +248,7 @@ export const InventariosTable = ({
             text="Guardar"
             type="submit"
             form="inventario-form"
-            className="w-full p-2 rounded-xl"
+            className="w-full  rounded-xl"
           />
         </div>
       </Modall>
@@ -230,12 +258,33 @@ export const InventariosTable = ({
         isOpen={IsOpenUpdate}
         onOpenChange={handleCloseUpdate}
       >
-        {selectedInventario && (
-          <FormUpdate
-            inventarios={InventariosWithKey ?? []}
-            inventarioId={selectedInventario.idInventario as number}
-            id="FormUpdate"
-            onclose={handleCloseUpdate}
+        {selectedInventarioStock ? (
+          selectedInventarioStock.fkElemento?.fkCaracteristica ? (
+            <FormAgregateStock
+              fkInventario={selectedInventarioStock.idInventario!}
+              fkElemento={selectedInventarioStock.fkElemento.idElemento!}
+              fkSitio={selectedInventarioStock.fkSitio.idSitio!}
+              onClose={handleCloseUpdate}
+            />
+          ) : (
+            <FormUpdate
+              inventarios={InventariosWithKey ?? []}
+              inventarioId={selectedInventarioStock.idInventario!}
+              id="FormUpdate"
+              onclose={handleCloseUpdate}
+            />
+          )
+        ) : null}
+      </Modall>
+      <Modall
+        ModalTitle="Códigos del Inventario"
+        isOpen={isOpenCodigos}
+        onOpenChange={handleCloseCodigos}
+      >
+        {inventarioCodigos && (
+          <CodigoInventario
+            idInventario={inventarioCodigos.idInventario!}
+            onClose={handleCloseCodigos}
           />
         )}
       </Modall>
@@ -244,8 +293,7 @@ export const InventariosTable = ({
         <Globaltable
           data={InventariosWithKey}
           columns={columns ?? []}
-          onEdit={userHasPermission(30) ? handleEdit : undefined}
-          onDelete={userHasPermission(31) ? (inventario) => handleState(inventario.idInventario) : undefined}
+          onDelete={(inventario) => handleState(inventario.idInventario)}
           extraHeaderContent={
             <div>
               {userHasPermission(27) &&

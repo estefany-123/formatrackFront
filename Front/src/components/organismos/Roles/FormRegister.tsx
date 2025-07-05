@@ -10,7 +10,11 @@ type FormularioProps = {
   id: string;
 };
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function FormularioRoles({
+  addData,
+  onClose,
+  id,
+}: FormularioProps) {
   const {
     control,
     register,
@@ -19,6 +23,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   } = useForm<RolCreate>({
     resolver: zodResolver(RolCreateSchema),
     mode: "onChange",
+    defaultValues: {
+      estado: true,
+    },
   });
 
   const onSubmit = async (data: RolCreate) => {
@@ -29,7 +36,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       addToast({
         title: "Registro Exitoso",
         description: "Rol agregado correctamente",
-        color:"success",
+        color: "success",
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
@@ -37,7 +44,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       console.error("Error al guardar:", error);
     }
   };
-  console.log("Errores", errors)
+  console.log("Errores", errors);
   return (
     <Form
       id={id}
@@ -64,6 +71,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             onChange={(e) => field.onChange(e.target.value === "true")}
             isInvalid={!!errors.estado}
             errorMessage={errors.estado?.message}
+            isDisabled
+            defaultSelectedKeys={["true"]}
           >
             <SelectItem key="true">Activo</SelectItem>
             <SelectItem key="false">Inactivo</SelectItem>

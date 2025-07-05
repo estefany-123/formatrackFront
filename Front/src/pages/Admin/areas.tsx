@@ -1,8 +1,7 @@
-import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
+import Globaltable from "@/components/organismos/table.tsx"; 
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/areas/FormRegister";
 import { useState } from "react";
 import { Area } from "@/types/area";
 import { useAreas } from "@/hooks/areas/useAreas";
@@ -10,6 +9,7 @@ import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/areas/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioArea from "@/components/organismos/areas/FormRegister";
 
 const AreaTable = () => {
 
@@ -136,7 +136,7 @@ const AreaTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioArea
           id="area-form"
           addData={handleAddArea}
           onClose={handleClose}
