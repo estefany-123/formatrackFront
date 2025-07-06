@@ -24,9 +24,7 @@ export const InventariosTable = ({
   inventarios: inventariosProp,
   idSitio,
 }: InventariosTableProps) => {
-
-    const { userHasPermission } = usePermissions();
-  
+  const { userHasPermission } = usePermissions();
 
   const {
     inventarios: inventariosHook,
@@ -47,6 +45,7 @@ export const InventariosTable = ({
   const [isOpenCodigos, setIsOpenCodigos] = useState(false);
   const [inventarioCodigos, setInventarioCodigos] =
     useState<InventarioConElemento | null>(null);
+  const [, setSelectedInventario] = useState<Inventario | null>(null);
 
   const handleCloseCodigos = () => {
     setIsOpenCodigos(false);
@@ -79,6 +78,13 @@ export const InventariosTable = ({
     } catch (error) {
       console.error("Error al agregar al inventario:", error);
     }
+  };
+  const handleEdit = (inventario: Inventario) => {
+    if (!inventario || !inventario.idInventario) {
+      return;
+    }
+    setSelectedInventario(inventario);
+    setIsOpenUpdate(true);
   };
 
   const columns: TableColumn<Inventario>[] = [
@@ -290,17 +296,24 @@ export const InventariosTable = ({
         )}
       </Modall>
 
-      { userHasPermission(29) && InventariosWithKey && (
+      {userHasPermission(29) && InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
           columns={columns ?? []}
           onEdit={userHasPermission(30) ? handleEdit : undefined}
-          onDelete={userHasPermission(31) ? (inventario) => handleState(inventario.idInventario) : undefined}
+          onDelete={
+            userHasPermission(31)
+              ? (inventario) => handleState(inventario.idInventario)
+              : undefined
+          }
           extraHeaderContent={
             <div>
-              {userHasPermission(27) &&
-              <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
-              }
+              {userHasPermission(27) && (
+                <Buton
+                  text="Nuevo inventario"
+                  onPress={() => setIsOpen(true)}
+                />
+              )}
             </div>
           }
         />

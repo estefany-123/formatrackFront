@@ -2,14 +2,13 @@ import { Form } from "@heroui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
 import { MovimientoUpdate, MovimientoUpdateSchema } from "@/schemas/Movimento";
 import { useMovimiento } from "@/hooks/Movimientos/useMovimiento";
 import { addToast } from "@heroui/react";
 import Buton from "@/components/molecules/Button";
 
 type Props = {
-  movimientos: (MovimientoUpdate & { id_movimiento?: number })[];
+  movimientos: (MovimientoUpdate & { idMovimiento?: number })[];
   movimientoId: number;
   id: string;
   onclose: () => void;
@@ -40,9 +39,9 @@ export const FormUpdate = ({
 
   const onSubmit = async (data: MovimientoUpdate) => {
     console.log(data);
-    if (!data.id_movimiento) return;
+    if (!data.idMovimiento) return;
     try {
-      await updateMovimiento(data.id_movimiento, data);
+      await updateMovimiento(data.idMovimiento, data);
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
@@ -82,17 +81,17 @@ export const FormUpdate = ({
         label="Hora Ingreso"
         placeholder="Seleccione la Hora Ingreso"
         type="time"
-        {...register("hora_ingreso")}
-        isInvalid={!!errors.hora_ingreso}
-        errorMessage={errors.hora_ingreso?.message}
+        {...register("horaIngreso")}
+        isInvalid={!!errors.horaIngreso}
+        errorMessage={errors.horaIngreso?.message}
       />
       <Input
         label="Hora Salida"
         placeholder="Ingrese la hora de Salida"
         type="time"
-        {...register("hora_salida")}
-        isInvalid={!!errors.hora_salida}
-        errorMessage={errors.hora_salida?.message}
+        {...register("horaSalida")}
+        isInvalid={!!errors.horaSalida}
+        errorMessage={errors.horaSalida?.message}
       />
       <div className="justify-center pl-10">
         <Buton

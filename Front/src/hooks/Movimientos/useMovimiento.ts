@@ -1,5 +1,5 @@
 import { getMovimiento } from "@/axios/Movimentos/getMovimento";
-import { postMovimiento } from "@/axios/Movimentos/postMovimiento";
+import { MovimientoPostData, postMovimiento } from "@/axios/Movimentos/postMovimiento";
 import { putMovimiento } from "@/axios/Movimentos/putMovimiento";
 import { Movimiento } from "@/types/Movimiento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,7 +37,7 @@ export function useMovimiento() {
   };
 
   const updateMovimientoMutation = useMutation({
-    mutationFn: ({id, data}:{id:number, data:Movimiento}) => {
+    mutationFn: ({id, data}:{id:number, data:MovimientoPostData}) => {
       const {idMovimiento, ...resto} = data
       return putMovimiento(id, resto)},
     onSuccess: () => {

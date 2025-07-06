@@ -2,7 +2,7 @@ import { axiosAPI } from "../axiosAPI";
 
 export interface MovimientoPutData {
   idMovimiento?: number;
-  descripcion: string;
+  descripcion?: string;
   cantidad?: number;
   horaIngreso?: string;
   horaSalida?: string;

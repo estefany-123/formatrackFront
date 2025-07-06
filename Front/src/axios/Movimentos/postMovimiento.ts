@@ -1,9 +1,8 @@
-import { CodigoInventario } from "@/types/Inventario";
 import { axiosAPI } from "../axiosAPI";
 
 export interface MovimientoPostData {
   idMovimiento?: number;
-  descripcion: string;
+  descripcion?: string;
   cantidad?: number;
   horaIngreso?: string;
   horaSalida?: string;
@@ -18,9 +17,9 @@ export interface MovimientoPostData {
   fkUsuario?: number;
   fkTipoMovimiento?: number;
   fkSitio?: number;
-  fechaDevolucion?: Date;
+  fechaDevolucion?: Date | string | null;
   fkInventario?: number;
-  codigos?: CodigoInventario[];
+  codigos?: string[];
 }
 
 export async function postMovimiento(data: MovimientoPostData): Promise<any> {

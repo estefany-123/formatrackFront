@@ -24,7 +24,7 @@ import {
   TableCell,
   getKeyValue,
 } from "@heroui/table";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 export interface TableColumn<T> {
   key: keyof T;

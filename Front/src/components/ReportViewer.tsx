@@ -1,19 +1,10 @@
 import { ReportesPDF } from "@/components/ReportesPDF"; // Asegúrate que este es tu componente de PDF
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
-import { useState } from "react";
 
 export function ReportViewer({ tipo, data }: { tipo: string; data: any[] }) {
-  const [infoExtra, setInfoExtra] = useState("");
 
   return (
     <div className="space-y-4">
-      <textarea
-        placeholder="Añadir información adicional (observaciones, responsable, etc.)"
-        className="w-full border p-2 rounded"
-        value={infoExtra}
-        onChange={(e) => setInfoExtra(e.target.value)}
-      />
-
       <PDFViewer width="100%" height={600}>
         <ReportesPDF tipo={tipo} data={data}  />
       </PDFViewer>

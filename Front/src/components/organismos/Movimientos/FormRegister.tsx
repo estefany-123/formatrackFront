@@ -46,9 +46,10 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       cancelado: false,
       devolutivo: false,
       noDevolutivo: true,
-      horaIngreso: undefined,
-      horaSalida: undefined,
+      horaIngreso: "00:00",
+      horaSalida: "00:00",
       fechaDevolucion: undefined,
+      lugarDestino: undefined,
       codigos: [],
     },
   });
@@ -82,14 +83,34 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const onSubmit = async (data: MovimientoCreate) => {
     const payload = {
       ...mapMovimiento(data),
-      fechaDevolucion:
-        data.fechaDevolucion && data.fechaDevolucion.trim() !== ""
-          ? new Date(data.fechaDevolucion)
-          : undefined,
+      codigos: data.codigos?.map((c) => c.trim()),
+      horaIngreso: data.horaIngreso || undefined,
+      horaSalida: data.horaSalida || undefined,
+      fechaDevolucion: data.fechaDevolucion
+        ? new Date(data.fechaDevolucion)
+        : undefined,
     };
-    console.log("Codigos seleccionados:", data.codigos);
 
-    console.log("Payload enviado al backend:", data);
+    console.log("🎯 Inventario seleccionado:", data.fkInventario);
+    console.log("🎯 Códigos seleccionados:", data.codigos);
+
+    // Mostrar todos los valores del formulario con su tipo de dato
+    console.log("📦 Datos del formulario (campos y tipos):");
+    Object.entries(data).forEach(([key, value]) => {
+      let tipo: string;
+      if (Array.isArray(value)) {
+        tipo = "array";
+      } else if (value === null) {
+        tipo = "null";
+      } else {
+        tipo = typeof value;
+      }
+      console.log(`- ${key}:`, value, `(tipo: ${tipo})`);
+    });
+
+    // Mostrar el payload que se enviará al backend
+    console.log("✅ Payload enviado al backend:", payload);
+
     if (
       tipoMovimientoSeleccionado &&
       ["salida", "baja", "préstamo"].includes(tipoMovimientoSeleccionado) &&
@@ -106,6 +127,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     }
     try {
       await addData(payload);
+
       onClose();
       addToast({
         title: "Registro Exitoso",
@@ -114,8 +136,16 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
-    } catch (error) {
-      console.error("Error al guardar movimiento:", error);
+    } catch (error: any) {
+      const mensaje = error?.response?.data?.message;
+      addToast({
+        title: "Error al guardar movimiento",
+        description: Array.isArray(mensaje)
+          ? mensaje.join(", ")
+          : (mensaje ?? "Ocurrió un error inesperado."),
+        color: "danger",
+        timeout: 3000,
+      });
     }
   };
   console.log("Errores", errors);

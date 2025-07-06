@@ -149,6 +149,8 @@ export const MovimientoTable = () => {
       idMovimiento: movimiento.idMovimiento || 0,
     }));
 
+    console.log("🧾 Datos para la tabla MovimientoWithKey:", MovimientoWithKey);
+
   return (
     <div className="p-4">
       <div className="flex pb-4 pt-4">
@@ -203,7 +205,16 @@ export const MovimientoTable = () => {
       >
         {selectedMovimiento && (
           <FormUpdate
-            movimientos={MovimientoWithKey ?? []}
+            movimientos={
+              MovimientoWithKey?.map((mov) => ({
+                ...mov,
+                fechaDevolucion: mov.fechaDevolucion
+                  ? typeof mov.fechaDevolucion === "string"
+                    ? mov.fechaDevolucion
+                    : mov.fechaDevolucion.toISOString().split("T")[0]
+                  : undefined,
+              })) ?? []
+            }
             movimientoId={selectedMovimiento.idMovimiento as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}

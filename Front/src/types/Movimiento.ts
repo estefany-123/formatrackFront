@@ -1,8 +1,8 @@
-import { CodigoInventario } from "./Inventario";
+
 
 export type Movimiento = {
   idMovimiento?: number;
-  descripcion: string;
+  descripcion?: string;
   cantidad?: number;
   horaIngreso?: string;
   horaSalida?: string;
@@ -13,7 +13,7 @@ export type Movimiento = {
   lugarDestino?: string;
   devolutivo?: boolean;
   noDevolutivo?: boolean;
-  fechaDevolucion?: string | null;
+  fechaDevolucion?: Date | string | null;
   createdAt?: string;
   updatedAt?: string;
   fkUsuario?: number;
@@ -21,5 +21,5 @@ export type Movimiento = {
   fkSitio?: number;
   fkInventario?: number;
   tipo_bien?: string;
-  codigos?: CodigoInventario[];
+  codigos?: string[];
 };
