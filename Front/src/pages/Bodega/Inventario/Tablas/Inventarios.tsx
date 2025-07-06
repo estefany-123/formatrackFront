@@ -13,6 +13,7 @@ import { FormAgregateStock } from "@/components/organismos/Inventarios/FormAgreg
 import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
 import { CodigoInventario } from "../../CodigoInventario";
 import FormularioInventario from "@/components/organismos/Inventarios/FormRegister";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -23,6 +24,10 @@ export const InventariosTable = ({
   inventarios: inventariosProp,
   idSitio,
 }: InventariosTableProps) => {
+
+    const { userHasPermission } = usePermissions();
+  
+
   const {
     inventarios: inventariosHook,
     isLoading,
@@ -284,13 +289,19 @@ export const InventariosTable = ({
           />
         )}
       </Modall>
-      {InventariosWithKey && (
+
+      { userHasPermission(29) && InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
           columns={columns ?? []}
-          onDelete={(inventario) => handleState(inventario.idInventario)}
+          onEdit={userHasPermission(30) ? handleEdit : undefined}
+          onDelete={userHasPermission(31) ? (inventario) => handleState(inventario.idInventario) : undefined}
           extraHeaderContent={
-            <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(27) &&
+              <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}

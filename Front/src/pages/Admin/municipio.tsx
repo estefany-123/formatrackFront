@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardBody } from "@heroui/react";
 
 const MunicipiosTable = () => {
+
+  
   const { municipios, isLoading, isError, error, addMunicipio, changeState } =
     useMunicipio();
 

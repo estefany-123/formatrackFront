@@ -8,9 +8,13 @@ import { Pformacion } from "@/types/programaFormacion";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 import FormularioPrograma from "@/components/organismos/Programas/FormRegister";
 
 const ProgramasTable = () => {
+
+  const { userHasPermission } = usePermissions();
+
   const { programas, isLoading, isError, error, addPrograma, changeState } =
     usePrograma();
 
@@ -62,10 +66,10 @@ const ProgramasTable = () => {
         <span>
           {programa.createdAt
             ? new Date(programa.createdAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -77,10 +81,10 @@ const ProgramasTable = () => {
         <span>
           {programa.updatedAt
             ? new Date(programa.updatedAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -120,7 +124,9 @@ const ProgramasTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Fichas</h1>
               <div className="flex gap-2">
-                <Buton text="Fichas" onPress={handleGoToFicha} />
+                {userHasPermission(7) &&
+                  <Buton text="Fichas" onPress={handleGoToFicha} />
+                }
               </div>
             </div>
           </CardBody>
@@ -137,7 +143,7 @@ const ProgramasTable = () => {
           onClose={handleClose}
         />
         <Buton
-        text="Guardar"
+          text="Guardar"
           type="submit"
           form="programa-form"
           className="rounded-xl"
@@ -159,14 +165,18 @@ const ProgramasTable = () => {
         )}
       </Modall>
 
-      {usersWithKey && (
+      {userHasPermission(40) && usersWithKey && (
         <Globaltable
           data={usersWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={(programa) => handleState(programa.idPrograma)}
+          onEdit={userHasPermission(41) ? handleEdit : undefined}
+          onDelete={userHasPermission(42) ? (programa) => handleState(programa.idPrograma) : undefined}
           extraHeaderContent={
-            <Buton text="Añadir Programa" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(39) &&
+                <Buton text="Añadir Programa" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}
