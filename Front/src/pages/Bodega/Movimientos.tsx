@@ -9,7 +9,7 @@ import Formulario from "@/components/organismos/Movimientos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Movimientos/FormUpdate";
 import { Chip } from "@heroui/chip";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 export const MovimientoTable = () => {
