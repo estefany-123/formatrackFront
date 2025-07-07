@@ -29,7 +29,7 @@ export type Elemento = {
   fechaVencimiento?: string;
   fechaUso?: string;
   baja?: boolean;
-  imagenElemento?: { id: number, url: string }[];
+  imagen?: string;
   fkUnidadMedida?: number;
   fkCategoria?: number;
   fkCaracteristica?: number | null;

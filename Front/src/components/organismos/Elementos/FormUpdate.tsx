@@ -35,7 +35,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
     
   });
 
-  const imagen = watch("imagenElemento");
+  const imagen = watch("imagen");
 
   const onSubmit = async (data: ElementoUpdate) => {
     if (!data.idElemento) return;
@@ -80,7 +80,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
       {imagen && typeof imagen === "string" && (
         <div className="flex justify-center">
           <img
-             src={`http://localhost:3000${imagen}`}
+             src={`http://localhost:3000/img/img/elementos/${imagen}`}
             alt="Imagen actual"
             className="w-40 h-40 object-cover rounded-lg mb-4"
           />
@@ -103,7 +103,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
         accept="image/*"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) setValue("imagenElemento", file);
+          if (file) setValue("imagen", file);
         }}
       />
 

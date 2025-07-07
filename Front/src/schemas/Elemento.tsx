@@ -13,7 +13,7 @@ export const ElementoUpdateSchema = z.object({
     .min(1, { message: "Descripcion es requerida" })
     .min(2, { message: "Longitud minima 2" }),
 
-imagenElemento: z
+imagen: z
   .any()
   .refine(
     (file) =>
