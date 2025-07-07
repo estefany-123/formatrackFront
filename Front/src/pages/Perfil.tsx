@@ -27,6 +27,7 @@ function Perfil() {
     setperfilcontext(response.updated.perfil)
   }
 
+    const handleClose = () => setIsOpenModal(false);
   return (
     <div className="min-h-screen flex items-center justify-center p-4 dark:text-white">
       <Card1 className="w-full max-w-md bg-white shadow-lg rounded-lg p-6 relative dark:text-white">
@@ -81,8 +82,7 @@ function Perfil() {
           </div>
         </div>
       </Card1>
-      <Modall isOpen={isOpenModal}>
-        <h1>Actualizar datos</h1>
+      <Modall ModalTitle='Editar Perfil' onOpenChange={handleClose} isOpen={isOpenModal}>
         <FormPerfil
           inicialData={{
             nombre: perfilInfo.nombre,

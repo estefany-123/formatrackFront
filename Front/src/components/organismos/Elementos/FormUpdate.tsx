@@ -32,6 +32,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
     resolver: zodResolver(ElementoUpdateSchema),
     mode: "onChange",
     defaultValues: foundElemento,
+    
   });
 
   const imagen = watch("imagenElemento");

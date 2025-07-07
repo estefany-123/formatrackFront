@@ -13,13 +13,15 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
+import { Notificacion } from "@/types/Notificacion";
 
 type NavProps = {
   children?: ReactNode;
   onOpenNotifications?: () => void;
+  notificaciones?: Notificacion[];
 };
 
-export function Nav({ children, onOpenNotifications }: NavProps) {
+export function Nav({ children, onOpenNotifications, notificaciones = [] }: NavProps) {
   const navigate = useNavigate();
   const { nombre, perfil } = useAuth();
 
@@ -40,8 +42,12 @@ export function Nav({ children, onOpenNotifications }: NavProps) {
               onClick={onOpenNotifications}
             >
               <BellIcon className="w-6 h-6" />
-              {/* Puedes agregar un contador si lo pasas como prop */}
-              {/* <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1.5 text-xs">3</span> */}
+
+              {notificaciones.some((n) => !n.leido) && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1.5 text-xs">
+                  {notificaciones.filter((n) => !n.leido).length}
+                </span>
+              )}
             </button>
           </DropdownTrigger>
 

@@ -65,7 +65,7 @@ export const UserSchema = z.object({
         .number({ message: "Rol es requerido y debe ser un numero" })
 })
 
-export type User = z.infer<typeof PerfilSchema>
+export type User = z.infer<typeof UserSchema>
 
 
 export const PerfilSchema = z.object({

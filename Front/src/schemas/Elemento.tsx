@@ -25,7 +25,7 @@ imagenElemento: z
       message: "Debe ser un archivo o una URL o ruta válida",
     }
   )
-  .optional(),
+  .optional().nullable(),
 });
 
 export type ElementoUpdate = z.infer<typeof ElementoUpdateSchema>;

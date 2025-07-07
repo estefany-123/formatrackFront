@@ -15,6 +15,9 @@ export function useSocketNotificaciones(
 
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
+      query:{
+        idUsuario: usuarioId.toString()
+      }
     });
 
     socketRef.current = socket;

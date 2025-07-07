@@ -50,7 +50,10 @@ function App() {
           <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
           <Route path="bodega/unidades" element={<UnidadTable />} />
           <Route path="bodega/categorias" element={<CategoriasTable />} />
-          <Route path="bodega/caracteristicas" element={<CaracteristicasTable />} />
+          <Route
+            path="bodega/caracteristicas"
+            element={<CaracteristicasTable />}
+          />
           <Route path="bodega/inventario/" element={<Inventario />} />
           <Route path="bodega/inventario/areas" element={<Inventario />} />
           <Route
@@ -61,10 +64,10 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
+          <Route path="reportes" element={<ReportesPage />}></Route>
         </Route>
-        <Route path="reportes" element={<ReportesPage/>}></Route>
       </Route>
-      
+
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />

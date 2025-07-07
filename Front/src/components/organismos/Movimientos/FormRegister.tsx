@@ -173,28 +173,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           errorMessage={errors.lugarDestino?.message}
         />
 
-        {/* Hora dinámica según tipo de movimiento */}
-        {tipoMovimientoSeleccionado === "ingreso" ? (
-          <Input
-            label="Hora de Ingreso"
-            type="time"
-            {...register("horaIngreso")}
-            isInvalid={!!errors.horaIngreso}
-            errorMessage={errors.horaIngreso?.message}
-          />
-        ) : tipoMovimientoSeleccionado &&
-          ["salida", "baja", "préstamo"].includes(
-            tipoMovimientoSeleccionado
-          ) ? (
-          <Input
-            label="Hora de Salida"
-            type="time"
-            {...register("horaSalida")}
-            isInvalid={!!errors.horaSalida}
-            errorMessage={errors.horaSalida?.message}
-          />
-        ) : null}
-
         <Controller
           control={control}
           name="tipo_bien"
@@ -313,6 +291,27 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             </>
           )}
         />
+
+        {tipoMovimientoSeleccionado === "ingreso" ? (
+          <Input
+            label="Hora de Ingreso"
+            type="time"
+            {...register("horaIngreso")}
+            isInvalid={!!errors.horaIngreso}
+            errorMessage={errors.horaIngreso?.message}
+          />
+        ) : tipoMovimientoSeleccionado &&
+          ["salida", "baja", "préstamo"].includes(
+            tipoMovimientoSeleccionado
+          ) ? (
+          <Input
+            label="Hora de Salida"
+            type="time"
+            {...register("horaSalida")}
+            isInvalid={!!errors.horaSalida}
+            errorMessage={errors.horaSalida?.message}
+          />
+        ) : null}
 
         <Controller
           control={control}

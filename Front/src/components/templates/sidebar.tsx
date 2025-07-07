@@ -10,15 +10,23 @@ import {
 import useLogin from "@/hooks/Usuarios/useLogin";
 
 export default function Sidebar() {
-
   const { permissions } = useAuth();
 
-  const mappingItems = [{
-    id: 0,
-    nombre: "Home",
-    icono: "HomeIcon",
-    href: "/"
-  },...permissions];
+  const mappingItems = [
+    {
+      id: 0,
+      nombre: "Home",
+      icono: "HomeIcon",
+      href: "/",
+    },
+    ...permissions,
+    {
+      id: 0,
+      nombre: "Repotess",
+      icono: "DocumentChartBarIcon",
+      href: "/reportes",
+    }
+  ];
 
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
@@ -32,8 +40,7 @@ export default function Sidebar() {
     );
   };
 
-    const { logout } = useLogin();
-  
+  const { logout } = useLogin();
 
   return (
     <aside
@@ -62,52 +69,52 @@ export default function Sidebar() {
       <nav className="space-y-2 px-1 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
         {mappingItems.map((item) => {
           const Icono = iconsConfig[item.icono] ?? BookOpenIcon;
-          return(
-          <div key={item.nombre}>
-            <Link
-              to={item.href}
-              onClick={() => toggleItem(item.nombre)}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
-                location.pathname === item.href
-                  ? "bg-blue-600 text-white"
-                  : "hover:bg-blue-600 text-black-300"
-              }`}
-            >
-              
-              
-              <Icono className="w-6 h-6" />
-              {!collapsed && <span>{item.nombre}</span>}
-            </Link>
-            {item.rutas && openItems.includes(item.nombre) && (
-              <div className="pl-6">
-                {item.rutas.map((subItem: any) => {
-                  if(!subItem.listed) return;
-                  const SubIcono = iconsConfig[subItem.icono] ?? BookOpenIcon;
-                  return(
-                  <Link
-                    key={subItem.nombre}
-                    to={subItem.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
-                      location.pathname === subItem.href
-                        ? "bg-blue-600 text-white"
-                        : "hover:bg-blue-600 text-black-300"
-                    }`}
-                  >
-                    <SubIcono className="w-6 h-6" />
-                    {!collapsed && <span>{subItem.nombre}</span>}
-                  </Link>
-                 
-                )})}
-              </div>
-              
-            )}
-          </div>
-           
-        )})}
-
+          return (
+            <div key={item.nombre}>
+              <Link
+                to={item.href}
+                onClick={() => toggleItem(item.nombre)}
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
+                  location.pathname === item.href
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-blue-600 text-black-300"
+                }`}
+              >
+                <Icono className="w-6 h-6" />
+                {!collapsed && <span>{item.nombre}</span>}
+              </Link>
+              {item.rutas && openItems.includes(item.nombre) && (
+                <div className="pl-6">
+                  {item.rutas.map((subItem: any) => {
+                    if (!subItem.listed) return;
+                    const SubIcono = iconsConfig[subItem.icono] ?? BookOpenIcon;
+                    return (
+                      <Link
+                        key={subItem.nombre}
+                        to={subItem.href}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left transition-colors ${
+                          location.pathname === subItem.href
+                            ? "bg-blue-600 text-white"
+                            : "hover:bg-blue-600 text-black-300"
+                        }`}
+                      >
+                        <SubIcono className="w-6 h-6" />
+                        {!collapsed && <span>{subItem.nombre}</span>}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </nav>
       <div className="flex">
-        <ArrowRightStartOnRectangleIcon onClick={logout} height={26} className={`hover:text-red-500 cursor-pointer transition mb-4 ${collapsed ? 'mx-auto' : 'ms-auto me-6'}`} />
+        <ArrowRightStartOnRectangleIcon
+          onClick={logout}
+          height={26}
+          className={`hover:text-red-500 cursor-pointer transition mb-4 ${collapsed ? "mx-auto" : "ms-auto me-6"}`}
+        />
       </div>
     </aside>
   );
