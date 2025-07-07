@@ -76,16 +76,14 @@ export const ElementosTable = () => {
   const columns: TableColumn<Elemento>[] = [
     {
       label: "Imagen",
-      key: "imagenElemento",
+      key: "imagen",
       render: (item: Elemento) => {
-        const imagen = item.imagenElemento?.[0]?.url;
+        const imagen = item.imagen;
         console.log(imagen);
-        const cleanImagen = imagen?.replace(/^\/+|\/+$/g, "");
-
-        console.log("Imagen limpia:", cleanImagen);
+  
         return imagen ? (
           <img
-            src={`http://localhost:3000${imagen}`}
+            src={`http://localhost:3000/img/img/elementos/${imagen}`}
             alt="Imagen"
             width={200}
             height={50}

@@ -9,6 +9,7 @@ import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Programas/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioPrograma from "@/components/organismos/Programas/FormRegister";
 
 const ProgramasTable = () => {
 

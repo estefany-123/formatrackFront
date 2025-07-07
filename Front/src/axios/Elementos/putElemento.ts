@@ -3,15 +3,15 @@ import { axiosAPI } from "../axiosAPI";
 export interface ElementoPutData {
     nombre: string;
     descripcion: string;
-    imagenElemento?: string | File | undefined;
+    imagen?: string | File | undefined;
 }
 
 export async function putElemento(id:number, data:ElementoPutData):Promise<any> {
     const formData = new FormData();
     formData.append('nombre', data.nombre);
     formData.append('descripcion', data.descripcion);
-    if (data.imagenElemento) {
-        formData.append('imagenElemento', data.imagenElemento);
+    if (data.imagen) {
+        formData.append('imagen', data.imagen);
     }
     const res = await axiosAPI.patch(`elementos/${id}`, formData, {
         headers: {
