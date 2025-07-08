@@ -64,7 +64,7 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
-          <Route path="reportes" element={<ReportesPage />}></Route>
+        <Route path="reportes" element={<ReportesPage/>}></Route>
         </Route>
       </Route>
 

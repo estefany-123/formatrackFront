@@ -12,9 +12,10 @@ export function useElemento() {
   const { data, isLoading, isError, error } = useQuery<Elemento[]>({
     queryKey: ["elementos"],
     queryFn: getElemento,
-    staleTime: 1000 * 60 * 5,
+    staleTime:0,
     gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount:true
   });
 
   const addElementoMutation = useMutation({

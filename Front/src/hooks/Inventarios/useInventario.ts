@@ -16,15 +16,16 @@ export function useInventario() {
   const { data, isLoading, isError, error } = useQuery<InventarioConSitio[]>({
     queryKey: ["inventarios"],
     queryFn: getInventario,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
     gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount:true
   });
 
   const addInventarioMutation = useMutation({
     mutationFn: postInventario,
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },

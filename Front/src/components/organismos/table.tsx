@@ -75,12 +75,13 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   const filteredData = useMemo(() => {
     let result = data;
 
-    if ("estado" in data[0]) {
-      if (estadoFiltro === "activos") {
-        result = result.filter((item) => item.estado === true);
-      } else if (estadoFiltro === "inactivos") {
-        result = result.filter((item) => item.estado === false);
-      }
+
+    if (estadoFiltro === "activos") {
+      result = result.filter((item) => item.estado === true);
+    } else if (estadoFiltro === "inactivos") {
+      result = result.filter((item) => item.estado === false);
+    }else{
+      result = result
     }
 
     if (searchTerm.trim()) {
