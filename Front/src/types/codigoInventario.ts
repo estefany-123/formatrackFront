@@ -6,6 +6,6 @@ export type CodigoInventario = {
     createdAt?:string
     updatedAt?:string
     fkInventario?:{
-        idInventario:number
+        idInventario?:number
     }
 }

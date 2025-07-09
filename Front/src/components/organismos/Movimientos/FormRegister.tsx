@@ -479,58 +479,72 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           )}
 
         {tipoMovimientoSeleccionado === "ingreso" && (
-          <Controller
-            control={control}
-            name="codigos"
-            render={({ field }) => (
-              <div className="space-y-3">
-                <h3 className="text-base font-semibold text-gray-800">
-                  Ingresar Códigos Nuevos
-                </h3>
+          <>
+            {tieneCaracteristicas ? (
+              <Controller
+                control={control}
+                name="codigos"
+                render={({ field }) => (
+                  <div className="space-y-3">
+                    <h3 className="text-base font-semibold text-gray-800">
+                      Ingresar Códigos Nuevos
+                    </h3>
 
-                <div className="space-y-2">
-                  {(field.value ?? [""]).map((codigo, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200"
-                    >
-                      <Input
-                        className="flex-1"
-                        placeholder={`Código ${index + 1}`}
-                        value={codigo}
-                        onChange={(e) => {
-                          const updated = [...(field.value ?? [])];
-                          updated[index] = e.target.value;
-                          field.onChange(updated);
-                        }}
-                      />
+                    <div className="space-y-2">
+                      {(field.value ?? [""]).map((codigo, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200"
+                        >
+                          <Input
+                            className="flex-1"
+                            placeholder={`Código ${index + 1}`}
+                            value={codigo}
+                            onChange={(e) => {
+                              const updated = [...(field.value ?? [])];
+                              updated[index] = e.target.value;
+                              field.onChange(updated);
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = [...(field.value ?? [])];
+                              updated.splice(index, 1);
+                              field.onChange(updated);
+                            }}
+                            className="px-3 py-1 text-sm rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
                       <button
                         type="button"
-                        onClick={() => {
-                          const updated = [...(field.value ?? [])];
-                          updated.splice(index, 1);
-                          field.onChange(updated);
-                        }}
-                        className="px-3 py-1 text-sm rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition"
+                        onClick={() =>
+                          field.onChange([...(field.value ?? []), ""])
+                        }
+                        className="px-4 py-2 mt-2 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
                       >
-                        Eliminar
+                        + Añadir otro código
                       </button>
                     </div>
-                  ))}
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => field.onChange([...(field.value ?? []), ""])}
-                    className="px-4 py-2 mt-2 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
-                  >
-                    + Añadir otro código
-                  </button>
-                </div>
-              </div>
+                  </div>
+                )}
+              />
+            ) : (
+              <Input
+                label="Cantidad"
+                type="number"
+                {...register("cantidad", { valueAsNumber: true })}
+                isInvalid={!!errors.cantidad}
+                errorMessage={errors.cantidad?.message}
+              />
             )}
-          />
+          </>
         )}
       </Form>
 

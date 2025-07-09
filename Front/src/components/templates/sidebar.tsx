@@ -20,12 +20,6 @@ export default function Sidebar() {
       href: "/",
     },
     ...permissions,
-    {
-      id: 0,
-      nombre: "Repotess",
-      icono: "DocumentChartBarIcon",
-      href: "/reportes",
-    }
   ];
 
   const [openItems, setOpenItems] = useState<string[]>([]);

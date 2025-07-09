@@ -76,7 +76,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
     let result = data;
 
 
-    if (estadoFiltro === "activos") {
+    if (mostrarFiltroEstado) {
       result = result.filter((item) => item.estado === true);
     } else if (estadoFiltro === "inactivos") {
       result = result.filter((item) => item.estado === false);
