@@ -25,8 +25,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
-import ReportesPage from "./pages/Reportes/Reportes";
-// import ReportesPage from "./pages/Reportes/Reportes";
+import {Reportes} from "./pages/Reportes/Reportes";
 
 function App() {
   return (
@@ -64,7 +63,7 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
-        <Route path="reportes" element={<ReportesPage/>}></Route>
+        <Route path="reportes" element={<Reportes/>}></Route>
         </Route>
       </Route>
 

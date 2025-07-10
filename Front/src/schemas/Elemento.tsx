@@ -50,7 +50,7 @@ export const ElementoCreateSchema = z.object({
 
   baja: z.boolean({ required_error: "baja es requerida" }).default(false).optional(),
 
-imagenElemento: z
+imagen: z
     .any()
     .refine(
       (file) =>
@@ -62,7 +62,6 @@ imagenElemento: z
 
   fechaVencimiento: z.string({ message: "Fecha es requerida" }).optional(),
 
-  fechaUso: z.string({ message: "Fecha es requerida" }),
 
   fkUnidadMedida: z.number({ required_error: "Unidad es requerida" }),
 

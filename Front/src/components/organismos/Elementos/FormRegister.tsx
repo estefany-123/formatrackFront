@@ -141,15 +141,6 @@ export default function FormularioElementos({
           />
         )}
 
-        <Input
-          label="Fecha Permanencia"
-          type="date"
-          placeholder="Ingrese la fecha"
-          {...register("fechaUso")}
-          isInvalid={!!errors.fechaUso}
-          errorMessage={errors.fechaUso?.message}
-        />
-
         <Controller
           control={control}
           name="estado"
@@ -177,7 +168,7 @@ export default function FormularioElementos({
           accept="image/*"
           onChange={(e) => {
             const file = e.target.files?.[0] ?? undefined;
-            setValue("imagenElemento", file);
+            setValue("imagen", file);
           }}
         />
 
