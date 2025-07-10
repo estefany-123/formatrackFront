@@ -36,7 +36,7 @@ const CategoriasTable = () => {
   };
 
   const handleState = async (categorias: Categoria) => {
-    await changeState(categorias.idCategoria);
+    await changeState(categorias.idCategoria as number);
     console.log(categorias.idCategoria);
   };
 
@@ -149,7 +149,7 @@ const CategoriasTable = () => {
         {selectedCategoria && (
           <FormUpCategoria
             categorias={categoriasWithKey ?? []}
-            categoriaId={selectedCategoria.idCategoria}
+            categoriaId={selectedCategoria.idCategoria as number}
             id="FormUpdate"
             onclose={handleCloseUpdate}
           />
