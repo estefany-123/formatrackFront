@@ -4,9 +4,12 @@ import { Button } from '@heroui/button'
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { addToast, useModalContext } from "@heroui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FormEvent, useState } from "react";
 
 export default function FormRegisterMasivo(){
+
+    const queryClient = useQueryClient();
 
     const { onClose } = useModalContext();
 
@@ -24,6 +27,7 @@ export default function FormRegisterMasivo(){
         e.preventDefault();
         if(!file) return setError("Selecciona un archivo primero");
         const formData = new FormData();
+    
         formData.append("excel",file);
         try{
             await postMassiveUsuarios(formData);
@@ -33,9 +37,13 @@ export default function FormRegisterMasivo(){
                 color: "success"
             })
             onClose();
+            queryClient.invalidateQueries({
+                queryKey: ["users"]
+            });
         }
         catch(error){
             console.log(error);
+                console.log("esto es formdata",formData)
             addToast({
                 title: "Error subiendo usuarios",
                 description: "Hubo un error intentando subir los usuarios",
