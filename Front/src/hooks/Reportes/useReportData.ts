@@ -15,6 +15,7 @@ import {
 export const useReportData = (reportId: string) => {
   const [filters, setFilters] = useState<Record<string, string>>({});
 
+
   const report = reports.find((r) => r.id === reportId);
   if (!report) return { data: [], aplicarFiltros: () => {}, descargarPDF: () => {} };
 
@@ -29,7 +30,7 @@ export const useReportData = (reportId: string) => {
   let data: Record<string, any>[] = [];
 
   switch (reportId) {
-    case "inventario-sitio":
+    case "sitios-con-mayor-stock":
       data = sitiosStock;
       break;
     case "usuarios-con-mas-movimientos":
@@ -38,7 +39,7 @@ export const useReportData = (reportId: string) => {
     case "elementos-por-caducar":
       data = elementosCaducar;
       break;
-    case "movimientos":
+    case "historial-movimientos":
       data = historialMovs;
       break;
     default:
@@ -60,10 +61,12 @@ export const useReportData = (reportId: string) => {
     const blob = await pdf(element).toBlob();
     saveAs(blob, `${report.title}.pdf`);
   };
-
+console.log("DATA RECIBIDA PARA EL REPORTE:", reportId, data);
+console.log("Filtros aplicados:", filters);
   return {
     data,
     aplicarFiltros,
     descargarPDF,
   };
+  
 };

@@ -5,7 +5,7 @@ export type postElementos = {
   noPerecedero?: boolean;
   estado?: boolean;
   fechaVencimiento?: string;
-  imagen?: string | File;
+  imagen?: string | File | undefined;
   fkUnidadMedida?: number;
   fkCategoria?: number;
   fkCaracteristica?: number | null;

@@ -39,7 +39,7 @@ export async function postElemento(data: ElementoPostData): Promise<any> {
     formData.append("fkCaracteristica", data.fkCaracteristica.toString());
   }
   if (data.imagen) {
-    formData.append("imagen", data.imagen.toString());
+    formData.append("imagen", data.imagen);
   }
 
 

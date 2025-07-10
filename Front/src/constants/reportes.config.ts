@@ -1,42 +1,92 @@
 export const reports = [
   {
-    id: "usuarios-elementos",
-    title: "Usuarios con elementos asignados",
-    description: "Muestra los usuarios que tienen elementos asignados en el sistema.",
-    headers: ["Nombre", "Cantidad de elementos", "Última asignación"],
-    accessors: ["nombre", "cantidad", "fecha"],
+    id: "usuarios-con-mas-movimientos",
+    title: "Movimientos Realizados por los Usarios",
+    description:
+      "Muestra los usuarios que han realizado movimientos y a que elementos.",
+    accessors: ["usuario", "sitio", "total_movimientos", "cantidad", "codigos"],
+    headers: [
+      "Usuario",
+      "Sitio",
+      "Total de Movimientos",
+      "Cantidad",
+      "Códigos",
+    ],
   },
   {
-    id: "movimientos",
-    title: "Movimientos de inventario",
-    description: "Lista de movimientos realizados, filtrados por tipo y fecha.",
-    headers: ["Elemento", "Tipo", "Cantidad", "Fecha", "Sitio"],
-    accessors: ["elemento", "tipo", "cantidad", "fecha", "sitio"],
+    id: "historial-movimientos",
+    title: "Histotial de Movimientos",
+    description:
+      "Da un historial acerca de los moviemitos que se han realizado.",
+    headers: [
+      "Tipo",
+      "Elemento",
+      "Usuario",
+      "Sitio",
+      "Área",
+      "Lugar destino",
+      "Fecha",
+      "Cantidad",
+      "Códigos",
+    ],
+    accessors: [
+      "tipo",
+      "elemento",
+      "usuario",
+      "sitio",
+      "area",
+      "lugar_destino",
+      "fecha",
+      "cantidad",
+      "codigos",
+    ],
   },
   {
-    id: "usuarios-con-rol",
-    title: "Usuarios por rol",
-    description: "Listado de usuarios agrupados por su rol.",
-    headers: ["Nombre", "Rol", "Email"],
-    accessors: ["nombre", "rol", "email"],
-  },
-  {
-    id: "inventario-sitio",
-    title: "Inventario por sitio",
+    id: "sitios-con-mayor-stock",
+    title: "Stock del inventraio por Sitios",
     description: "Elementos disponibles por sitio.",
-    headers: ["Sitio", "Elemento", "Stock"],
-    accessors: ["sitio", "elemento", "stock"],
+    headers: ["Sitio", "Área", "Encargado", "Elemento", "Cantidad"],
+    accessors: ["sitio", "area", "encargado", "elemento", "cantidad"],
+  },
+  {
+    id: "elementos-por-caducar",
+    title: "Elementos por caducar",
+    description: "Lista de elementos que vencen próximamente.",
+    headers: [
+      "Nombre",
+      "Vencimiento",
+      "Creado",
+      "Registrado por",
+      "Sitio",
+      "Área",
+      "Días restantes",
+    ],
+    accessors: [
+      "nombre",
+      "vencimiento",
+      "creado",
+      "registrado_por",
+      "sitio",
+      "area",
+      "dias_restantes",
+    ],
   },
 ];
 
-
-
 export const filtrosPorReporte: Record<
   string,
-  Array<"fecha" | "tipoMovimiento" | "sitio" | "estado" | "rol">
+  Array<
+    | "fecha"
+    | "tipoMovimiento"
+    | "sitio"
+    | "estado"
+    | "nombre"
+    | "usuario"
+    | "area"
+  >
 > = {
-  "usuarios-elementos": ["fecha"],
-  "movimientos": ["fecha", "tipoMovimiento", "sitio", "estado"],
-  "usuarios-con-rol": ["rol", "fecha"],
-  "inventario-sitio": ["sitio"],
+  "usuarios-con-mas-movimientos": ["fecha", "sitio", "usuario"],
+  "historial-movimientos": ["fecha", "tipoMovimiento", "sitio", "usuario"],
+  "sitios-con-mayor-stock": ["sitio"],
+  "elementos-por-caducar": ["fecha", "sitio", "nombre"],
 };

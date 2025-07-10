@@ -1,24 +1,23 @@
 import React, { useState } from "react";
 import Buton from "@/components/molecules/Button";
-import { useRol } from "@/hooks/Roles/useRol";
 import { useSitios } from "@/hooks/sitios/useSitios";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
+import { useUsuario } from "@/hooks/Usuarios/useUsuario"; // Asumiendo que tienes este hook
+import { useAreas } from "@/hooks/areas/useAreas"; // Asumiendo que tienes este hook
 
 type Props = {
-  filtros: Array<"fecha" | "tipoMovimiento" | "sitio" | "estado" | "rol">;
+  filtros: Array<"fecha" | "tipoMovimiento" | "sitio" | "estado" | "nombre" | "usuario" | "area">;
   onFilter: (filtros: Record<string, string>) => void;
 };
 
 export const ReportFilterForm = ({ filtros, onFilter }: Props) => {
   const [filtro, setFiltro] = useState<Record<string, string>>({});
 
-  const { roles: roles = [] } = useRol();
-  const { sitios: sitios = [] } = useSitios();
-  const { tipos: tipos = [] } = useTipoMovimiento();
+  const { sitios = [] } = useSitios();
+  const { tipos = [] } = useTipoMovimiento();
+  const { users = [] } = useUsuario();
+  const { areas = [] } = useAreas();
 
-  console.log("roles", roles);
-  console.log("sitios", sitios);
-  console.log("tipos", tipos);
   const handleChange = (key: string, value: string) => {
     setFiltro((prev) => ({ ...prev, [key]: value }));
   };
@@ -56,18 +55,23 @@ export const ReportFilterForm = ({ filtros, onFilter }: Props) => {
         </>
       )}
 
-      <select
-        value={filtro.tipoMovimiento || ""}
-        onChange={(e) => handleChange("tipoMovimiento", e.target.value)}
-        className="border rounded px-2 py-1"
-      >
-        <option value="">Todos</option>
-        {tipos.map((tm: any) => (
-          <option key={tm.idTipo} value={tm.nombre}>
-            {tm.nombre}
-          </option>
-        ))}
-      </select>
+      {filtros.includes("tipoMovimiento") && (
+        <div className="flex flex-col">
+          <label>Tipo de movimiento:</label>
+          <select
+            value={filtro.tipoMovimiento || ""}
+            onChange={(e) => handleChange("tipoMovimiento", e.target.value)}
+            className="border rounded px-2 py-1"
+          >
+            <option value="">Todos</option>
+            {tipos.map((tm: any) => (
+              <option key={tm.idTipo} value={tm.nombre}>
+                {tm.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {filtros.includes("estado") && (
         <div className="flex flex-col">
@@ -103,21 +107,52 @@ export const ReportFilterForm = ({ filtros, onFilter }: Props) => {
         </div>
       )}
 
-      {filtros.includes("rol") && (
+      {filtros.includes("usuario") && (
         <div className="flex flex-col">
-          <label>Rol:</label>
+          <label>Usuario:</label>
           <select
-            value={filtro.rol || ""}
-            onChange={(e) => handleChange("rol", e.target.value)}
+            value={filtro.usuario || ""}
+            onChange={(e) => handleChange("usuario", e.target.value)}
             className="border rounded px-2 py-1"
           >
             <option value="">Todos</option>
-            {roles.map((r: any) => (
-              <option key={r.idRol} value={r.idRol}>
-                {r.nombre}
+            {users.map((u: any) => (
+              <option key={u.idUsuario} value={u.idUsuario}>
+                {u.nombre}
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {filtros.includes("area") && (
+        <div className="flex flex-col">
+          <label>Área:</label>
+          <select
+            value={filtro.area || ""}
+            onChange={(e) => handleChange("area", e.target.value)}
+            className="border rounded px-2 py-1"
+          >
+            <option value="">Todas</option>
+            {areas.map((a: any) => (
+              <option key={a.idArea} value={a.idArea}>
+                {a.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {filtros.includes("nombre") && (
+        <div className="flex flex-col">
+          <label>Nombre del elemento:</label>
+          <input
+            type="text"
+            value={filtro.nombre || ""}
+            onChange={(e) => handleChange("nombre", e.target.value)}
+            className="border rounded px-2 py-1"
+            placeholder="Buscar por nombre"
+          />
         </div>
       )}
 
