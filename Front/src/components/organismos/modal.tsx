@@ -11,14 +11,14 @@ type PropsModal = {
         children: React.ReactNode
         isOpen?: boolean
         onOpenChange?: () => void
-
+        size?: "sm" | "md" | "lg" | "xl" | "2xl" | "xs" | "3xl" | "4xl" | "5xl" | "full"
 }
-export default function Modall({ ModalTitle, children, isOpen, onOpenChange }: PropsModal) {
+export default function Modall({ ModalTitle, children, isOpen, onOpenChange, size }: PropsModal) {
 
 
         return (
 
-                <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside" isDismissable={false} >
+                <Modal size={ size ?? "md"} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside" isDismissable={false} >
                         <ModalContent>
 
                                 <>
