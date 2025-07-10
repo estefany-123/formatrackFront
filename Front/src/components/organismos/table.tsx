@@ -76,13 +76,13 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
     let result = data;
 
 
-    if (mostrarFiltroEstado) {
-      result = result.filter((item) => item.estado === true);
-    } else if (estadoFiltro === "inactivos") {
-      result = result.filter((item) => item.estado === false);
-    }else{
-      result = result
-    }
+if (mostrarFiltroEstado) {
+  if (estadoFiltro === "activos") {
+    result = result.filter((item) => item.estado === true);
+  } else if (estadoFiltro === "inactivos") {
+    result = result.filter((item) => item.estado === false);
+  }
+}
 
     if (searchTerm.trim()) {
       const lowerSearch = searchTerm.toLowerCase();

@@ -4,9 +4,18 @@ import { useSitios } from "@/hooks/sitios/useSitios";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario"; // Asumiendo que tienes este hook
 import { useAreas } from "@/hooks/areas/useAreas"; // Asumiendo que tienes este hook
+import { Input } from "@heroui/input";
 
 type Props = {
-  filtros: Array<"fecha" | "tipoMovimiento" | "sitio" | "estado" | "nombre" | "usuario" | "area">;
+  filtros: Array<
+    | "fecha"
+    | "tipoMovimiento"
+    | "sitio"
+    | "estado"
+    | "nombre"
+    | "usuario"
+    | "area"
+  >;
   onFilter: (filtros: Record<string, string>) => void;
 };
 
@@ -33,26 +42,28 @@ export const ReportFilterForm = ({ filtros, onFilter }: Props) => {
       className="flex flex-wrap gap-4 items-end mb-4"
     >
       {filtros.includes("fecha") && (
-        <>
-          <div className="flex flex-col">
-            <label>Desde:</label>
-            <input
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Rango de fechas:</label>
+          <div className="flex items-end gap-2">
+            <Input
+              label="Fecha Inicio"
               type="date"
+              size="sm"
               value={filtro.desde || ""}
               onChange={(e) => handleChange("desde", e.target.value)}
-              className="border rounded px-2 py-1"
+              className="text-sm"
             />
-          </div>
-          <div className="flex flex-col">
-            <label>Hasta:</label>
-            <input
+            <span className="text-sm">–</span>
+            <Input
+              label="Fecha Fin"
               type="date"
+              size="sm"
               value={filtro.hasta || ""}
               onChange={(e) => handleChange("hasta", e.target.value)}
-              className="border rounded px-2 py-1"
+              className="text-sm"
             />
           </div>
-        </>
+        </div>
       )}
 
       {filtros.includes("tipoMovimiento") && (

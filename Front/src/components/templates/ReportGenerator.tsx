@@ -3,7 +3,6 @@ import { ReportFilterForm } from "@/components/molecules/ReportFilterForm";
 import { ReportTableSection } from "@/components/organismos/ReportTableSection";
 import { ReportPreviewPanel } from "@/components/organismos/ReportPreviewPanel";
 import { GraficoConCaptura } from "../organismos/GraficaConCaptura";
-import { useState } from "react";
 
 type ReportItem = {
   id: string;
@@ -41,7 +40,6 @@ export const ReportGenerator = ({
   onDownloadPDF,
 }: Props) => {
   const report = reports.find((r) => r.id === selectedId);
-  const [imagenBase64, setImagenBase64] = useState<string | null>(null);
 
   if (!report) return <p>Reporte no encontrado.</p>;
 
@@ -86,7 +84,7 @@ export const ReportGenerator = ({
                   : "cantidad"
         }
         title={report.title}
-        onBase64Ready={setImagenBase64}
+
       />
     </div>
   );

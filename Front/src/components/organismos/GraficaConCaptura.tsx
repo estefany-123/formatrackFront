@@ -6,10 +6,9 @@ type Props = {
   labels: string[];
   accessor: string;
   title: string;
-  onBase64Ready: (base64: string) => void;
 };
 
-export const GraficoConCaptura = ({ data, labels, accessor, title, onBase64Ready }: Props) => {
+export const GraficoConCaptura = ({ data, labels, accessor, title }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
 
@@ -45,12 +44,6 @@ export const GraficoConCaptura = ({ data, labels, accessor, title, onBase64Ready
         },
       },
     });
-
-    // Esperar a que renderice
-    setTimeout(() => {
-      const base64 = canvasRef.current!.toDataURL("image/png");
-      onBase64Ready(base64);
-    }, 500);
   }, [data, labels, accessor, title]);
 
   return (

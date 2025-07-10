@@ -18,7 +18,7 @@ export const ReportSelectorPanel = ({ reports, selectedId, onChange }: Props) =>
 
   return (
     <section className="mb-6">
-      <Title>📊 Reportes</Title>
+      <Title> Reportes</Title>
       <ReportSelectorButton
         reports={reports}
         selectedId={selectedId}

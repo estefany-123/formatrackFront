@@ -11,7 +11,7 @@ type Props = {
 export const ReportPreviewPanel = ({ data, title, headers, accessors }: Props) => {
   return (
     <section className="mt-6">
-      <h2 className="text-lg font-semibold mb-2">📄 Vista previa PDF</h2>
+      <h2 className="text-lg font-semibold mb-2"> Vista previa PDF</h2>
       <div className="border rounded overflow-hidden shadow">
         <PDFViewer width="100%" height="500">
           <ReportPDF

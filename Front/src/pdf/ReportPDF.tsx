@@ -4,7 +4,6 @@ import {
   View,
   Document,
   StyleSheet,
-  Image,
 } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
@@ -54,7 +53,7 @@ type Props = {
   headers: string[];
   accessors: string[];
   data: any[];
-  chartImageBase64?: string; // imagen opcional del gráfico
+// imagen opcional del gráfico
 };
 
 const ReportPDF = ({
@@ -62,15 +61,10 @@ const ReportPDF = ({
   headers,
   accessors,
   data,
-  chartImageBase64,
 }: Props) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <Text style={styles.title}>{title}</Text>
-
-      {chartImageBase64 && (
-        <Image src={chartImageBase64} style={styles.chart} />
-      )}
 
       <View style={styles.table}>
         {/* Encabezado */}
