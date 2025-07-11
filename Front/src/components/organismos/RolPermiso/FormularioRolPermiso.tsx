@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 export default function FormularioRolPermiso(
   { rol }: { rol: number },
-  id: string
 ) {
   const [loading, setLoading] = useState<boolean>(true);
 

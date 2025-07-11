@@ -5,7 +5,7 @@ import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useFichas } from "@/hooks/fichas/useFichas";
 import { Ficha } from "@/types/Ficha";
-import { Card, CardBody, divider } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdateFicha } from "@/components/organismos/fichas/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
