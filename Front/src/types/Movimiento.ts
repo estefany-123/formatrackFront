@@ -23,3 +23,11 @@ export type Movimiento = {
   tipo_bien?: string;
   codigos?: string[];
 };
+
+export type MovimientoExtendido = Movimiento & {
+  fkTipoMovimiento?: { nombre: string };
+  fkUsuario?: { nombre: string };
+  fkInventario?: {
+    fkElemento?: { nombre: string };
+  };
+};

@@ -2,7 +2,6 @@ import { ReportSelectorPanel } from "@/components/organismos/ReportSelectorPanel
 import { ReportFilterForm } from "@/components/molecules/ReportFilterForm";
 import { ReportTableSection } from "@/components/organismos/ReportTableSection";
 import { ReportPreviewPanel } from "@/components/organismos/ReportPreviewPanel";
-import { GraficoConCaptura } from "../organismos/GraficaConCaptura";
 
 type ReportItem = {
   id: string;
@@ -65,26 +64,6 @@ export const ReportGenerator = ({
         headers={report.headers}
         accessors={report.accessors}
         data={data}
-      />
-
-      <GraficoConCaptura
-        data={data}
-        labels={data.map(
-          (d) => d.usuario || d.elemento || d.sitio || d.nombre || "Desconocido"
-        )}
-        accessor={
-          report.id === "usuarios-con-mas-movimientos"
-            ? "total_movimientos"
-            : report.id === "movimientos"
-              ? "cantidad"
-              : report.id === "sitios-con-mayor-stock"
-                ? "cantidad"
-                : report.id === "elementos-por-caducar"
-                  ? "dias_restantes"
-                  : "cantidad"
-        }
-        title={report.title}
-
       />
     </div>
   );

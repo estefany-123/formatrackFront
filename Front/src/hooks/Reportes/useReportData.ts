@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 
@@ -26,28 +26,64 @@ export const useReportData = (reportId: string) => {
     filters.hasta || ""
   );
 
+  const normaliza = (valor?: string | number | null) =>
+    valor ? String(valor).toLowerCase() : "";
+
   const data = useMemo(() => {
     let baseData: Record<string, any>[] = [];
 
     switch (reportId) {
       case "sitios-con-mayor-stock":
         baseData = sitiosStock;
-        if (filters.sitio) baseData = baseData.filter((d) => d.sitio?.includes(filters.sitio));
-        if (filters.area) baseData = baseData.filter((d) => d.area?.includes(filters.area));
+        if (filters.sitio) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.sitio).includes(normaliza(filters.sitio))
+          );
+        }
+        if (filters.area) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.area).includes(normaliza(filters.area))
+          );
+        }
         break;
 
       case "usuarios-con-mas-movimientos":
         baseData = usuariosMovs;
-        if (filters.usuario) baseData = baseData.filter((d) => d.usuario?.includes(filters.usuario));
-        if (filters.sitio) baseData = baseData.filter((d) => d.sitio?.includes(filters.sitio));
-        if (filters.nombre) baseData = baseData.filter((d) => d.elemento?.toLowerCase().includes(filters.nombre.toLowerCase()));
+        if (filters.usuario) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.usuario).includes(normaliza(filters.usuario))
+          );
+        }
+        if (filters.sitio) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.sitio).includes(normaliza(filters.sitio))
+          );
+        }
+        if (filters.nombre) {
+          baseData = baseData.filter((d) => {
+            const nombre = d.elemento || d.nombre;
+            return normaliza(nombre).includes(normaliza(filters.nombre));
+          });
+        }
         break;
 
       case "elementos-por-caducar":
         baseData = elementosCaducar;
-        if (filters.nombre) baseData = baseData.filter((d) => d.nombre?.toLowerCase().includes(filters.nombre.toLowerCase()));
-        if (filters.sitio) baseData = baseData.filter((d) => d.sitio?.includes(filters.sitio));
-        if (filters.area) baseData = baseData.filter((d) => d.area?.includes(filters.area));
+        if (filters.nombre) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.nombre).includes(normaliza(filters.nombre))
+          );
+        }
+        if (filters.sitio) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.sitio).includes(normaliza(filters.sitio))
+          );
+        }
+        if (filters.area) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.area).includes(normaliza(filters.area))
+          );
+        }
         if (filters.desde && filters.hasta) {
           const desde = new Date(filters.desde);
           const hasta = new Date(filters.hasta);
@@ -60,10 +96,27 @@ export const useReportData = (reportId: string) => {
 
       case "historial-movimientos":
         baseData = historialMovs;
-        if (filters.tipoMovimiento) baseData = baseData.filter((d) => d.tipo?.includes(filters.tipoMovimiento));
-        if (filters.sitio) baseData = baseData.filter((d) => d.sitio?.includes(filters.sitio));
-        if (filters.usuario) baseData = baseData.filter((d) => d.usuario?.includes(filters.usuario));
-        if (filters.nombre) baseData = baseData.filter((d) => d.elemento?.toLowerCase().includes(filters.nombre.toLowerCase()));
+        if (filters.tipoMovimiento) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.tipo).includes(normaliza(filters.tipoMovimiento))
+          );
+        }
+        if (filters.sitio) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.sitio).includes(normaliza(filters.sitio))
+          );
+        }
+        if (filters.usuario) {
+          baseData = baseData.filter((d) =>
+            normaliza(d.usuario).includes(normaliza(filters.usuario))
+          );
+        }
+        if (filters.nombre) {
+          baseData = baseData.filter((d) => {
+            const nombre = d.elemento || d.nombre;
+            return normaliza(nombre).includes(normaliza(filters.nombre));
+          });
+        }
         break;
 
       default:
@@ -71,14 +124,21 @@ export const useReportData = (reportId: string) => {
     }
 
     return baseData;
-  }, [reportId, filters, sitiosStock, usuariosMovs, elementosCaducar, historialMovs]);
+  }, [
+    reportId,
+    filters,
+    sitiosStock,
+    usuariosMovs,
+    elementosCaducar,
+    historialMovs,
+  ]);
 
   const aplicarFiltros = (valores: Record<string, string>) => {
     setFilters(valores);
   };
 
   const descargarPDF = async () => {
-    const element = React.createElement(ReportPDF, {
+    const element = ReportPDF({
       title: report.title,
       headers: report.headers,
       accessors: report.accessors,
@@ -88,9 +148,6 @@ export const useReportData = (reportId: string) => {
     const blob = await pdf(element).toBlob();
     saveAs(blob, `${report.title}.pdf`);
   };
-
-  console.log("Filtros aplicados:", filters);
-  console.log("DATA RECIBIDA PARA EL REPORTE:", reportId, data);
 
   return {
     data,

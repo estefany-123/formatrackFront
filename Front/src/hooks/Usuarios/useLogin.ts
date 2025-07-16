@@ -1,3 +1,4 @@
+import { verificarInventario } from "@/axios/Notificaciones/verificarInventario";
 import { postLogin } from "@/axios/Usuarios/postLogin";
 import { useAuth } from "@/providers/AuthProvider";
 import { Credenciales } from "@/schemas/User";
@@ -29,12 +30,14 @@ export default function useLogin(){
             cookies.set("token",token);
             cookies.set("permissions",permissions);
             //Auth
-            const {nombre,apellido,perfil,iduser} : {nombre : string, apellido : string, perfil: string,iduser:number}= jwtDecode(token);
+            const {nombre,apellido,perfil,idUsuario} : {nombre : string, apellido : string, perfil: string,idUsuario:number}= jwtDecode(token);
             setNombre(`${nombre} ${apellido}`);
             setAuthenticated(true);
             setPerfil(perfil);
-            setIdUser(iduser)
-            console.log("iduser desde uselogin",iduser)
+            setIdUser(idUsuario)
+            console.log("idUsuario desde uselogin",idUsuario)
+
+            await verificarInventario(idUsuario)
             //Error handling
             setIsError(false);
             setError(undefined);

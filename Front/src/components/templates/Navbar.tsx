@@ -13,15 +13,18 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
-import { Notificacion } from "@/types/Notificacion";
 
 type NavProps = {
   children?: ReactNode;
   onOpenNotifications?: () => void;
-  notificaciones?: Notificacion[];
+  cantidadNoLeidas?: number;
 };
 
-export function Nav({ children, onOpenNotifications, notificaciones = [] }: NavProps) {
+export function Nav({
+  children,
+  onOpenNotifications,
+  cantidadNoLeidas = 0,
+}: NavProps) {
   const navigate = useNavigate();
   const { nombre, perfil } = useAuth();
 
@@ -43,9 +46,9 @@ export function Nav({ children, onOpenNotifications, notificaciones = [] }: NavP
             >
               <BellIcon className="w-6 h-6" />
 
-              {notificaciones.some((n) => !n.leido) && (
+              {cantidadNoLeidas > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1.5 text-xs">
-                  {notificaciones.filter((n) => !n.leido).length}
+                  {cantidadNoLeidas}
                 </span>
               )}
             </button>
@@ -72,7 +75,9 @@ export function Nav({ children, onOpenNotifications, notificaciones = [] }: NavP
           </DropdownMenu>
         </Dropdown>
 
-        <div>{children}</div>
+        <div>
+          {children}
+        </div>
 
         <User
           name={nombre}

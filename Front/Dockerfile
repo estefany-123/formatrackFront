@@ -1,13 +1,15 @@
-FROM node:alpine
+FROM node:22.9.0-alpine3.19
 
-COPY  package*.json .
+WORKDIR /app/
 
-COPY  . /app
+COPY package*.json .
 
-WORKDIR /app
+RUN npm install
 
-RUN npm i
+COPY . .
 
 EXPOSE 5173
+
+ENV VITE_API_CLIENT='http://localhost:3000/'
 
 CMD ["npm", "run", "dev"]

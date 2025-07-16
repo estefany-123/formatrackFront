@@ -26,6 +26,7 @@ import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
 import {Reportes} from "./pages/Reportes/Reportes";
+import MovimientoDetalle from "./pages/Bodega/MovimientosDetalles";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="admin/tiposSitio" element={<TipoSitioTable />} />
           <Route path="bodega/elementos" element={<ElementosTable />} />
           <Route path="bodega/movimientos" element={<MovimientoTable />} />
+          <Route path="bodega/movimientosDetalle/:id" element={<MovimientoDetalle />} />
           <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
           <Route path="bodega/unidades" element={<UnidadTable />} />
           <Route path="bodega/categorias" element={<CategoriasTable />} />

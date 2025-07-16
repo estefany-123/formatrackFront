@@ -11,7 +11,10 @@ export const ReportTable = ({ headers, accessors, data }: Props) => {
         <thead className="bg-gray-200">
           <tr>
             {headers.map((header, i) => (
-              <th key={i} className="px-4 py-2 text-left text-sm font-bold">
+              <th
+                key={i}
+                className="px-4 py-2 text-left text-sm font-bold whitespace-nowrap"
+              >
                 {header}
               </th>
             ))}
@@ -28,8 +31,13 @@ export const ReportTable = ({ headers, accessors, data }: Props) => {
           {data.map((row, i) => (
             <tr key={i} className="hover:bg-gray-100">
               {accessors.map((acc, j) => (
-                <td key={j} className="px-4 py-2 border-t">
-                  {row[acc]}
+                <td
+                  key={j}
+                  className="px-4 py-2 border-t whitespace-pre-wrap break-words text-sm"
+                >
+                  {Array.isArray(row[acc])
+                    ? row[acc].join(", ") // Si es array, lo separa por comas
+                    : row[acc] ?? "-"}
                 </td>
               ))}
             </tr>
