@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 export const TipoSitioSchema = z.object({
-    nombre : z.string().min(1,{message : "Nombre es reqerido"}).min(4,"Mínimo 4 caracteres"),
+    nombre : z
+    .string()
+    .min(1,{message : "Nombre es requerido"})
+    .min(4,{message:"Mínimo 4 caracteres"}),
     estado: z.boolean({ required_error: "Estado es requerido" }),
 })
 

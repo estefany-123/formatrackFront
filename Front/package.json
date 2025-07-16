@@ -4,12 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint -c .eslintrc.json ./src/**/**/*.{ts,tsx} --fix",
     "preview": "vite preview"
   },
   "dependencies": {
+    
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@heroui/button": "^2.2.16",

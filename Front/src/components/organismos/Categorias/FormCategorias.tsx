@@ -30,7 +30,6 @@ export default function FormCategorias({
   });
 
   const onSubmit = async (data: Categoria) => {
-    console.log(data);
     try {
       await addData(data);
       onClose();

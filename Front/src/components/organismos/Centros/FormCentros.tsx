@@ -31,6 +31,7 @@ export default function FormCentros({ addData, onClose, id }: FormularioProps) {
     formState: { errors },
   } = useForm<Centro>({
     resolver: zodResolver(CentroSchema),
+    mode:"onChange",
     defaultValues: {
       estado: true,
     },
@@ -41,7 +42,6 @@ export default function FormCentros({ addData, onClose, id }: FormularioProps) {
   const handleClose = () => setShowModal(false);
 
   const onSubmit = async (data: Centro) => {
-    console.log(data);
     try {
       await addData(data);
       onClose();
@@ -69,7 +69,7 @@ export default function FormCentros({ addData, onClose, id }: FormularioProps) {
           label="Nombre"
           placeholder="Nombre"
           type="text"
-          isInvalid={!!errors.nombre} //color
+          isInvalid={!!errors.nombre}
           errorMessage={errors.nombre?.message}
         />
 
