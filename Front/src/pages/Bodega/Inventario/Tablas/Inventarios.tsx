@@ -88,11 +88,11 @@ export const InventariosTable = ({
       label: "Imagen",
       render: (inventario: Inventario) => {
         const fkElemento = (inventario as any).fkElemento;
-        const imagen = fkElemento?.imagenElemento;
+        const imagen = fkElemento?.imagen;
 
         if (!imagen) return <span>No encontrado</span>;
 
-        const src = `http://localhost:3000/img/elementos/${imagen}`;
+        const src = `http://localhost:3000/img/img/elementos/${imagen}`;
 
         return (
           <img

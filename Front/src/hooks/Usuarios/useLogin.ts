@@ -23,7 +23,6 @@ export default function useLogin(){
         setIsLoading(true);
         try{
             const response  = await postLogin(data);
-            console.log("datos que se envian al back",typeof data.documento);
              console.log(response)
             const token = response.access_token;
             const permissions = response.modules;
@@ -35,7 +34,6 @@ export default function useLogin(){
             setAuthenticated(true);
             setPerfil(perfil);
             setIdUser(idUsuario)
-            console.log("idUsuario desde uselogin",idUsuario)
 
             await verificarInventario(idUsuario)
             //Error handling
