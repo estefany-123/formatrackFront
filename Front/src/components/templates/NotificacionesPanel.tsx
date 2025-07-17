@@ -48,23 +48,25 @@ export default function NotificacionesPanel({ open, onClose }: Props) {
             {noti.requiereAccion && noti.estado === "enProceso" && (
               <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    cambiarEstado({
+                  onClick={async () => {
+                    await cambiarEstado({
                       id: noti.idNotificacion,
                       estado: "aceptado",
-                    })
-                  }
+                    });
+                    navigate("/bodega/movimientos"); // Redirige después de aceptar
+                  }}
                   className="px-3 py-1 rounded-md bg-green-500 text-white hover:bg-green-600"
                 >
                   Aceptar
                 </button>
                 <button
-                  onClick={() =>
-                    cambiarEstado({
+                  onClick={async () =>{
+                    await cambiarEstado({
                       id: noti.idNotificacion,
                       estado: "cancelado",
                     })
-                  }
+                    navigate("/bodega/movimientos");
+                  }}
                   className="px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600"
                 >
                   Rechazar
@@ -82,7 +84,8 @@ export default function NotificacionesPanel({ open, onClose }: Props) {
             {/* Botón marcar como leída */}
             {!noti.leido && (
               <button
-                onClick={() => marcarLeida(noti.idNotificacion)}
+                onClick={async () =>{ await marcarLeida(noti.idNotificacion)
+                  navigate("/");}}
                 className="mt-2 text-blue-500 underline text-sm"
               >
                 Marcar como leída
