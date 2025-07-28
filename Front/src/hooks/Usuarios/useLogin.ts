@@ -42,7 +42,7 @@ export default function useLogin(){
             //Redirection
             navigate("/");
         }
-        catch(error){
+        catch(error:any){
             const errorMessage = error.response.data.response.message;
             setIsError(true);
             setError(errorMessage);
