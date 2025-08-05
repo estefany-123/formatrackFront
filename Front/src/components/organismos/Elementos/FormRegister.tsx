@@ -6,7 +6,7 @@ import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 import { Form } from "@heroui/form";
 import { addToast, Checkbox, Input, Select, SelectItem } from "@heroui/react";
 import { ElementoCreate, ElementoCreateSchema } from "@/schemas/Elemento";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Buton from "@/components/molecules/Button";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import Modal from "../modal";
@@ -175,87 +175,151 @@ export default function FormularioElementos({
         <Controller
           control={control}
           name="fkUnidadMedida"
-          render={({ field }) => (
-            <div className="w-full flex">
-              <Select
-                label="Unidad"
-                {...field}
-                className="w-full"
-                placeholder="Selecciona una unidad de medida..."
-                aria-label="Seleccionar Unidad de Medida"
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                isInvalid={!!errors.fkUnidadMedida}
-                errorMessage={errors.fkUnidadMedida?.message}
-              >
-                {unidades?.length ? (
-                  unidades
-                    .filter((u) => u.estado === true)
-                    .map((unidad) => (
-                      <SelectItem
-                        key={unidad.idUnidad}
-                        textValue={unidad.nombre}
-                      >
-                        {unidad.nombre}
-                      </SelectItem>
-                    ))
-                ) : (
-                  <SelectItem isDisabled>
-                    No hay unidades disponibles
-                  </SelectItem>
-                )}
-              </Select>
-              <Buton
-                type="button"
-                className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl "
-                onPress={() => setShowModal(true)}
-              >
-                <PlusCircleIcon />
-              </Buton>
-            </div>
-          )}
+          render={({ field }) => {
+            const [query, setQuery] = useState("");
+            const [showOptions, setShowOptions] = useState(false);
+
+            const filteredUnidades =
+              unidades?.filter(
+                (u) =>
+                  u.estado &&
+                  u.nombre.toLowerCase().includes(query.toLowerCase())
+              ) || [];
+
+            const selectedUnidad = unidades?.find(
+              (u) => u.idUnidad === field.value
+            );
+
+            useEffect(() => {
+              if (selectedUnidad) {
+                setQuery(selectedUnidad.nombre);
+              }
+            }, [selectedUnidad?.idUnidad]);
+
+            return (
+              <div className="relative w-full flex items-start gap-2">
+                <div className="w-full">
+                  <Input
+                    label="Unidad"
+                    placeholder="Selecciona una unidad de medida..."
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowOptions(true);
+                      field.onChange(null); // borra selección anterior si empieza a escribir
+                    }}
+                    onFocus={() => setShowOptions(true)}
+                    onBlur={() => setTimeout(() => setShowOptions(false), 150)}
+                    isInvalid={!!errors.fkUnidadMedida}
+                    errorMessage={errors.fkUnidadMedida?.message}
+                  />
+
+                  {showOptions && filteredUnidades.length > 0 && (
+                    <div
+                      className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto 
+              rounded-lg border border-gray-200 bg-white/80 
+              shadow-lg transition-all duration-200 backdrop-blur-sm"
+                    >
+                      {filteredUnidades.map((unidad) => (
+                        <div
+                          key={unidad.idUnidad}
+                          className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                          onMouseDown={(e) => {
+                            // evita que blur se dispare antes del onClick
+                            e.preventDefault();
+                            field.onChange(unidad.idUnidad);
+                            setQuery(unidad.nombre);
+                            setShowOptions(false);
+                          }}
+                        >
+                          {unidad.nombre}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl "
+                  onPress={() => setShowModal(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            );
+          }}
         />
 
         <Controller
           control={control}
           name="fkCategoria"
-          render={({ field }) => (
-            <div className="w-full flex">
-              <Select
-                label="Categoria"
-                {...field}
-                className="w-full"
-                placeholder="Selecciona una categoría..."
-                aria-label="Seleccionar Categoría"
-                onChange={(e) => {
-                  const value = Number(e.target.value);
-                  field.onChange(value);
-                }}
-                isInvalid={!!errors.fkCategoria}
-                errorMessage={errors.fkCategoria?.message}
-              >
-                {categorias?.length ? (
-                  categorias
-                    .filter((cat) => cat.estado === true)
-                    .map((cat) => (
-                      <SelectItem key={cat.idCategoria} textValue={cat.nombre}>
-                        {cat.nombre}
-                      </SelectItem>
-                    ))
-                ) : (
-                  <SelectItem isDisabled>
-                    No hay categorías disponibles
-                  </SelectItem>
-                )}
-              </Select>
-              <Buton
-                type="button"
-                className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl "
-                onPress={() => setShowModalCategoria(true)}
-              >
-                <PlusCircleIcon />
-              </Buton>
-            </div>
-          )}
+          render={({ field }) => {
+            const [query, setQuery] = useState("");
+            const [showOptions, setShowOptions] = useState(false);
+
+            const filteredCategorias =
+              categorias?.filter(
+                (c) =>
+                  c.estado &&
+                  c.nombre.toLowerCase().includes(query.toLowerCase())
+              ) || [];
+
+            const selectedCategoria = categorias?.find(
+              (c) => c.idCategoria === field.value
+            );
+
+            useEffect(() => {
+              if (selectedCategoria) {
+                setQuery(selectedCategoria.nombre);
+              }
+            }, [selectedCategoria?.idCategoria]);
+
+            return (
+              <div className="relative w-full flex items-start gap-2">
+                <div className="w-full">
+                  <Input
+                    label="Categoría"
+                    placeholder="Selecciona una categoría..."
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowOptions(true);
+                      field.onChange(null);
+                    }}
+                    onFocus={() => setShowOptions(true)}
+                    onBlur={() => setTimeout(() => setShowOptions(false), 150)}
+                    isInvalid={!!errors.fkCategoria}
+                    errorMessage={errors.fkCategoria?.message}
+                  />
+                  {showOptions && filteredCategorias.length > 0 && (
+                    <div className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto rounded-lg border border-gray-200 bg-white/80 shadow-lg transition-all duration-200 backdrop-blur-sm">
+                      {filteredCategorias.map((cat) => (
+                        <div
+                          key={cat.idCategoria}
+                          className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            field.onChange(cat.idCategoria);
+                            setQuery(cat.nombre);
+                            setShowOptions(false);
+                          }}
+                        >
+                          {cat.nombre}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModalCategoria(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            );
+          }}
         />
 
         <Checkbox
@@ -272,29 +336,71 @@ export default function FormularioElementos({
               <Controller
                 control={control}
                 name="fkCaracteristica"
-                render={({ field }) => (
-                  <Select
-                    label="Característica"
-                    {...field}
-                    className="w-full"
-                    placeholder="Selecciona una característica..."
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    isInvalid={!!errors.fkCaracteristica}
-                    errorMessage={errors.fkCaracteristica?.message}
-                  >
-                    {caracteristicas?.length ? (
-                      caracteristicas.map((cat) => (
-                        <SelectItem key={cat.idCaracteristica}>
-                          {cat.nombre}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem isDisabled>
-                        No hay características disponibles
-                      </SelectItem>
-                    )}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  const [query, setQuery] = useState("");
+                  const [showOptions, setShowOptions] = useState(false);
+
+                  const filteredCaracteristicas =
+                    caracteristicas?.filter((c) =>
+                      c.nombre.toLowerCase().includes(query.toLowerCase())
+                    ) || [];
+
+                  const selectedCaracteristica = caracteristicas?.find(
+                    (c) => c.idCaracteristica === field.value
+                  );
+
+                  useEffect(() => {
+                    if (selectedCaracteristica) {
+                      setQuery(selectedCaracteristica.nombre);
+                    }
+                  }, [selectedCaracteristica?.idCaracteristica]);
+
+                  return (
+                    <div className="relative w-full flex items-start gap-2">
+                      <div className="w-full">
+                        <Input
+                          label="Característica"
+                          placeholder="Selecciona una característica..."
+                          value={query}
+                          onChange={(e) => {
+                            setQuery(e.target.value);
+                            setShowOptions(true);
+                            field.onChange(null);
+                          }}
+                          onFocus={() => setShowOptions(true)}
+                          onBlur={() =>
+                            setTimeout(() => setShowOptions(false), 150)
+                          }
+                          isInvalid={!!errors.fkCaracteristica}
+                          errorMessage={errors.fkCaracteristica?.message}
+                        />
+
+                        {showOptions && filteredCaracteristicas.length > 0 && (
+                          <div
+                            className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto 
+              rounded-lg border border-gray-200 bg-white/80 
+              shadow-lg transition-all duration-200 backdrop-blur-sm"
+                          >
+                            {filteredCaracteristicas.map((car) => (
+                              <div
+                                key={car.idCaracteristica}
+                                className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  field.onChange(car.idCaracteristica);
+                                  setQuery(car.nombre);
+                                  setShowOptions(false);
+                                }}
+                              >
+                                {car.nombre}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }}
               />
             </div>
 
@@ -307,6 +413,23 @@ export default function FormularioElementos({
             </Buton>
           </div>
         )}
+<Controller
+  name="perecedero"
+  control={control}
+  defaultValue={false}
+  render={({ field }) => (
+    <input type="hidden" {...field} value={field.value ? "true" : "false"} />
+  )}
+/>
+<Controller
+  name="noPerecedero"
+  control={control}
+  defaultValue={false}
+  render={({ field }) => (
+    <input type="hidden" {...field} value={field.value ? "true" : "false"} />
+  )}
+/>
+
       </Form>
       <Modal
         ModalTitle="Agregar Unidad"
