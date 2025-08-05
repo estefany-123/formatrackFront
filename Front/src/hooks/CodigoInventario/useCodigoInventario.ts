@@ -9,15 +9,17 @@ export function useCodigoInventario() {
   const { data, isLoading, isError, error } = useQuery<CodigoInventario[]>({
     queryKey: ["codigosInventario"],
     queryFn: getCodigoInventario,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
 
   const getCodigosPorInventario = (
-    idInventario: number
+    idInventario: number,
+    codigosData: CodigoInventario[] = data ?? []
   ): CodigoInventario[] => {
-    return (data ?? []).filter((c) => {
+    return codigosData.filter((c) => {
       if (typeof c.fkInventario === "object" && c.fkInventario !== null) {
         return c.fkInventario.idInventario === idInventario;
       }
@@ -34,10 +36,11 @@ export function useCodigoInventario() {
 
   const updateCodigoMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: CodigoInventario }) => {
-      return putCodigoInventario(id, data);
+      const { idCodigoInventario, ...resto } = data;
+      return putCodigoInventario(id, resto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["codigosInventario"] });
+      queryClient.refetchQueries({ queryKey: ["codigosInventario"] });
     },
     onError: (error) => {
       console.error("Error al actualizar el código de inventario:", error);

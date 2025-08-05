@@ -3,7 +3,6 @@ import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
-import Formulario from "@/components/organismos/Inventarios/FormRegister";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import {
   Inventario,
@@ -13,6 +12,8 @@ import {
 import { FormAgregateStock } from "@/components/organismos/Inventarios/FormAgregateStock";
 import { FormUpdate } from "@/components/organismos/Inventarios/FormUpdate";
 import { CodigoInventario } from "../../CodigoInventario";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
+import { DocumentTextIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 
 interface InventariosTableProps {
   inventarios?: Inventario[];
@@ -23,17 +24,15 @@ export const InventariosTable = ({
   inventarios: inventariosProp,
   idSitio,
 }: InventariosTableProps) => {
+  const { userHasPermission } = usePermissions();
+
   const {
     inventarios: inventariosHook,
     isLoading,
     isError,
     error,
-    addInventario,
     changeState,
   } = useInventario();
-  //Modal agregar
-  const [isOpen, setIsOpen] = useState(false);
-  const handleClose = () => setIsOpen(false);
 
   //Modal actualizar
   const [IsOpenUpdate, setIsOpenUpdate] = useState(false);
@@ -42,6 +41,7 @@ export const InventariosTable = ({
   const [isOpenCodigos, setIsOpenCodigos] = useState(false);
   const [inventarioCodigos, setInventarioCodigos] =
     useState<InventarioConElemento | null>(null);
+  // const [, setSelectedInventario] = useState<Inventario | null>(null);
 
   const handleCloseCodigos = () => {
     setIsOpenCodigos(false);
@@ -67,14 +67,6 @@ export const InventariosTable = ({
     setIsOpenUpdate(true);
   };
 
-  const handleAddInventario = async (inventario: Inventario) => {
-    try {
-      await addInventario(inventario);
-      handleClose();
-    } catch (error) {
-      console.error("Error al agregar al inventario:", error);
-    }
-  };
 
   const columns: TableColumn<Inventario>[] = [
     {
@@ -96,11 +88,11 @@ export const InventariosTable = ({
       label: "Imagen",
       render: (inventario: Inventario) => {
         const fkElemento = (inventario as any).fkElemento;
-        const imagen = fkElemento?.imagenElemento;
+        const imagen = fkElemento?.imagen;
 
         if (!imagen) return <span>No encontrado</span>;
 
-        const src = `http://localhost:3000/img/elementos/${imagen}`;
+        const src = `http://localhost:3000/img/img/elementos/${imagen}`;
 
         return (
           <img
@@ -123,10 +115,10 @@ export const InventariosTable = ({
         if (cantidad >= 50) {
           color = "text-green-600 font-bold";
           estado = "Suficiente";
-        } else if (cantidad >= 25) {
+        } else if (cantidad >= 16) {
           color = "text-yellow-500 font-semibold";
           estado = "Moderado";
-        } else if (cantidad > 0 && cantidad <= 11) {
+        } else if (cantidad > 0 && cantidad <= 15) {
           color = "text-red-500 font-semibold";
           estado = "Bajo";
         }
@@ -172,21 +164,27 @@ export const InventariosTable = ({
     {
       key: "acciones",
       label: "",
-      render: (inventario: Inventario) => (
-        <div>
+      render: (inventario: Inventario & { tieneCaracteristicas?: boolean }) => (
+        <div className="flex gap-2">
           <Buton
-            text="Agregar stock"
+            className="w-[50px] h-[40px] p-0 min-w-0"
             onPress={() =>
               handleOpenAddStock(inventario as InventarioConElemento)
             }
-          />
-          <Buton
-            text="Ver códigos"
-            className="bg-gray-600 hover:bg-gray-700 text-white"
-            onPress={() =>
-              handleOpenCodigos(inventario as InventarioConElemento)
-            }
-          />
+          >
+            <PlusCircleIcon />
+          </Buton>
+
+          {inventario.tieneCaracteristicas && (
+            <Buton
+              className="w-[50px] h-[40px] p-0 min-w-0 bg-green-600 hover:bg-gray-700 text-white"
+              onPress={() =>
+                handleOpenCodigos(inventario as InventarioConElemento)
+              }
+            >
+              <DocumentTextIcon />
+            </Buton>
+          )}
         </div>
       ),
     },
@@ -215,6 +213,11 @@ export const InventariosTable = ({
         : crypto.randomUUID(),
       idInventario: inventario.idInventario || 0,
       estado: Boolean(inventario.estado),
+      tieneCaracteristicas: Array.isArray(
+        inventario.fkElemento?.fkCaracteristica
+      )
+        ? inventario.fkElemento.fkCaracteristica.length > 0
+        : !!inventario.fkElemento?.fkCaracteristica,
     }));
 
   console.log("Inventarios filtrados:", filtered);
@@ -227,26 +230,6 @@ export const InventariosTable = ({
           Inventarios Registrados
         </h1>
       )}
-      <Modall
-        ModalTitle="Registrar Nuevo Inventario"
-        isOpen={isOpen}
-        onOpenChange={handleClose}
-      >
-        <Formulario
-          id="inventario-form"
-          addData={handleAddInventario}
-          onClose={handleClose}
-          idSitio={idSitio!}
-        />
-        <div className="justify-center pt-2">
-          <Buton
-            text="Guardar"
-            type="submit"
-            form="inventario-form"
-            className="w-full  rounded-xl"
-          />
-        </div>
-      </Modall>
 
       <Modall
         ModalTitle="Agregar Stock"
@@ -279,17 +262,26 @@ export const InventariosTable = ({
         {inventarioCodigos && (
           <CodigoInventario
             idInventario={inventarioCodigos.idInventario!}
+            tieneCaracteristicas={
+              Array.isArray(inventarioCodigos.fkElemento?.fkCaracteristica)
+                ? inventarioCodigos.fkElemento.fkCaracteristica.length > 0
+                : !!inventarioCodigos.fkElemento?.fkCaracteristica
+            }
+            isOpen={isOpenCodigos}
             onClose={handleCloseCodigos}
           />
         )}
       </Modall>
-      {InventariosWithKey && (
+
+      {userHasPermission(29) && InventariosWithKey && (
         <Globaltable
           data={InventariosWithKey}
           columns={columns ?? []}
-          onDelete={(inventario) => handleState(inventario.idInventario)}
-          extraHeaderContent={
-            <Buton text="Nuevo inventario" onPress={() => setIsOpen(true)} />
+          // onEdit={userHasPermission(30) ? handleEdit : undefined}
+          onDelete={
+            userHasPermission(31)
+              ? (inventario) => handleState(inventario.idInventario)
+              : undefined
           }
         />
       )}

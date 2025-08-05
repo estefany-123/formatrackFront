@@ -4,11 +4,11 @@ import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useTipoMovimiento } from "@/hooks/TiposMovimento/useTipoMovimiento";
-import Formulario from "@/components/organismos/TiposMovimiento/FormRegister";
 import { FormUpdate } from "@/components/organismos/TiposMovimiento/FormUpdate";
 import { TipoMovimiento } from "@/types/TipoMovimiento";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import FormularioTiposMovimiento from "@/components/organismos/TiposMovimiento/FormRegister";
 
 export const TipoMovimientoTable = () => {
   const { tipos, isLoading, isError, error, addTipoMovimiento, changeState } =
@@ -113,12 +113,11 @@ export const TipoMovimientoTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Tipos</h1>
               <div className="flex gap-2">
-                <Button
-                  className="text-white bg-blue-700"
+                <Buton
+                  text="Movimientos"
+                  className="rounded-xl"
                   onPress={handleGoToElemento}
-                >
-                  Movimientos
-                </Button>
+                />
               </div>
             </div>
           </CardBody>
@@ -130,7 +129,7 @@ export const TipoMovimientoTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioTiposMovimiento
           id="tipo-form"
           addData={handleAddTipoMovimiento}
           onClose={handleClose}

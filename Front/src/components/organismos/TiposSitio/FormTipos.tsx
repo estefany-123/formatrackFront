@@ -1,6 +1,6 @@
 import { Form } from "@heroui/form";
 import { TipoSitio, TipoSitioSchema } from "@/schemas/TipoSitio";
-import { Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Input, Select, SelectItem } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -18,6 +18,9 @@ export default function FormTipos({ addData, onClose, id }: FormularioProps) {
     setValue,
   } = useForm({
     resolver: zodResolver(TipoSitioSchema),
+    defaultValues: {
+      estado: true,
+    },
   });
 
   const onSubmit = async (data: TipoSitio) => {
@@ -25,6 +28,13 @@ export default function FormTipos({ addData, onClose, id }: FormularioProps) {
       console.log("Enviando formulario con datos:", data);
       await addData(data);
       onClose();
+      addToast({
+        title: "Registro Exitoso",
+        description: "Tipo de Sitio agregado correctamente",
+        color: "success",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.error("Error al cargar el tipo de sitio", error);
     }
@@ -54,6 +64,8 @@ export default function FormTipos({ addData, onClose, id }: FormularioProps) {
         placeholder="Estado"
         isInvalid={!!errors.estado}
         errorMessage={errors.estado?.message}
+        isDisabled
+        defaultSelectedKeys={["true"]}
       >
         <SelectItem key="true">Activo</SelectItem>
         <SelectItem key="false">Inactivo</SelectItem>

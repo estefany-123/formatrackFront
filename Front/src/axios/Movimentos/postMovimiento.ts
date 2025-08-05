@@ -2,10 +2,10 @@ import { axiosAPI } from "../axiosAPI";
 
 export interface MovimientoPostData {
   idMovimiento?: number;
-  descripcion: string;
-  cantidad: number;
-  horaIngreso: string;
-  horaSalida: string;
+  descripcion?: string;
+  cantidad?: number;
+  horaIngreso?: string;
+  horaSalida?: string;
   aceptado?: boolean;
   enProceso?: boolean;
   cancelado?: boolean;
@@ -17,9 +17,9 @@ export interface MovimientoPostData {
   fkUsuario?: number;
   fkTipoMovimiento?: number;
   fkSitio?: number;
-  codigos?: string[];
-  fechaDevolucion?: Date;
+  fechaDevolucion?: Date | string | null;
   fkInventario?: number;
+  codigos?: string[];
 }
 
 export async function postMovimiento(data: MovimientoPostData): Promise<any> {

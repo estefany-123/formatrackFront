@@ -4,17 +4,18 @@ import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useRol } from "@/hooks/Roles/useRol";
-import Formulario from "@/components/organismos/Roles/FormRegister";
 import { FormUpdate } from "@/components/organismos/Roles/FormUpdate";
 import { Rol } from "@/types/Rol";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import FormularioRolPermiso from "@/components/organismos/RolPermiso/FormRegister";
-import { usePermisos } from "@/hooks/permisos/usePermisos";
-import { useRolPermiso } from "@/hooks/RolPermiso/useRolPermiso";
+import FormularioRolPermiso from "@/components/organismos/RolPermiso/FormularioRolPermiso";
+import FormularioRoles from "@/components/organismos/Roles/FormRegister";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 export const RolTable = () => {
   const { roles, isLoading, isError, error, addRol, changeState } = useRol();
+
+  const { userHasPermission } = usePermissions();
 
   //Modal agregar
   const [isOpen, setIsOpen] = useState(false);
@@ -25,9 +26,6 @@ export const RolTable = () => {
   const [selectedRol, setSelectedRol] = useState<Rol | null>(null);
   const [rolParaPermisos, setRolParaPermisos] = useState<number | null>(null);
   const [showPermisosModal, setShowPermisosModal] = useState(false);
-
-  const { permiso } = usePermisos();
-  const { addRolPermiso } = useRolPermiso();
 
   const handleAsignarPermisos = (idRol: number) => {
     setRolParaPermisos(idRol);
@@ -110,8 +108,7 @@ export const RolTable = () => {
       render: (rol: Rol) => (
         <Buton
           text="Asignar"
-          onPress={() => handleAsignarPermisos(rol.idRol)}
-          className="bg-indigo-600 text-white"
+          onPress={() => handleAsignarPermisos(rol.idRol as number)}
         />
       ),
     },
@@ -155,7 +152,7 @@ export const RolTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioRoles
           id="rol-form"
           addData={handleAddRol}
           onClose={handleClose}
@@ -182,35 +179,31 @@ export const RolTable = () => {
           />
         )}
       </Modall>
-
       <Modall
+        size="5xl"
         ModalTitle="Asignar Permisos"
         isOpen={showPermisosModal}
         onOpenChange={handleCerrarPermisos}
       >
         {typeof rolParaPermisos === "number" && (
-          <FormularioRolPermiso
-            id={rolParaPermisos}
-            onClose={handleCerrarPermisos}
-            addData={addRolPermiso}
-            permisos={(permiso ?? []).filter(
-              (p): p is { idPermiso: number; permiso: string } =>
-                typeof p.idPermiso === "number" && typeof p.permiso === "string"
-            )}
-            roles={rolesWithKey ?? []}
-            fkRolDefault={rolParaPermisos}
-          />
+          <FormularioRolPermiso rol={rolParaPermisos} />
         )}
       </Modall>
 
-      {rolesWithKey && (
+      {userHasPermission(34) && rolesWithKey && (
         <Globaltable
           data={rolesWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={(rol) => handleState(rol.idRol)}
+          onEdit={userHasPermission(35) ? handleEdit : undefined}
+          onDelete={
+            userHasPermission(36) ? (rol) => handleState(rol.idRol) : undefined
+          }
           extraHeaderContent={
-            <Buton text="Nuevo rol" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(33) && (
+                <Buton text="Nuevo rol" onPress={() => setIsOpen(true)} />
+              )}
+            </div>
           }
         />
       )}

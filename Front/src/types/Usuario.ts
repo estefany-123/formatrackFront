@@ -21,8 +21,18 @@ export type Perfil={
     telefono : string,
     correo : string,
     perfil: string,
-    fkRol:number
+    fkRol: {
+        nombre: string
+    }
 
+}
+export type UpPerfil={
+    nombre:string,
+    apellido:string,
+    edad:number,
+    telefono:string,
+    correo:string,
+    password:string
 }
 
 export type postUser = {

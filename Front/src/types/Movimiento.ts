@@ -1,9 +1,11 @@
+
+
 export type Movimiento = {
   idMovimiento?: number;
-  descripcion: string;
-  cantidad: number;
-  horaIngreso: string;
-  horaSalida: string;
+  descripcion?: string;
+  cantidad?: number;
+  horaIngreso?: string;
+  horaSalida?: string;
   estado?: boolean;
   aceptado?: boolean;
   enProceso?: boolean;
@@ -11,7 +13,7 @@ export type Movimiento = {
   lugarDestino?: string;
   devolutivo?: boolean;
   noDevolutivo?: boolean;
-  fechaDevolucion?: string | null;
+  fechaDevolucion?: Date | string | null;
   createdAt?: string;
   updatedAt?: string;
   fkUsuario?: number;
@@ -20,4 +22,12 @@ export type Movimiento = {
   fkInventario?: number;
   tipo_bien?: string;
   codigos?: string[];
+};
+
+export type MovimientoExtendido = Movimiento & {
+  fkTipoMovimiento?: { nombre: string };
+  fkUsuario?: { nombre: string };
+  fkInventario?: {
+    fkElemento?: { nombre: string };
+  };
 };

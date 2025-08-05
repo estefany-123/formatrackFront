@@ -9,8 +9,12 @@ import { useCentro } from "@/hooks/Centros/useCentros";
 import { useNavigate } from "react-router-dom";
 import { Card, CardBody } from "@heroui/react";
 import { Centro } from "@/types/Centro";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 const CentrosTable = () => {
+
+  const { userHasPermission } = usePermissions();
+
   const { centros, isLoading, isError, error, addCentro, changeState } =
     useCentro();
 
@@ -66,10 +70,10 @@ const CentrosTable = () => {
         <span>
           {centro.createdAt
             ? new Date(centro.createdAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -81,15 +85,15 @@ const CentrosTable = () => {
         <span>
           {centro.updatedAt
             ? new Date(centro.updatedAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
     },
-    { key: "estado", label: "estado" },
+    { key: "estado", label: "Estado" },
   ];
 
   if (isLoading) {
@@ -117,11 +121,16 @@ const CentrosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Centros</h1>
               <div className="flex gap-2">
-                <Buton text="Sedes" onPress={handleGoToSede} />
-                <Buton
-                  text="Gestionar Municipios"
-                  onPress={handleGoToMunicipio}
-                />
+                {userHasPermission(44) &&
+                  <Buton text="Sedes" onPress={handleGoToSede} />
+                }
+                {userHasPermission(52) &&
+
+                  <Buton
+                    text="Gestionar Municipios"
+                    onPress={handleGoToMunicipio}
+                  />
+                }
               </div>
             </div>
           </CardBody>
@@ -161,14 +170,18 @@ const CentrosTable = () => {
         )}
       </Modall>
 
-      {centrosWithKey && (
+      {userHasPermission(48) && centrosWithKey && (
         <Globaltable
           data={centrosWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={handleState}
+          onEdit={userHasPermission(49) ? handleEdit : undefined}
+          onDelete={userHasPermission(50) ? handleState : undefined}
           extraHeaderContent={
-            <Buton text="Añadir Centro" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(47) &&
+                <Buton text="Añadir Centro" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}

@@ -7,7 +7,6 @@ export const getRefetchPermisos = async (): Promise<any[]> => {
         return response.data.modules;
     }
     catch(error){
-        console.log(error);
         return []
     }
 }

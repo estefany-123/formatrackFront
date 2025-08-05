@@ -1,13 +1,11 @@
-import {
-  CategoriaUpdate,
-  CategoriaUpdateSchema,
-} from "@/schemas/Categorias";
+import { CategoriaUpdate, CategoriaUpdateSchema } from "@/schemas/Categorias";
 import { Form } from "@heroui/form";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@heroui/input";
 import Buton from "@/components/molecules/Button";
+import { addToast } from "@heroui/react";
 
 type Props = {
   categorias: CategoriaUpdate[];
@@ -31,6 +29,7 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
     defaultValues: {
       idCategoria: foundCategoria.idCategoria,
       nombre: foundCategoria.nombre,
+      codigoUNPSC: foundCategoria.codigoUNPSC,
     },
   });
 
@@ -38,9 +37,16 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
     console.log("submiting...");
     console.log(data);
     try {
-      await updateCategoria(data.idCategoria, data);
+      await updateCategoria(data.idCategoria as number, data);
       console.log("Sended success");
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Categoria actuaizada correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar el centro", error);
     }
@@ -68,12 +74,12 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
         errorMessage={errors.codigoUNPSC?.message}
       />
 
-        <Buton
-          text="Guardar"
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full rounded-xl"
-        />
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full rounded-xl"
+      />
     </Form>
   );
 };

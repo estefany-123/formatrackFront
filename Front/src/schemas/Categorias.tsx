@@ -16,7 +16,7 @@ export const CategoriaSchema = z.object({
 export type Categoria = z.infer<typeof CategoriaSchema>;
 
 export const CategoriaUpdateSchema = z.object({
-  idCategoria: z.number(),
+  idCategoria: z.number().optional(),
   nombre: z
     .string()
     .min(1, { message: "Es necesario un nombre" })

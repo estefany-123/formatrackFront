@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardBody } from "@heroui/react";
 
 const MunicipiosTable = () => {
+
+  
   const { municipios, isLoading, isError, error, addMunicipio, changeState } =
     useMunicipio();
 
@@ -36,7 +38,7 @@ const MunicipiosTable = () => {
   };
 
   const handleState = async (municipios: Municipio) => {
-    await changeState(municipios.idMunicipio);
+    await changeState(municipios.idMunicipio as number);
     console.log(municipios.idMunicipio);
   };
 
@@ -150,7 +152,7 @@ const MunicipiosTable = () => {
         {selectedMunicipio && (
           <FormUpMunicipio
             municipios={municipiosWithKey ?? []}
-            municipioId={selectedMunicipio.idMunicipio}
+            municipioId={selectedMunicipio.idMunicipio as number}
             id="FormUpMuni"
             onclose={handleCloseUpdate}
           />

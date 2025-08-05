@@ -5,13 +5,17 @@ import Modall from "@/components/organismos/modal";
 import { useState } from "react";
 import { useElemento } from "@/hooks/Elementos/useElemento";
 import { Elemento } from "@/types/Elemento";
-import Formulario from "@/components/organismos/Elementos/FormRegister";
 import { FormUpdate } from "@/components/organismos/Elementos/FormUpdate";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { ElementoCreate } from "@/schemas/Elemento";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioElementos from "@/components/organismos/Elementos/FormRegister";
 
 export const ElementosTable = () => {
+
+  const { userHasPermission } = usePermissions();
+
   const { elementos, isLoading, isError, error, addElemento, changeState } =
     useElemento();
 
@@ -72,16 +76,14 @@ export const ElementosTable = () => {
   const columns: TableColumn<Elemento>[] = [
     {
       label: "Imagen",
-      key: "imagenElemento",
+      key: "imagen",
       render: (item: Elemento) => {
-        const imagen = item.imagenElemento?.[0]?.url;
+        const imagen = item.imagen;
         console.log(imagen);
-        const cleanImagen = imagen?.replace(/^\/+|\/+$/g, "");
-
-        console.log("Imagen limpia:", cleanImagen);
+  
         return imagen ? (
           <img
-            src={`http://localhost:3000${imagen}`}
+            src={`http://localhost:3000/img/img/elementos/${imagen}`}
             alt="Imagen"
             width={200}
             height={50}
@@ -113,10 +115,10 @@ export const ElementosTable = () => {
         <span>
           {elemento.createdAt
             ? new Date(elemento.createdAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -128,10 +130,10 @@ export const ElementosTable = () => {
         <span>
           {elemento.updatedAt
             ? new Date(elemento.updatedAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -166,15 +168,21 @@ export const ElementosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Elementos</h1>
               <div className="flex gap-2">
-                <Buton text="Gestionar Unidad" onPress={handleGoToUnidad} />
-                <Buton
-                  text="Gestionar Categoria"
-                  onPress={handleGoToCategoria}
-                />
-                <Buton
-                  text="Gestionar Caracteristica"
-                  onPress={handleGoToCaracteristica}
-                />
+                {userHasPermission(60) &&
+                  <Buton text="Gestionar Unidad" onPress={handleGoToUnidad} />
+                }
+                {userHasPermission(64) &&
+                  <Buton
+                    text="Gestionar Categoria"
+                    onPress={handleGoToCategoria}
+                  />
+                }
+                {userHasPermission(68) &&
+                  <Buton
+                    text="Gestionar Caracteristica"
+                    onPress={handleGoToCaracteristica}
+                  />
+                }
               </div>
             </div>
           </CardBody>
@@ -186,7 +194,7 @@ export const ElementosTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioElementos
           id="element-form"
           addData={handleAddElemento}
           onClose={handleClose}
@@ -201,29 +209,33 @@ export const ElementosTable = () => {
         </div>
       </Modall>
 
-        <Modall
-          ModalTitle="Editar Elemento"
-          isOpen={IsOpenUpdate}
-          onOpenChange={handleCloseUpdate}
-        >
-          {selectedElemento && (
-            <FormUpdate
-              elementos={ElementosWithKey ?? []}
-              elementoId={selectedElemento.idElemento as number}
-              id="FormUpdate"
-              onclose={handleCloseUpdate}
-            />
-          )}
-        </Modall>
+      <Modall
+        ModalTitle="Editar Elemento"
+        isOpen={IsOpenUpdate}
+        onOpenChange={handleCloseUpdate}
+      >
+        {selectedElemento && (
+          <FormUpdate
+            elementos={ElementosWithKey ?? []}
+            elementoId={selectedElemento.idElemento as number}
+            id="FormUpdate"
+            onclose={handleCloseUpdate}
+          />
+        )}
+      </Modall>
 
-      {ElementosWithKey && (
+      {userHasPermission(19) && ElementosWithKey && (
         <Globaltable
           data={ElementosWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={(elemento) => handleState(elemento.idElemento)}
+          onEdit={userHasPermission(20) ? handleEdit : undefined}
+          onDelete={userHasPermission(21) ? (elemento) => handleState(elemento.idElemento) : undefined}
           extraHeaderContent={
-            <Buton text="Nuevo elemento" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(18) &&
+                <Buton text="Nuevo elemento" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}

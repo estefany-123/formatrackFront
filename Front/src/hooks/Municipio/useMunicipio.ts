@@ -4,6 +4,7 @@ import { getMunicipio } from "@/axios/Municipio/getMunicipio";
 import { postMunicipio } from "@/axios/Municipio/postMunicipio";
 import { UpMunicipio } from "@/axios/Municipio/putMunicipio";
 import { StateMunicipio } from "@/axios/Municipio/putStateMunicipio";
+import { addToast } from "@heroui/react";
 
 export function useMunicipio() {
   const queryClient = useQueryClient();
@@ -53,8 +54,13 @@ export function useMunicipio() {
 
   const changeStateMutation = useMutation({
     mutationFn: StateMunicipio,
-
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["municipio"],
       });

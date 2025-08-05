@@ -3,6 +3,7 @@ import { getSitio } from "@/axios/Sitios/getSitio";
 import { postSitio } from "@/axios/Sitios/postSitio";
 import { putSitio } from "@/axios/Sitios/putSitio";
 import { ListarSitios, Sitios } from "@/types/sitios";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useSitios() {
@@ -10,7 +11,7 @@ export function useSitios() {
 
   const { data, isLoading, isError, error } = useQuery<ListarSitios[]>({
     queryKey: ["sitios"],
-    queryFn:getSitio,
+    queryFn: getSitio,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -37,8 +38,9 @@ export function useSitios() {
 
   const updateSitioMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Sitios }) => {
-      const {idSitio, ...resto}=data;
-      return putSitio(id, resto)},
+      const { idSitio, ...resto } = data;
+      return putSitio(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["sitios"],
@@ -54,6 +56,12 @@ export function useSitios() {
     mutationFn: deleteSitio,
 
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["sitios"],
       });

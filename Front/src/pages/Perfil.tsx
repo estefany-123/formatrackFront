@@ -1,61 +1,103 @@
 import Card1 from '@/components/molecules/Card';
-import { useRol } from '@/hooks/Roles/useRol';
-import { usePefil } from '@/hooks/Usuarios/usePerfil';
+import { usePerfil } from '@/hooks/Usuarios/usePerfil';
 import { Avatar } from '@heroui/react';
+import { patchFotoPerfil } from '../axios/Usuarios/patchFotoPerfil'
+import { PencilIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '@/providers/AuthProvider';
+import { useState } from 'react';
+import FormPerfil from '@/components/organismos/Usuarios/FormPerfil';
+import Modall from '@/components/organismos/modal';
+
 
 function Perfil() {
-  const { perfil, isLoading, error } = usePefil();
-  const { roles, isLoading: loadinRol, isError, error: errorRol, getRolById } = useRol();
+  const { perfilInfo, setPerfilInfo, isLoading, error } = usePerfil();
+  const { setPerfil: setperfilcontext } = useAuth();
 
-  if (isLoading || loadinRol) return <div>Cargando...</div>;
-   if (error) return <div>Error: {error.message}</div>;
-   if (errorRol) return <div>Error: {errorRol.message}</div>;
-   if (!perfil) return <div>No se encontraron datos del perfil</div>;
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
+  if (isLoading) return <div>Cargando...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!perfilInfo) return <div>No se encontraron datos del perfil</div>;
 
-  const rol = getRolById(perfil.fkRol);
-  if (!rol) {
-    return <div className="text-center text-gray-500">No se encontró el rol para fkRol: {perfil.fkRol}</div>;
+  async function handleEditFoto(e: any) {
+    const file = e.target.files[0] ?? undefined;
+    if (!file) return;
+    const response = await patchFotoPerfil(file);
+    setPerfilInfo(response.updated);
+    setperfilcontext(response.updated.perfil)
   }
 
-  const { nombre, apellido, documento, edad, telefono, correo, perfil: perfilImg } = perfil;
-
-  console.log("Perfil:", { nombre, apellido, documento, edad, telefono, correo, perfilImg, rol: rol.nombre });
-
+    const handleClose = () => setIsOpenModal(false);
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <Card1 className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+    <div className="min-h-screen flex items-center justify-center p-4 dark:text-white">
+      <Card1 className="w-full max-w-md bg-white shadow-lg rounded-lg p-6 relative dark:text-white">
         <div className="flex flex-col items-center">
-         <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-              {rol.nombre}
+
+          <button
+            onClick={() => setIsOpenModal(true)}
+            className="absolute top-3 right-3 p-1 rounded-full bg-white shadow hover:bg-gray-100 transition"
+          >
+            <PencilIcon className="w-6 h-6 text-gray-600" />
+          </button>
+
+          {isOpenModal && (
+            <div>
+
+              <h2 className="text-xl font-bold mb-4">Editar perfil</h2>
+
+
+            </div>
+          )}
+          <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center dark:text-white">
+            {perfilInfo.fkRol.nombre}
           </h1>
-          <Avatar
-            src={`http://localhost:3000/img/perfiles/${perfil.perfil || 'defaultPerfil.png'}`}
-            className="w-32 h-32 rounded-full mb-4 border-4 border-blue-200"
-          />
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-            {nombre} {apellido}
+          <div className='relative w-32 h-32 rounded-full mb-4 border-4 border-blue-200 group'>
+            <Avatar
+              src={`http://localhost:3000/img/perfiles/${perfilInfo.perfil || 'defaultPerfil.png'}`}
+              className="w-full h-full group-hover:opacity-70 transition duration-200"
+            />
+            <PencilIcon color='#fff' className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-full p-6 opacity-0 group-hover:opacity-100 transition duration-200' />
+            <input onChange={handleEditFoto} className='absolute top-0 left-0 w-full h-full rounded-full opacity-0' type='file' accept='image/png, image/jpeg' />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center dark:text-white">
+            {perfilInfo.nombre} {perfilInfo.apellido}
           </h1>
-          <div className="w-full space-y-3 text-gray-600">
+          <div className="w-full space-y-3 text-gray-600 dark:text-white">
             <div className="flex justify-between">
               <span className="font-semibold">Documento:</span>
-              <span>{documento}</span>
+              <span>{perfilInfo.documento}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Edad:</span>
-              <span>{edad || 'No especificada'}</span>
+              <span>{perfilInfo.edad || 'No especificada'}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Teléfono:</span>
-              <span>{telefono || 'No especificado'}</span>
+              <span>{perfilInfo.telefono || 'No especificado'}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Correo:</span>
-              <span>{correo}</span>
+              <span>{perfilInfo.correo}</span>
             </div>
           </div>
         </div>
       </Card1>
+      <Modall ModalTitle='Editar Perfil' onOpenChange={handleClose} isOpen={isOpenModal}>
+        <FormPerfil
+          inicialData={{
+            nombre: perfilInfo.nombre,
+            apellido: perfilInfo.apellido,
+            edad: perfilInfo.edad,
+            telefono: perfilInfo.telefono,
+            correo : perfilInfo.correo,
+            password: ""
+
+          }}
+          onclose={() => setIsOpenModal(false)}
+        />
+
+
+      </Modall>
     </div>
   );
 }

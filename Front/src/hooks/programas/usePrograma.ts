@@ -3,6 +3,7 @@ import { getPrograma } from "@/axios/ProgramasFormacion/getPrograma";
 import { postPrograma } from "@/axios/ProgramasFormacion/postPrograma";
 import { putPrograma } from "@/axios/ProgramasFormacion/putPrograma";
 import { Pformacion } from "@/types/programaFormacion";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function usePrograma() {
@@ -36,9 +37,10 @@ export function usePrograma() {
   };
 
   const updateProgramaMutation = useMutation({
-    mutationFn: ({id, data}:{id:number, data:Pformacion}) => {
-      const {idPrograma, ...resto}=data;
-      return putPrograma(id, resto)},
+    mutationFn: ({ id, data }: { id: number; data: Pformacion }) => {
+      const { idPrograma, ...resto } = data;
+      return putPrograma(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["programa"],
@@ -53,6 +55,12 @@ export function usePrograma() {
   const changeStateMutation = useMutation({
     mutationFn: deletePrograma,
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["programa"],
       });

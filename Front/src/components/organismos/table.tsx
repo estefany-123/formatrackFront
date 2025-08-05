@@ -24,7 +24,7 @@ import {
   TableCell,
   getKeyValue,
 } from "@heroui/table";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 export interface TableColumn<T> {
   key: keyof T;
@@ -67,15 +67,22 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   >("activos");
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
+  
+  const mostrarFiltroEstado = useMemo(() => {
+    return data.some((item) => "estado" in item);
+  }, [data]);
 
   const filteredData = useMemo(() => {
     let result = data;
 
-    if (estadoFiltro === "activos") {
-      result = result.filter((item) => item.estado === true);
-    } else if (estadoFiltro === "inactivos") {
-      result = result.filter((item) => item.estado === false);
-    }
+
+if (mostrarFiltroEstado) {
+  if (estadoFiltro === "activos") {
+    result = result.filter((item) => item.estado === true);
+  } else if (estadoFiltro === "inactivos") {
+    result = result.filter((item) => item.estado === false);
+  }
+}
 
     if (searchTerm.trim()) {
       const lowerSearch = searchTerm.toLowerCase();
@@ -164,6 +171,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
       <div className="flex justify-between items-center flex-wrap gap-4 mt-4 mb-4 ">
         <div className="flex items-center gap-4">
           {extraHeaderContent}
+          {mostrarFiltroEstado && (
           <Select
             label="Estado"
             size="sm"
@@ -194,6 +202,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
               Todos
             </SelectItem>
           </Select>
+          )}
         </div>
         <div className="flex">
           <Input

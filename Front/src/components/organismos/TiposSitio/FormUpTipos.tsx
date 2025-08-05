@@ -9,6 +9,7 @@ import {
 } from "@/schemas/TipoSitio";
 import { Input } from "@heroui/input";
 import Buton from "@/components/molecules/Button";
+import { addToast } from "@heroui/react";
 
 type Props = {
   tipos: TipoSitio[];
@@ -39,6 +40,13 @@ const FormUpTipos = ({ tipos, tipoSitioId, id, onclose }: Props) => {
     try {
       await updateTipo(data.idTipo, data);
       onclose();
+      addToast({
+        title: "Actualizacion Exitosa",
+        description: "Sitio actuaizado correctamente",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } catch (error) {
       console.log("Error al actualizar el tipo de sitio", error);
     }

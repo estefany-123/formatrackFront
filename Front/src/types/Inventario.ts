@@ -1,3 +1,10 @@
+export type CodigoInventario = {
+  idCodigoInventario: number;
+  codigo: string;
+  uso:boolean
+  baja:boolean
+};
+
 export type Inventario = {
   idInventario?: number;
   stock?: number;
@@ -8,8 +15,9 @@ export type Inventario = {
   fkElemento?: number;
   imagenElemento?: string;
   acciones?: string;
-  codigos?: string[];
+  codigos?: CodigoInventario[];
 };
+
 
 export type InventarioConSitio = Inventario & {
   idInventario?: number;
@@ -28,6 +36,7 @@ export type InventarioConSitio = Inventario & {
     idElemento: number;
     nombre: string;
     imagenElemento?: string;
+    fkCaracteristica?: number
   };
 };
 

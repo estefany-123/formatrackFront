@@ -1,5 +1,10 @@
+import { acceptMovimiento } from "@/axios/Movimentos/acceptMovimiento";
+import { cancelMovimiento } from "@/axios/Movimentos/cancelMovimiento";
 import { getMovimiento } from "@/axios/Movimentos/getMovimento";
-import { postMovimiento } from "@/axios/Movimentos/postMovimiento";
+import {
+  MovimientoPostData,
+  postMovimiento,
+} from "@/axios/Movimentos/postMovimiento";
 import { putMovimiento } from "@/axios/Movimentos/putMovimiento";
 import { Movimiento } from "@/types/Movimiento";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,9 +42,10 @@ export function useMovimiento() {
   };
 
   const updateMovimientoMutation = useMutation({
-    mutationFn: ({id, data}:{id:number, data:Movimiento}) => {
-      const {idMovimiento, ...resto} = data
-      return putMovimiento(id, resto)},
+    mutationFn: ({ id, data }: { id: number; data: MovimientoPostData }) => {
+      const { idMovimiento, ...resto } = data;
+      return putMovimiento(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["movimientos"],
@@ -51,6 +57,25 @@ export function useMovimiento() {
     },
   });
 
+  const acceptMovimientoMutation = useMutation({
+    mutationFn: (id: number) => acceptMovimiento(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["movimientos"] });
+    },
+    onError: (error) => {
+      console.error("Error al aceptar el movimiento", error);
+    },
+  });
+
+  const cancelMovimientoMutation = useMutation({
+    mutationFn: (id: number) => cancelMovimiento(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["movimientos"] });
+    },
+    onError: (error) => {
+      console.error("Error al rechazar el movimiento", error);
+    },
+  });
   const addMovimiento = async (movimiento: Movimiento) => {
     return addMovimientoMutation.mutateAsync(movimiento);
   };
@@ -59,15 +84,15 @@ export function useMovimiento() {
     return updateMovimientoMutation.mutateAsync({ id, data });
   };
 
-
   return {
     movimientos: data,
     isLoading,
     isError,
     error,
     addMovimiento,
-    // changeState,
     getMovimientoById,
     updateMovimiento,
+    acceptMovimiento: acceptMovimientoMutation.mutateAsync,
+    cancelMovimiento: cancelMovimientoMutation.mutateAsync,
   };
 }

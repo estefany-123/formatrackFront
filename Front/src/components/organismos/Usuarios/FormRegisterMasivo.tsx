@@ -1,11 +1,15 @@
 import { postMassiveUsuarios } from "@/axios/Usuarios/postMassiveUsuarios";
 import Buton from "@/components/molecules/Button";
+import { Button } from '@heroui/button'
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { addToast, useModalContext } from "@heroui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FormEvent, useState } from "react";
 
 export default function FormRegisterMasivo(){
+
+    const queryClient = useQueryClient();
 
     const { onClose } = useModalContext();
 
@@ -23,6 +27,7 @@ export default function FormRegisterMasivo(){
         e.preventDefault();
         if(!file) return setError("Selecciona un archivo primero");
         const formData = new FormData();
+    
         formData.append("excel",file);
         try{
             await postMassiveUsuarios(formData);
@@ -32,9 +37,13 @@ export default function FormRegisterMasivo(){
                 color: "success"
             })
             onClose();
+            queryClient.invalidateQueries({
+                queryKey: ["users"]
+            });
         }
         catch(error){
             console.log(error);
+                console.log("esto es formdata",formData)
             addToast({
                 title: "Error subiendo usuarios",
                 description: "Hubo un error intentando subir los usuarios",
@@ -45,7 +54,7 @@ export default function FormRegisterMasivo(){
 
     return(
         <Form onSubmit={onSubmit} className="flex flex-col gap-6">
-
+            <a href={`${import.meta.env.VITE_API_CLIENT}img/excel/FORMATO EXCEL.xlsx`} download><Button variant="bordered" color="success">Descargar formato</Button></a>
             <Input onChange={handleFileChange} type="file" accept=".xlsx,.xls" />
             {file && <p>Selected file: {file.name}</p>}
 

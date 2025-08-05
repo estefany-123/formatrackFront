@@ -18,7 +18,7 @@ export function useCaracteristica() {
     mutationFn: postCaracteristica,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["municipio"],
+        queryKey: ["caracteristicas"],
       });
     },
     onError: (error) => {

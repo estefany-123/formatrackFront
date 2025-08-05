@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { useSitios } from "@/hooks/sitios/useSitios";
-import { Button, Card } from "@heroui/react";
+import {  Card } from "@heroui/react";
 import { Link } from "react-router-dom";
+import Buton from "@/components/molecules/Button";
 
 export const InventarioArea = () => {
   const { id } = useParams();
@@ -24,7 +25,7 @@ const sitiosFiltrados = sitios?.filter(
     <div>
       <Link to={`/bodega/inventario/areas/`}>
         <h2 className="text-lg m-4 font-semibold">
-          <Button className=" bg-blue-600 text-white hover:bg-blue-800 hover:text-white dark:hover:text-white">Regresar</Button>
+          <Buton className="hover: hover:text-white dark:hover:text-white">Regresar</Buton>
         </h2>
       </Link>
       <h1 className="text-2xl text-center font-bold mb-4">

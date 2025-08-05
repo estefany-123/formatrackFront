@@ -43,7 +43,7 @@ const CategoriasTable = () => {
   const handleAddCategoria = async (categoria: Categoria) => {
     try {
       await addCategoria(categoria);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose(); 
     } catch (error) {
       console.error("Error al agregar la categoria:", error);
     }
@@ -107,6 +107,7 @@ const CategoriasTable = () => {
         ? categorias.idCategoria.toString()
         : crypto.randomUUID(),
       estado: Boolean(categorias.estado),
+      idCategoria:categorias.idCategoria
     }));
 
   return (
@@ -115,7 +116,7 @@ const CategoriasTable = () => {
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Gestionar Tipos</h1>
+              <h1 className="text-2xl font-bold">Gestionar Categoras</h1>
               <div className="flex gap-2">
                 <Buton text="Elementos" onPress={handleGoToElemento} />
               </div>

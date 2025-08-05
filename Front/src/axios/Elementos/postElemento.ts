@@ -7,8 +7,7 @@ export interface ElementoPostData {
   noPerecedero?: boolean;
   estado?: boolean;
   fechaVencimiento?: string;
-  fechaUso?: string;
-  imagenElemento?: string | File;
+  imagen?: string | File;
   fkUnidadMedida?: number;
   fkCategoria?: number;
   fkCaracteristica?: number | null;
@@ -30,9 +29,6 @@ export async function postElemento(data: ElementoPostData): Promise<any> {
   if (data.fechaVencimiento) {
     formData.append("fechaVencimiento", data.fechaVencimiento.toString());
   }
-  if (data.fechaUso) {
-    formData.append("fechaUso", data.fechaUso.toString());
-  }
   if (data.fkUnidadMedida) {
     formData.append("fkUnidadMedida", data.fkUnidadMedida.toString());
   }
@@ -42,15 +38,10 @@ export async function postElemento(data: ElementoPostData): Promise<any> {
   if (data.fkCaracteristica) {
     formData.append("fkCaracteristica", data.fkCaracteristica.toString());
   }
-  const imagen = data.imagenElemento;
-
-  if (typeof imagen === "string") {
-    formData.append("imagenElemento", imagen);
-  } else if (imagen instanceof File) {
-    formData.append("imagenElemento", imagen.name);
-  } else {
-    formData.append("imagenElemento", ""); 
+  if (data.imagen) {
+    formData.append("imagen", data.imagen);
   }
+
 
   console.log("Enviando:", [...formData.entries()]);
 

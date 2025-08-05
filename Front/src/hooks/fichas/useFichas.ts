@@ -3,6 +3,7 @@ import { getFicha } from "@/axios/Fichas/getFicha";
 import { postFicha } from "@/axios/Fichas/postFicha";
 import { putFicha } from "@/axios/Fichas/putFicha";
 import { Ficha } from "@/types/Ficha";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useFichas() {
@@ -10,7 +11,7 @@ export function useFichas() {
 
   const { data, isLoading, isError, error } = useQuery<Ficha[]>({
     queryKey: ["ficha"],
-    queryFn:getFicha,
+    queryFn: getFicha,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -36,9 +37,10 @@ export function useFichas() {
   };
 
   const updateAreaMutation = useMutation({
-    mutationFn: ({id, data}:{id:number, data:Ficha}) => {
-      const {idFicha, ...resto}=data;
-      return putFicha(id, resto)},
+    mutationFn: ({ id, data }: { id: number; data: Ficha }) => {
+      const { idFicha, ...resto } = data;
+      return putFicha(id, resto);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["ficha"],
@@ -54,6 +56,12 @@ export function useFichas() {
     mutationFn: deleteFicha,
 
     onSuccess: () => {
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ["ficha"],
       });
@@ -72,7 +80,7 @@ export function useFichas() {
     return updateAreaMutation.mutateAsync({ id, data });
   };
 
-  const changeState = async (idFicha:number) => {
+  const changeState = async (idFicha: number) => {
     return changeStateMutation.mutateAsync(idFicha);
   };
 

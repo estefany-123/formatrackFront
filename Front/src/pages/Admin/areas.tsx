@@ -1,16 +1,20 @@
-import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
+import Globaltable from "@/components/organismos/table.tsx"; 
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/areas/FormRegister";
 import { useState } from "react";
 import { Area } from "@/types/area";
 import { useAreas } from "@/hooks/areas/useAreas";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/areas/Formupdate";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioArea from "@/components/organismos/areas/FormRegister";
 
 const AreaTable = () => {
+
+  const { userHasPermission } = usePermissions();
+
   const { areas, isLoading, isError, error, addArea, changeState } = useAreas();
 
   //Modal agregar
@@ -63,10 +67,10 @@ const AreaTable = () => {
         <span>
           {Area.createdAt
             ? new Date(Area.createdAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -78,10 +82,10 @@ const AreaTable = () => {
         <span>
           {Area.updatedAt
             ? new Date(Area.updatedAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -116,8 +120,12 @@ const AreaTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Areas</h1>
               <div className="flex gap-2">
-                <Buton text="Gestionar Sedes" onPress={handleGoToSede} />
-                <Buton text="Gestionar Usuarios" onPress={handleGoToUsuario} />
+                {userHasPermission(44) &&
+                  <Buton text="Gestionar Sedes" onPress={handleGoToSede} />
+                }
+                {userHasPermission(3) &&
+                  <Buton text="Gestionar Usuarios" onPress={handleGoToUsuario} />
+                }
               </div>
             </div>
           </CardBody>
@@ -128,7 +136,7 @@ const AreaTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioArea
           id="area-form"
           addData={handleAddArea}
           onClose={handleClose}
@@ -158,14 +166,19 @@ const AreaTable = () => {
         )}
       </Modall>
 
-      {areasWithKey && (
+      {userHasPermission(11) && areasWithKey && (
         <Globaltable
           data={areasWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={(area) => handleState(area.idArea)}
+          onEdit={userHasPermission(12) ? handleEdit : undefined}
+          onDelete={userHasPermission(13) ? (area) => handleState(area.idArea) : undefined}
           extraHeaderContent={
-            <Buton text="Añadir Area" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(10) &&
+              <Buton text="Añadir Area" onPress={() => setIsOpen(true)} />
+              }
+            </div>
+
           }
         />
       )}

@@ -2,15 +2,21 @@ import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabl
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
-import Formulario from "@/components/organismos/Sedes/FormRegister";
 import { useState } from "react";
 import { useSede } from "@/hooks/sedes/useSedes";
 import { Card, CardBody } from "@heroui/react";
 import { Sede } from "@/types/sedes";
 import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
+import FormularioSede from "@/components/organismos/Sedes/FormRegister";
 
 const SedeTable = () => {
+
+
+  const { userHasPermission } = usePermissions();
+
+
   const { sede, isLoading, isError, error, addSede, changeState } = useSede();
 
   //Modal agregar
@@ -65,10 +71,10 @@ const SedeTable = () => {
         <span>
           {sede.createdAt
             ? new Date(sede.createdAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -80,10 +86,10 @@ const SedeTable = () => {
         <span>
           {sede.updatedAt
             ? new Date(sede.updatedAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -116,8 +122,12 @@ const SedeTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Sedes</h1>
               <div className="flex gap-2">
-                <Buton text="Areas" onPress={handleGoToArea} />
-                <Buton text="Gestionar Centros" onPress={handleGoToCentro} />
+                {userHasPermission(11) &&
+                  <Buton text="Areas" onPress={handleGoToArea} />
+                }
+                {userHasPermission(48) &&
+                  <Buton text="Gestionar Centros" onPress={handleGoToCentro} />
+                }
               </div>
             </div>
           </CardBody>
@@ -129,7 +139,7 @@ const SedeTable = () => {
         isOpen={isOpen}
         onOpenChange={handleClose}
       >
-        <Formulario
+        <FormularioSede
           id="sede-form"
           addData={handleAddSede}
           onClose={handleClose}
@@ -159,14 +169,18 @@ const SedeTable = () => {
         )}
       </Modall>
 
-      {sedeWithKey && (
+      {userHasPermission(44) && sedeWithKey && (
         <Globaltable
           data={sedeWithKey}
           columns={columns}
-          onEdit={handleEdit}
-          onDelete={handleState}
+          onEdit={userHasPermission(45) ? handleEdit : undefined}
+          onDelete={userHasPermission(46) ? handleState : undefined}
           extraHeaderContent={
-            <Buton text="Añadir sede" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(43) &&
+                <Buton text="Añadir sede" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}

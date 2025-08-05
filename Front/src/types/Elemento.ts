@@ -5,8 +5,7 @@ export type postElementos = {
   noPerecedero?: boolean;
   estado?: boolean;
   fechaVencimiento?: string;
-  fechaUso?: string;
-  imagenElemento?: string | File;
+  imagen?: string | File | undefined;
   fkUnidadMedida?: number;
   fkCategoria?: number;
   fkCaracteristica?: number | null;
@@ -16,7 +15,7 @@ export type putElementos = {
   idElemento?: number;
   nombre: string;
   descripcion: string;
-  imagenElemento?: string | File | undefined;
+  imagen?: string | File | undefined;
 };
 
 export type Elemento = {
@@ -27,9 +26,8 @@ export type Elemento = {
   noPerecedero?: boolean;
   estado?: boolean;
   fechaVencimiento?: string;
-  fechaUso?: string;
   baja?: boolean;
-  imagenElemento?: { id: number, url: string }[];
+  imagen?: string;
   fkUnidadMedida?: number;
   fkCategoria?: number;
   fkCaracteristica?: number | null;

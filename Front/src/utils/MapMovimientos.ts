@@ -22,5 +22,6 @@ export function mapMovimiento(data: MovimientoCreate): MovimientoPostData {
     codigos: data.codigos ?? [],
     createdAt: undefined,
     updatedAt: undefined,
+    lugarDestino: data.lugarDestino
   };
 }

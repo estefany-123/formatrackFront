@@ -1,9 +1,13 @@
-import { AgregateStockData, agregateStock } from "@/axios/Inventarios/agregateStockInventario";
+import {
+  AgregateStockData,
+  agregateStock,
+} from "@/axios/Inventarios/agregateStockInventario";
 import { deleteInventario } from "@/axios/Inventarios/deleteInventario";
 import { getInventario } from "@/axios/Inventarios/getInventario";
 import { postInventario } from "@/axios/Inventarios/postInventario";
 import { putInventario } from "@/axios/Inventarios/putInventario";
 import { Inventario, InventarioConSitio } from "@/types/Inventario";
+import { addToast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useInventario() {
@@ -12,15 +16,16 @@ export function useInventario() {
   const { data, isLoading, isError, error } = useQuery<InventarioConSitio[]>({
     queryKey: ["inventarios"],
     queryFn: getInventario,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
     gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount:true
   });
 
   const addInventarioMutation = useMutation({
     mutationFn: postInventario,
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },
@@ -41,7 +46,7 @@ export function useInventario() {
       return putInventario(id, resto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },
@@ -55,7 +60,13 @@ export function useInventario() {
     mutationFn: deleteInventario,
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      addToast({
+        title: "Estado cambiado con exito",
+        color: "primary",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },
@@ -68,7 +79,7 @@ export function useInventario() {
   const agregarStockMutation = useMutation({
     mutationFn: agregateStock,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["inventarios"] });
+      queryClient.refetchQueries({ queryKey: ["inventarios"] });
     },
     onError: (error) => {
       console.error("Error al agregar stock:", error);
@@ -88,8 +99,8 @@ export function useInventario() {
   };
 
   const agregarStockInventario = async (data: AgregateStockData) => {
-  return agregarStockMutation.mutateAsync(data);
-};
+    return agregarStockMutation.mutateAsync(data);
+  };
 
   return {
     inventarios: data,
@@ -100,6 +111,6 @@ export function useInventario() {
     changeState,
     getInventarioById,
     updateInventario,
-    agregarStockInventario
+    agregarStockInventario,
   };
 }

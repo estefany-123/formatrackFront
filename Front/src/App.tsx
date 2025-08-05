@@ -15,9 +15,6 @@ import CentrosTable from "./pages/Admin/centros";
 import MunicipiosTable from "./pages/Admin/municipio";
 import SitiosTable from "./pages/Admin/sitios";
 import TipoSitioTable from "./pages/Admin/tipoSitio";
-import PermisoTable from "./pages/Admin/permisos";
-import RutasTable from "./pages/Admin/rutas";
-import ModulosTable from "./pages/Admin/modulo";
 import { ElementosTable } from "./pages/Bodega/Elementos";
 import { MovimientoTable } from "./pages/Bodega/Movimientos";
 import { TipoMovimientoTable } from "./pages/Bodega/TiposMovimiento";
@@ -28,6 +25,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import { CaracteristicasTable } from "./pages/Bodega/Caracteristicas";
 import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
+import {Reportes} from "./pages/Reportes/Reportes";
+import MovimientoDetalle from "./pages/Bodega/MovimientosDetalles";
 
 function App() {
   return (
@@ -46,15 +45,16 @@ function App() {
           <Route path="admin/municipios" element={<MunicipiosTable />} />
           <Route path="admin/sitios" element={<SitiosTable />} />
           <Route path="admin/tiposSitio" element={<TipoSitioTable />} />
-          <Route path="admin/permisos" element={<PermisoTable />} />
-          <Route path="admin/rutas" element={<RutasTable />} />
-          <Route path="admin/modulos" element={<ModulosTable />} />
           <Route path="bodega/elementos" element={<ElementosTable />} />
           <Route path="bodega/movimientos" element={<MovimientoTable />} />
+          <Route path="bodega/movimientosDetalle/:id" element={<MovimientoDetalle />} />
           <Route path="bodega/tipos" element={<TipoMovimientoTable />} />
           <Route path="bodega/unidades" element={<UnidadTable />} />
           <Route path="bodega/categorias" element={<CategoriasTable />} />
-          <Route path="bodega/caracteristicas" element={<CaracteristicasTable />} />
+          <Route
+            path="bodega/caracteristicas"
+            element={<CaracteristicasTable />}
+          />
           <Route path="bodega/inventario/" element={<Inventario />} />
           <Route path="bodega/inventario/areas" element={<Inventario />} />
           <Route
@@ -65,15 +65,14 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
+        <Route path="reportes" element={<Reportes/>}></Route>
         </Route>
       </Route>
-      
+
       <Route path="/login" element={<Login />} />
       <Route path="/forgotPass" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/perfil" element={<Perfil />} />
-
-
     </Routes>
   );
 }

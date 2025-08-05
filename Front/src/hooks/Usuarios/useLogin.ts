@@ -1,3 +1,4 @@
+import { verificarInventario } from "@/axios/Notificaciones/verificarInventario";
 import { postLogin } from "@/axios/Usuarios/postLogin";
 import { useAuth } from "@/providers/AuthProvider";
 import { Credenciales } from "@/schemas/User";
@@ -12,27 +13,29 @@ export default function useLogin(){
 
     const [isError,setIsError] = useState<boolean>(false);
     const [error,setError] = useState<string | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {setAuthenticated, setNombre, setPerfil,setIdUser,setPermissions} = useAuth();
 
     const navigate = useNavigate();
 
     async function login(data : Credenciales){
+        setIsError(false);
+        setIsLoading(true);
         try{
-           
             const response  = await postLogin(data);
-            console.log("datos que se envian al back",typeof data.documento);
              console.log(response)
             const token = response.access_token;
             const permissions = response.modules;
             cookies.set("token",token);
             cookies.set("permissions",permissions);
             //Auth
-            const {nombre,apellido,perfil,iduser} : {nombre : string, apellido : string, perfil: string,iduser:number}= jwtDecode(token);
+            const {nombre,apellido,perfil,idUsuario} : {nombre : string, apellido : string, perfil: string,idUsuario:number}= jwtDecode(token);
             setNombre(`${nombre} ${apellido}`);
             setAuthenticated(true);
             setPerfil(perfil);
-            setIdUser(iduser)
-            console.log("iduser desde uselogin",iduser)
+            setIdUser(idUsuario)
+
+            await verificarInventario(idUsuario)
             //Error handling
             setIsError(false);
             setError(undefined);
@@ -40,10 +43,13 @@ export default function useLogin(){
             //Redirection
             navigate("/");
         }
-        catch(error){
-            console.error("No se pudo iniciar sesión",error);
+        catch(error:any){
+            const errorMessage = error.response.data.response.message;
             setIsError(true);
-            setError("Error iniciando sesión");
+            setError(errorMessage);
+        }
+        finally{
+            setIsLoading(false);
         }
     }
 
@@ -59,6 +65,6 @@ export default function useLogin(){
         }
     }
 
-    return{login,isError,error,logout};
+    return{login,isError,error,logout,isLoading};
 }
 
