@@ -9,7 +9,7 @@ type Props = {
 
 function Card1({children,className}: Props) {
   return (
-    <Card className={`border-collapse flex ${className}`}>
+    <Card className={`border-collapse flex dark:bg-gray-700 dark:text-white ${className}`}>
         <CardBody>
             {children}
         </CardBody>

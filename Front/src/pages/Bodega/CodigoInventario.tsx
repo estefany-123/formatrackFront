@@ -7,30 +7,41 @@ import { FormUpdate } from "@/components/organismos/CodigoInventario/FormUpdate"
 
 type Props = {
   idInventario: number;
+  tieneCaracteristicas: boolean;
+  isOpen: boolean;
   onClose: () => void;
 };
 
-export const CodigoInventario = ({ idInventario }: Props) => {
-  const { getCodigosPorInventario } = useCodigoInventario();
+export const CodigoInventario = ({
+  idInventario,
+  tieneCaracteristicas,
+  isOpen,
+}: Props) => {
+  const { codigos: codigosAll, getCodigosPorInventario } = useCodigoInventario();
   const [codigos, setCodigos] = useState<CodigoInventarioUpdate[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [codigoIdSeleccionado, setCodigoIdSeleccionado] = useState<
-    number | null
-  >(null);
+  const [isLoadingCo, setIsLoading] = useState(true);
+  const [codigoIdSeleccionado, setCodigoIdSeleccionado] = useState<number | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const cargarCodigos = async () => {
     setIsLoading(true);
     try {
-      const data = await getCodigosPorInventario(idInventario);
-      console.log("🔍 Códigos encontrados por inventario:", data);
-      setCodigos(data);
+      const disponibles = getCodigosPorInventario(idInventario, codigosAll ?? []).filter(
+        (c) => !c.uso
+      );
+      setCodigos(disponibles);
     } catch (error) {
       console.error("Error al cargar códigos:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isOpen && tieneCaracteristicas) {
+      cargarCodigos();
+    }
+  }, [idInventario, tieneCaracteristicas, isOpen, codigosAll]);
 
   const handleAbrirEdicion = (idCodigo: number) => {
     setCodigoIdSeleccionado(idCodigo);
@@ -43,15 +54,13 @@ export const CodigoInventario = ({ idInventario }: Props) => {
     cargarCodigos(); // Refrescar después de editar
   };
 
-  useEffect(() => {
-    cargarCodigos();
-  }, [idInventario]);
+  if (!tieneCaracteristicas) return null;
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">Códigos del Inventario</h2>
 
-      {isLoading ? (
+      {isLoadingCo ? (
         <p>Cargando códigos...</p>
       ) : codigos.length === 0 ? (
         <p className="text-sm text-gray-500">
@@ -67,7 +76,7 @@ export const CodigoInventario = ({ idInventario }: Props) => {
               <span>{codigo.codigo}</span>
               <Buton
                 text="Editar"
-                className="text-sm  px-3 py-1 rounded-xl"
+                className="text-sm px-3 py-1 rounded-xl"
                 onPress={() => handleAbrirEdicion(codigo.idCodigoInventario!)}
               />
             </li>

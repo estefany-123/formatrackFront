@@ -16,15 +16,16 @@ export function useInventario() {
   const { data, isLoading, isError, error } = useQuery<InventarioConSitio[]>({
     queryKey: ["inventarios"],
     queryFn: getInventario,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
     gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount:true
   });
 
   const addInventarioMutation = useMutation({
     mutationFn: postInventario,
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },
@@ -45,7 +46,7 @@ export function useInventario() {
       return putInventario(id, resto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },
@@ -65,7 +66,7 @@ export function useInventario() {
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: ["inventarios"],
       });
     },
@@ -78,7 +79,7 @@ export function useInventario() {
   const agregarStockMutation = useMutation({
     mutationFn: agregateStock,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["inventarios"] });
+      queryClient.refetchQueries({ queryKey: ["inventarios"] });
     },
     onError: (error) => {
       console.error("Error al agregar stock:", error);

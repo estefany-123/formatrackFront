@@ -2,7 +2,7 @@ import { axiosAPI } from "../axiosAPI";
 
 export async function cambiarEstadoNotificacion(
   idNotificacion: number,
-  estado: "aceptado" | "rechazado"
+  estado: "aceptado" | "cancelado"
 ) {
   const res = await axiosAPI.patch(`/notificaciones/${idNotificacion}/estado`, {
     estado,

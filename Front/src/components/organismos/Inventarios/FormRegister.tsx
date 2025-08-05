@@ -202,7 +202,7 @@ export default function FormularioInventario({
           id="user"
           onClose={() => setShowModalElemento(false)}
           addData={async (data) => {
-            await addElemento(data);
+            return await addElemento(data);
           }}
         />
         <Buton form="user" text="Guardar" type="submit" />

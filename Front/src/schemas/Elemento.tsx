@@ -13,7 +13,7 @@ export const ElementoUpdateSchema = z.object({
     .min(1, { message: "Descripcion es requerida" })
     .min(2, { message: "Longitud minima 2" }),
 
-imagenElemento: z
+imagen: z
   .any()
   .refine(
     (file) =>
@@ -25,13 +25,13 @@ imagenElemento: z
       message: "Debe ser un archivo o una URL o ruta válida",
     }
   )
-  .optional(),
+  .optional().nullable(),
 });
 
 export type ElementoUpdate = z.infer<typeof ElementoUpdateSchema>;
 
 export const ElementoCreateSchema = z.object({  
-  idElemento: z.number(),
+  idElemento: z.number().optional(),
   nombre: z
     .string()
     .min(1, { message: "Nombre es  requerido" })
@@ -50,7 +50,7 @@ export const ElementoCreateSchema = z.object({
 
   baja: z.boolean({ required_error: "baja es requerida" }).default(false).optional(),
 
-imagenElemento: z
+imagen: z
     .any()
     .refine(
       (file) =>
@@ -62,7 +62,6 @@ imagenElemento: z
 
   fechaVencimiento: z.string({ message: "Fecha es requerida" }).optional(),
 
-  fechaUso: z.string({ message: "Fecha es requerida" }),
 
   fkUnidadMedida: z.number({ required_error: "Unidad es requerida" }),
 

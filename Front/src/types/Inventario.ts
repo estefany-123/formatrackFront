@@ -36,6 +36,7 @@ export type InventarioConSitio = Inventario & {
     idElemento: number;
     nombre: string;
     imagenElemento?: string;
+    fkCaracteristica?: number
   };
 };
 

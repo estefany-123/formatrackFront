@@ -39,16 +39,17 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     resolver: zodResolver(MovimientoCreateSchema),
     mode: "onChange",
     defaultValues: {
-      cantidad:0,
+      cantidad: 0,
       estado: true,
       aceptado: false,
       enProceso: true,
       cancelado: false,
       devolutivo: false,
       noDevolutivo: true,
-      horaIngreso:undefined,
-      horaSalida:undefined,
-      fechaDevolucion:undefined,
+      horaIngreso: "00:00",
+      horaSalida: "00:00",
+      fechaDevolucion: undefined,
+      lugarDestino: undefined,
       codigos: [],
     },
   });
@@ -82,14 +83,34 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   const onSubmit = async (data: MovimientoCreate) => {
     const payload = {
       ...mapMovimiento(data),
-      fechaDevolucion:
-        data.fechaDevolucion && data.fechaDevolucion.trim() !== ""
-          ? new Date(data.fechaDevolucion)
-          : undefined,
+      codigos: data.codigos?.map((c) => c.trim()),
+      horaIngreso: data.horaIngreso || undefined,
+      horaSalida: data.horaSalida || undefined,
+      fechaDevolucion: data.fechaDevolucion
+        ? new Date(data.fechaDevolucion)
+        : undefined,
     };
-    console.log("Codigos seleccionados:", data.codigos);
 
-    console.log("Payload enviado al backend:", data);
+    console.log("🎯 Inventario seleccionado:", data.fkInventario);
+    console.log("🎯 Códigos seleccionados:", data.codigos);
+
+    // Mostrar todos los valores del formulario con su tipo de dato
+    console.log("📦 Datos del formulario (campos y tipos):");
+    Object.entries(data).forEach(([key, value]) => {
+      let tipo: string;
+      if (Array.isArray(value)) {
+        tipo = "array";
+      } else if (value === null) {
+        tipo = "null";
+      } else {
+        tipo = typeof value;
+      }
+      console.log(`- ${key}:`, value, `(tipo: ${tipo})`);
+    });
+
+    // Mostrar el payload que se enviará al backend
+    console.log("✅ Payload enviado al backend:", payload);
+
     if (
       tipoMovimientoSeleccionado &&
       ["salida", "baja", "préstamo"].includes(tipoMovimientoSeleccionado) &&
@@ -106,6 +127,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     }
     try {
       await addData(payload);
+
       onClose();
       addToast({
         title: "Registro Exitoso",
@@ -114,8 +136,16 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
-    } catch (error) {
-      console.error("Error al guardar movimiento:", error);
+    } catch (error: any) {
+      const mensaje = error?.response?.data?.message;
+      addToast({
+        title: "Error al guardar movimiento",
+        description: Array.isArray(mensaje)
+          ? mensaje.join(", ")
+          : (mensaje ?? "Ocurrió un error inesperado."),
+        color: "danger",
+        timeout: 3000,
+      });
     }
   };
   console.log("Errores", errors);
@@ -135,28 +165,13 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           isInvalid={!!errors.descripcion}
           errorMessage={errors.descripcion?.message}
         />
-
-        {/* Hora dinámica según tipo de movimiento */}
-        {tipoMovimientoSeleccionado === "ingreso" ? (
-          <Input
-            label="Hora de Ingreso"
-            type="time"
-            {...register("horaIngreso")}
-            isInvalid={!!errors.horaIngreso}
-            errorMessage={errors.horaIngreso?.message}
-          />
-        ) : tipoMovimientoSeleccionado &&
-          ["salida", "baja", "préstamo"].includes(
-            tipoMovimientoSeleccionado
-          ) ? (
-          <Input
-            label="Hora de Salida"
-            type="time"
-            {...register("horaSalida")}
-            isInvalid={!!errors.horaSalida}
-            errorMessage={errors.horaSalida?.message}
-          />
-        ) : null}
+        <Input
+          label="Destino"
+          type="text"
+          {...register("lugarDestino")}
+          isInvalid={!!errors.lugarDestino}
+          errorMessage={errors.lugarDestino?.message}
+        />
 
         <Controller
           control={control}
@@ -276,6 +291,27 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
             </>
           )}
         />
+
+        {tipoMovimientoSeleccionado === "ingreso" ? (
+          <Input
+            label="Hora de Ingreso"
+            type="time"
+            {...register("horaIngreso")}
+            isInvalid={!!errors.horaIngreso}
+            errorMessage={errors.horaIngreso?.message}
+          />
+        ) : tipoMovimientoSeleccionado &&
+          ["salida", "baja", "préstamo"].includes(
+            tipoMovimientoSeleccionado
+          ) ? (
+          <Input
+            label="Hora de Salida"
+            type="time"
+            {...register("horaSalida")}
+            isInvalid={!!errors.horaSalida}
+            errorMessage={errors.horaSalida?.message}
+          />
+        ) : null}
 
         <Controller
           control={control}
@@ -443,58 +479,72 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           )}
 
         {tipoMovimientoSeleccionado === "ingreso" && (
-          <Controller
-            control={control}
-            name="codigos"
-            render={({ field }) => (
-              <div className="space-y-3">
-                <h3 className="text-base font-semibold text-gray-800">
-                  Ingresar Códigos Nuevos
-                </h3>
+          <>
+            {tieneCaracteristicas ? (
+              <Controller
+                control={control}
+                name="codigos"
+                render={({ field }) => (
+                  <div className="space-y-3">
+                    <h3 className="text-base font-semibold text-gray-800">
+                      Ingresar Códigos Nuevos
+                    </h3>
 
-                <div className="space-y-2">
-                  {(field.value ?? [""]).map((codigo, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200"
-                    >
-                      <Input
-                        className="flex-1"
-                        placeholder={`Código ${index + 1}`}
-                        value={codigo}
-                        onChange={(e) => {
-                          const updated = [...(field.value ?? [])];
-                          updated[index] = e.target.value;
-                          field.onChange(updated);
-                        }}
-                      />
+                    <div className="space-y-2">
+                      {(field.value ?? [""]).map((codigo, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200"
+                        >
+                          <Input
+                            className="flex-1"
+                            placeholder={`Código ${index + 1}`}
+                            value={codigo}
+                            onChange={(e) => {
+                              const updated = [...(field.value ?? [])];
+                              updated[index] = e.target.value;
+                              field.onChange(updated);
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = [...(field.value ?? [])];
+                              updated.splice(index, 1);
+                              field.onChange(updated);
+                            }}
+                            className="px-3 py-1 text-sm rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
                       <button
                         type="button"
-                        onClick={() => {
-                          const updated = [...(field.value ?? [])];
-                          updated.splice(index, 1);
-                          field.onChange(updated);
-                        }}
-                        className="px-3 py-1 text-sm rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition"
+                        onClick={() =>
+                          field.onChange([...(field.value ?? []), ""])
+                        }
+                        className="px-4 py-2 mt-2 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
                       >
-                        Eliminar
+                        + Añadir otro código
                       </button>
                     </div>
-                  ))}
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => field.onChange([...(field.value ?? []), ""])}
-                    className="px-4 py-2 mt-2 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
-                  >
-                    + Añadir otro código
-                  </button>
-                </div>
-              </div>
+                  </div>
+                )}
+              />
+            ) : (
+              <Input
+                label="Cantidad"
+                type="number"
+                {...register("cantidad", { valueAsNumber: true })}
+                isInvalid={!!errors.cantidad}
+                errorMessage={errors.cantidad?.message}
+              />
             )}
-          />
+          </>
         )}
       </Form>
 

@@ -17,9 +17,14 @@ import { useAuth } from "@/providers/AuthProvider";
 type NavProps = {
   children?: ReactNode;
   onOpenNotifications?: () => void;
+  cantidadNoLeidas?: number;
 };
 
-export function Nav({ children, onOpenNotifications }: NavProps) {
+export function Nav({
+  children,
+  onOpenNotifications,
+  cantidadNoLeidas = 0,
+}: NavProps) {
   const navigate = useNavigate();
   const { nombre, perfil } = useAuth();
 
@@ -40,8 +45,12 @@ export function Nav({ children, onOpenNotifications }: NavProps) {
               onClick={onOpenNotifications}
             >
               <BellIcon className="w-6 h-6" />
-              {/* Puedes agregar un contador si lo pasas como prop */}
-              {/* <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1.5 text-xs">3</span> */}
+
+              {cantidadNoLeidas > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1.5 text-xs">
+                  {cantidadNoLeidas}
+                </span>
+              )}
             </button>
           </DropdownTrigger>
 
@@ -66,7 +75,9 @@ export function Nav({ children, onOpenNotifications }: NavProps) {
           </DropdownMenu>
         </Dropdown>
 
-        <div>{children}</div>
+        <div>
+          {children}
+        </div>
 
         <User
           name={nombre}

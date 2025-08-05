@@ -1,4 +1,4 @@
-export type NotificacionEstado = "aceptado" | "rechazado" | "pendiente" | null;
+export type NotificacionEstado = "aceptado" | "cancelado" | "enProceso" | null;
 
 export type Notificacion = {
   idNotificacion: number;

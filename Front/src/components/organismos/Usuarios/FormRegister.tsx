@@ -192,12 +192,6 @@ export default function FormularioU({ addData, onClose, id }: FormularioProps) {
             )}
           />
         )}
-        <Buton
-          text="Guardar"
-          type="submit"
-          form="user"
-          className="w-full p-2 rounded-xl"
-        />
       </Form>
       <Modal
         ModalTitle="Agregar Rol"

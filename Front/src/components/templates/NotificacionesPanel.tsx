@@ -1,6 +1,7 @@
 import { useAuth } from "@/providers/AuthProvider";
 import { useNotificaciones } from "@/hooks/Notificaciones/useNotificaciones";
 import Modall from "../organismos/modal";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   open: boolean;
@@ -11,6 +12,13 @@ export default function NotificacionesPanel({ open, onClose }: Props) {
   const { idUsuario } = useAuth();
   const { notificaciones, isLoading, cambiarEstado, marcarLeida } =
     useNotificaciones(idUsuario!);
+
+  const navigate = useNavigate();
+
+  const redirigirAMovimiento = (idMovimiento: number) => {
+    onClose();
+    navigate(`/bodega/movimientosDetalle/${idMovimiento}`);
+  };
 
   if (isLoading) return <p className="p-4">Cargando notificaciones...</p>;
 
@@ -24,7 +32,12 @@ export default function NotificacionesPanel({ open, onClose }: Props) {
         {notificaciones?.map((noti) => (
           <div
             key={noti.idNotificacion}
-            className="bg-white dark:bg-zinc-800 shadow-md rounded-xl p-4 border border-gray-200 dark:border-zinc-700"
+            onClick={() => {
+              if (noti.requiereAccion && noti.data?.idMovimiento) {
+                redirigirAMovimiento(noti.data.idMovimiento);
+              }
+            }}
+            className="bg-white dark:bg-zinc-800 shadow-md rounded-xl p-4 border border-gray-200 dark:border-zinc-700 cursor cursor-pointer"
           >
             <h3 className="font-semibold">{noti.titulo}</h3>
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
@@ -32,26 +45,28 @@ export default function NotificacionesPanel({ open, onClose }: Props) {
             </p>
 
             {/* Acciones si requiere revisión */}
-            {noti.requiereAccion && noti.estado === "pendiente" && (
+            {noti.requiereAccion && noti.estado === "enProceso" && (
               <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    cambiarEstado({
+                  onClick={async () => {
+                    await cambiarEstado({
                       id: noti.idNotificacion,
                       estado: "aceptado",
-                    })
-                  }
+                    });
+                    navigate("/bodega/movimientos"); // Redirige después de aceptar
+                  }}
                   className="px-3 py-1 rounded-md bg-green-500 text-white hover:bg-green-600"
                 >
                   Aceptar
                 </button>
                 <button
-                  onClick={() =>
-                    cambiarEstado({
+                  onClick={async () =>{
+                    await cambiarEstado({
                       id: noti.idNotificacion,
-                      estado: "rechazado",
+                      estado: "cancelado",
                     })
-                  }
+                    navigate("/bodega/movimientos");
+                  }}
                   className="px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600"
                 >
                   Rechazar
@@ -69,7 +84,8 @@ export default function NotificacionesPanel({ open, onClose }: Props) {
             {/* Botón marcar como leída */}
             {!noti.leido && (
               <button
-                onClick={() => marcarLeida(noti.idNotificacion)}
+                onClick={async () =>{ await marcarLeida(noti.idNotificacion)
+                  navigate("/");}}
                 className="mt-2 text-blue-500 underline text-sm"
               >
                 Marcar como leída

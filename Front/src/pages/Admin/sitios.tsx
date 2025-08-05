@@ -8,9 +8,13 @@ import { useSitios } from "@/hooks/sitios/useSitios";
 import { ListarSitios, Sitios } from "@/types/sitios";
 import { Card, CardBody } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 import FormularioSitio from "@/components/organismos/Sitios/FormRegister";
 
 const SitiosTable = () => {
+
+  const { userHasPermission } = usePermissions();
+
   const { sitios, isLoading, isError, error, addSitio, changeState } =
     useSitios();
 
@@ -63,10 +67,10 @@ const SitiosTable = () => {
         <span>
           {sitio.createdAt
             ? new Date(sitio.createdAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -78,10 +82,10 @@ const SitiosTable = () => {
         <span>
           {sitio.updatedAt
             ? new Date(sitio.updatedAt).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
             : "N/A"}
         </span>
       ),
@@ -114,7 +118,9 @@ const SitiosTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Sitios</h1>
               <div className="flex gap-2">
-                <Buton text="Gestionar Tipos" onPress={handleGoToTipo} />
+                {userHasPermission(56) &&
+                  <Buton text="Gestionar Tipos" onPress={handleGoToTipo} />
+                }
               </div>
             </div>
           </CardBody>
@@ -153,20 +159,24 @@ const SitiosTable = () => {
         )}
       </Modall>
 
-      {sitiosWithKey && (
+      {userHasPermission(15) && sitiosWithKey && (
         <Globaltable
           data={sitiosWithKey}
           columns={columns}
-          onEdit={(item) => {
+          onEdit={userHasPermission(16) ? (item) => {
             const sitioParaEditar: Sitios = {
               ...item,
-              fkArea: item.fkArea?.idArea, 
+              fkArea: item.fkArea?.idArea,
             };
             handleEdit(sitioParaEditar);
-          }}
-          onDelete={(sitio) => handleState(sitio.idSitio)}
+          } : undefined}
+          onDelete={userHasPermission(17) ? (sitio) => handleState(sitio.idSitio) : undefined}
           extraHeaderContent={
-            <Buton text="Añadir sitio" onPress={() => setIsOpen(true)} />
+            <div>
+              {userHasPermission(14) &&
+              <Buton text="Añadir sitio" onPress={() => setIsOpen(true)} />
+              }
+            </div>
           }
         />
       )}

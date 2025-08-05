@@ -8,5 +8,6 @@ export async function postLogin(
       "auth/login",
       data
     );
+    console.log(response)
     return response.data; 
   }

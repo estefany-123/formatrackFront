@@ -1,50 +1,24 @@
-# Vite & HeroUI Template
+## Clonacion del proyecto
 
-This is a template for creating applications using Vite and HeroUI (v2).
-
-[Try it on CodeSandbox](https://githubbox.com/frontio-ai/vite-template)
-
-## Technologies Used
-
-- [Vite](https://vitejs.dev/guide/)
-- [HeroUI](https://heroui.com)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Framer Motion](https://www.framer.com/motion)
-
-## How to Use
-
-To clone the project, run the following command:
+Abre la carpeta donde desea clonar el proyecto y ejecuta este comando en un cmd
 
 ```bash
-git clone https://github.com/frontio-ai/vite-template.git
+$ git clone https://github.com/estefany-123/formatrackFront.git
 ```
+luego de clonarlo le aparecera una carpeta "formatrackFront" y dentro de ella encontrara la carpeta raiz "Front" abralas con un click o en la terminal con cd + tabulador
 
-### Install dependencies
+Cree las variables de entorno en la carpeta raiztomando de guia el .env.example para crear su propio .env
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+## Instalacion de dependencias
+Luego de esto pasamos a ejecutar este comando dentro de la carpeta raiz para que se descarguen todas las dependencias necesarias 
 
 ```bash
-npm install
+$ npm install --force
 ```
+## Compile y corra el proyecto
 
-### Run the development server
+Antes de iniciar el servidor asegurese de tener en ejecucion la RestAPI, es decir el Backend
 
 ```bash
-npm run dev
+$ npm run dev
 ```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@heroui/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/frontio-ai/vite-template/blob/main/LICENSE).
