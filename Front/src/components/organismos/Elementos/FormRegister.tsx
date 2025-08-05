@@ -65,7 +65,7 @@ export default function FormularioElementos({
           ? data.fkCaracteristica
           : undefined,
       });
-
+      console.log("Esto es lo que manda imagen",data.imagen)
       onClose();
       addToast({
         title: "Registro Exitoso",

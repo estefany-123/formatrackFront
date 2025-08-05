@@ -30,7 +30,7 @@ export default function FormMunicipios({
   });
 
   const onSubmit = async (data: Municipio) => {
-    console.log(data);
+   
     try {
       await addData(data);
       onClose();

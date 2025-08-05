@@ -18,8 +18,7 @@ type Props = {
   onclose: () => void;
 };
 
-const FormUpTipos = ({ tipos, tipoSitioId, id, onclose }: Props) => {
-  console.log("Datos anteriores:", tipos);
+const FormUpTipos = ({ tipoSitioId, id, onclose }: Props) => {
 
   const { updateTipo, getTipoById } = useTipoSitio();
 

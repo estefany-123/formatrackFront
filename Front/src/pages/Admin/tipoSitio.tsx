@@ -1,4 +1,4 @@
-import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
+import Globaltable from "@/components/organismos/table.tsx";
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
@@ -34,13 +34,12 @@ const TipoSitioTable = () => {
 
   const handleState = async (tipos: TipoSitio) => {
     await changeState(tipos.idTipo as number);
-    console.log(tipos.idTipo);
   };
 
   const handleAddCentro = async (tipos: TipoSitio) => {
     try {
       await addTipo(tipos);
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose(); 
     } catch (error) {
       console.error("Error al agregar el tipo de sitio:", error);
     }
@@ -51,7 +50,7 @@ const TipoSitioTable = () => {
     setIsOpenUpdate(true);
   };
 
-  // Definir las columnas de la tabla
+  
   const columns: TableColumn<TipoSitio>[] = [
     { key: "nombre", label: "Nombre" },
     {

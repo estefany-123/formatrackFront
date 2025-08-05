@@ -23,6 +23,10 @@ export const UserUpdateSchema = z.object({
         .email({ message: "Correo es requerido" }),
     cargo: z
         .string().min(1, { message: "Cargo es requerido" }).optional(),
+
+    fkRol: z
+        .number({ message: "Rol es requerido y debe ser un numero" }).optional()
+
 })
 
 export type UserUpdate = z.infer<typeof UserUpdateSchema>
@@ -92,7 +96,7 @@ export const PerfilSchema = z.object({
         .string()
         .optional()
         .transform(val => (val === "" ? undefined : val))
-        .refine(val => val === undefined || val.length >= 8,"Debe tener al menos 8 caracteres")
+        .refine(val => val === undefined || val.length >= 8, "Debe tener al menos 8 caracteres")
 })
 
 export type Perfil = z.infer<typeof PerfilSchema>

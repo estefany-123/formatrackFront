@@ -19,7 +19,6 @@ const FormUpCentro = ({ centroId, id, onclose }: Props) => {
   const { UpCentro, getCentroById } = useCentro();
 
   const foundCentro = getCentroById(centroId) as CentroUpdate;
-  console.log(foundCentro);
 
   const {
     register,
@@ -27,6 +26,7 @@ const FormUpCentro = ({ centroId, id, onclose }: Props) => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(CentroUpdateSchema),
+    mode:"onChange",
     defaultValues: {
       idCentro: foundCentro.idCentro,
       nombre: foundCentro.nombre,
@@ -34,11 +34,8 @@ const FormUpCentro = ({ centroId, id, onclose }: Props) => {
   });
 
   const onSubmit = async (data: CentroUpdate) => {
-    console.log("submiting...");
-    console.log(data);
     try {
       await UpCentro(data.idCentro, data);
-      console.log("Sended success");
       onclose();
       addToast({
         title: "Actualizacion Exitosa",

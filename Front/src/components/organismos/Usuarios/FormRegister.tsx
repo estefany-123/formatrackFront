@@ -2,7 +2,7 @@ import { Input } from "@heroui/input";
 import { addToast, Select, SelectItem } from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSchema, User } from "@/schemas/User";
+import { UserSchema,User } from "@/schemas/User";
 import { Form } from "@heroui/form";
 import { useRol } from "@/hooks/Roles/useRol";
 import Buton from "@/components/molecules/Button";
@@ -178,7 +178,7 @@ export default function FormularioU({ addData, onClose, id }: FormularioProps) {
                         </SelectItem>
                       ))
                   ) : (
-                    <SelectItem isDisabled>No hay roles disponibles</SelectItem>
+                    <SelectItem >No hay roles disponibles</SelectItem>
                   )}
                 </Select>
                 <Buton
@@ -192,6 +192,7 @@ export default function FormularioU({ addData, onClose, id }: FormularioProps) {
             )}
           />
         )}
+        
       </Form>
       <Modal
         ModalTitle="Agregar Rol"
