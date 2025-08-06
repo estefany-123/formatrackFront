@@ -56,6 +56,7 @@ export default function FormularioElementos({
   const handleCloseCaracteristica = () => setShowModalCaracteristica(false);
 
   const onSubmit = async (data: ElementoCreate) => {
+    console.log("Datos enviados:", data);
     try {
       await addData({
         ...data,
@@ -115,6 +116,8 @@ export default function FormularioElementos({
                 field.onChange(value);
                 setValue("perecedero", value === "perecedero");
                 setValue("noPerecedero", value === "noPerecedero");
+
+                console.log("💡 Valores actuales del formulario:", value);
               }}
               isInvalid={!!errors.tipoElemento}
               errorMessage={errors.tipoElemento?.message}
@@ -413,23 +416,6 @@ export default function FormularioElementos({
             </Buton>
           </div>
         )}
-<Controller
-  name="perecedero"
-  control={control}
-  defaultValue={false}
-  render={({ field }) => (
-    <input type="hidden" {...field} value={field.value ? "true" : "false"} />
-  )}
-/>
-<Controller
-  name="noPerecedero"
-  control={control}
-  defaultValue={false}
-  render={({ field }) => (
-    <input type="hidden" {...field} value={field.value ? "true" : "false"} />
-  )}
-/>
-
       </Form>
       <Modal
         ModalTitle="Agregar Unidad"

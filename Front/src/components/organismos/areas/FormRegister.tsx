@@ -6,7 +6,7 @@ import { AreaCreate, AreaCreateSchema } from "@/schemas/Area";
 import { addToast, Select, SelectItem } from "@heroui/react";
 import { useSede } from "@/hooks/sedes/useSedes";
 import { useUsuario } from "@/hooks/Usuarios/useUsuario";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/organismos/modal";
 import FormularioSede from "../Sedes/FormRegister";
 import Buton from "@/components/molecules/Button";
@@ -104,83 +104,154 @@ export default function FormularioArea({
         <Controller
           control={control}
           name="fkSede"
-          render={({ field }) => (
-            <div className=" flex w-full">
-              <Select
-                label="Sede"
-                {...field}
-                value={field.value ?? ""}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                className="w-full"
-                placeholder="Selecciona una sede..."
-                aria-label="Seleccionar Sede"
-                isInvalid={!!errors.fkSede}
-                errorMessage={errors.fkSede?.message}
-              >
-                {sede?.length ? (
-                  sede
-                    .filter((s) => s.estado === true)
-                    .map((s) => (
-                      <SelectItem key={s.idSede} textValue={s.nombre}>
-                        {s.nombre}
-                      </SelectItem>
-                    ))
-                ) : (
-                  <SelectItem isDisabled>No hay sedes disponibles</SelectItem>
-                )}
-              </Select>
-              <Buton
-                type="button"
-                className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl "
-                onPress={() => setShowModal(true)}
-              >
-                <PlusCircleIcon />
-              </Buton>
-            </div>
-          )}
+          render={({ field }) => {
+            const [query, setQuery] = useState("");
+            const [showOptions, setShowOptions] = useState(false);
+
+            const filteredSedes =
+              sede?.filter(
+                (s) =>
+                  s.estado &&
+                  s.nombre.toLowerCase().includes(query.toLowerCase())
+              ) || [];
+
+            const selectedSede = sede?.find((s) => s.idSede === field.value);
+
+            useEffect(() => {
+              if (selectedSede) {
+                setQuery(selectedSede.nombre);
+              }
+            }, [selectedSede?.idSede]);
+
+            return (
+              <div className="relative w-full flex items-start gap-2">
+                <div className="w-full">
+                  <Input
+                    label="Sede"
+                    placeholder="Selecciona una sede..."
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowOptions(true);
+                      field.onChange(null);
+                    }}
+                    onFocus={() => setShowOptions(true)}
+                    onBlur={() => setTimeout(() => setShowOptions(false), 150)}
+                    isInvalid={!!errors.fkSede}
+                    errorMessage={errors.fkSede?.message}
+                  />
+
+                  {showOptions && filteredSedes.length > 0 && (
+                    <div
+                      className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto 
+              rounded-lg border border-gray-200 bg-white/80 
+              shadow-lg transition-all duration-200 backdrop-blur-sm"
+                    >
+                      {filteredSedes.map((sedeItem) => (
+                        <div
+                          key={sedeItem.idSede}
+                          className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            field.onChange(sedeItem.idSede);
+                            setQuery(sedeItem.nombre);
+                            setShowOptions(false);
+                          }}
+                        >
+                          {sedeItem.nombre}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModal(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            );
+          }}
         />
 
         <Controller
           control={control}
           name="fkUsuario"
-          render={({ field }) => (
-            <div className="flex w-full">
-              <Select
-                label="Usuario"
-                {...field}
-                value={field.value ?? ""}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                className="w-full"
-                placeholder="Selecciona un usuario..."
-                aria-label="Seleccionar Usuario"
-                isInvalid={!!errors.fkUsuario}
-                errorMessage={errors.fkUsuario?.message}
-              >
-                {users?.length ? (
-                  users
-                    .filter((u) => u.estado === true)
-                    .map((u) => (
-                      <SelectItem key={u.idUsuario} textValue={u.nombre}>
-                        {u.nombre}
-                      </SelectItem>
-                    ))
-                ) : (
-                  <SelectItem isDisabled>
-                    No hay usuarios disponibles
-                  </SelectItem>
-                )}
-              </Select>
-              <Buton
-                type="button"
-                className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
-                onPress={() => setShowModalUser(true)}
-              >
-                <PlusCircleIcon />
-              </Buton>
-            </div>
-          )}
+          render={({ field }) => {
+            const [query, setQuery] = useState("");
+            const [showOptions, setShowOptions] = useState(false);
+
+            const filteredUsuarios =
+              users?.filter(
+                (u) =>
+                  u.estado &&
+                  u.nombre.toLowerCase().includes(query.toLowerCase())
+              ) || [];
+
+            const selectedUsuario = users?.find(
+              (u) => u.idUsuario === field.value
+            );
+
+            useEffect(() => {
+              if (selectedUsuario) {
+                setQuery(selectedUsuario.nombre);
+              }
+            }, [selectedUsuario?.idUsuario]);
+
+            return (
+              <div className="relative w-full flex items-start gap-2">
+                <div className="w-full">
+                  <Input
+                    label="Usuario"
+                    placeholder="Selecciona un usuario..."
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowOptions(true);
+                      field.onChange(null);
+                    }}
+                    onFocus={() => setShowOptions(true)}
+                    onBlur={() => setTimeout(() => setShowOptions(false), 150)}
+                    isInvalid={!!errors.fkUsuario}
+                    errorMessage={errors.fkUsuario?.message}
+                  />
+
+                  {showOptions && filteredUsuarios.length > 0 && (
+                    <div
+                      className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto 
+              rounded-lg border border-gray-200 bg-white/80 
+              shadow-lg transition-all duration-200 backdrop-blur-sm"
+                    >
+                      {filteredUsuarios.map((usuario) => (
+                        <div
+                          key={usuario.idUsuario}
+                          className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            field.onChange(usuario.idUsuario);
+                            setQuery(usuario.nombre);
+                            setShowOptions(false);
+                          }}
+                        >
+                          {usuario.nombre}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModalUser(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            );
+          }}
         />
-        
       </Form>
       <Modal
         ModalTitle="Agregar Sede"

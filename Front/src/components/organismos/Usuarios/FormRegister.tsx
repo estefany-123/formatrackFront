@@ -6,7 +6,7 @@ import { UserSchema, User } from "@/schemas/User";
 import { Form } from "@heroui/form";
 import { useRol } from "@/hooks/Roles/useRol";
 import Buton from "@/components/molecules/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import FormularioRoles from "../Roles/FormRegister";
 import Modal from "../modal";
@@ -159,37 +159,78 @@ export default function FormularioU({ addData, onClose, id }: FormularioProps) {
           <Controller
             control={control}
             name="fkRol"
-            render={({ field }) => (
-              <div className="w-full flex">
-                <Select
-                  label="Rol"
-                  value={field.value ?? 0}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  placeholder="Selecciona un rol..."
-                  isInvalid={!!errors.fkRol}
-                  errorMessage={errors.fkRol?.message}
-                >
-                  {roles?.length ? (
-                    roles
-                      .filter((r) => r.estado === true)
-                      .map((rol) => (
-                        <SelectItem key={rol.idRol} textValue={rol.nombre}>
-                          {rol.nombre}
-                        </SelectItem>
-                      ))
-                  ) : (
-                    <SelectItem isDisabled>No hay roles disponibles</SelectItem>
-                  )}
-                </Select>
-                <Buton
-                  type="button"
-                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
-                  onPress={() => setShowModalRol(true)}
-                >
-                  <PlusCircleIcon />
-                </Buton>
-              </div>
-            )}
+            render={({ field }) => {
+              const [query, setQuery] = useState("");
+              const [showOptions, setShowOptions] = useState(false);
+
+              const filteredRoles =
+                roles?.filter(
+                  (r) =>
+                    r.estado &&
+                    r.nombre.toLowerCase().includes(query.toLowerCase())
+                ) || [];
+
+              const selectedRol = roles?.find((r) => r.idRol === field.value);
+
+              useEffect(() => {
+                if (selectedRol) {
+                  setQuery(selectedRol.nombre);
+                }
+              }, [selectedRol?.idRol]);
+
+              return (
+                <div className="relative w-full flex items-start gap-2">
+                  <div className="w-full">
+                    <Input
+                      label="Rol"
+                      placeholder="Selecciona un rol..."
+                      value={query}
+                      onChange={(e) => {
+                        setQuery(e.target.value);
+                        setShowOptions(true);
+                        field.onChange(null);
+                      }}
+                      onFocus={() => setShowOptions(true)}
+                      onBlur={() =>
+                        setTimeout(() => setShowOptions(false), 150)
+                      }
+                      isInvalid={!!errors.fkRol}
+                      errorMessage={errors.fkRol?.message}
+                    />
+
+                    {showOptions && filteredRoles.length > 0 && (
+                      <div
+                        className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto 
+              rounded-lg border border-gray-200 bg-white/80 
+              shadow-lg transition-all duration-200 backdrop-blur-sm"
+                      >
+                        {filteredRoles.map((rol) => (
+                          <div
+                            key={rol.idRol}
+                            className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              field.onChange(rol.idRol);
+                              setQuery(rol.nombre);
+                              setShowOptions(false);
+                            }}
+                          >
+                            {rol.nombre}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <Buton
+                    type="button"
+                    className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                    onPress={() => setShowModalRol(true)}
+                  >
+                    <PlusCircleIcon />
+                  </Buton>
+                </div>
+              );
+            }}
           />
         )}
       </Form>
