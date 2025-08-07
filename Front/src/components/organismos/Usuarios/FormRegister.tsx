@@ -178,7 +178,7 @@ export default function FormularioU({ addData, onClose, id }: FormularioProps) {
                         </SelectItem>
                       ))
                   ) : (
-                    <SelectItem isDisabled>No hay roles disponibles</SelectItem>
+                    <SelectItem>No hay roles disponibles</SelectItem>
                   )}
                 </Select>
                 <Buton

@@ -1,4 +1,4 @@
-import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
+import Globaltable from "@/components/organismos/table.tsx"; 
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
 import FormularioSede from "@/components/organismos/Sedes/FormRegister";
+import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 const SedeTable = () => {
 

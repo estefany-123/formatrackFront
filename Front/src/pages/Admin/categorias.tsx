@@ -1,4 +1,4 @@
-import Globaltable from "@/components/organismos/table.tsx"; // Importar la tabla reutilizable
+import Globaltable from "@/components/organismos/table.tsx"; 
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
@@ -37,7 +37,6 @@ const CategoriasTable = () => {
 
   const handleState = async (categorias: Categoria) => {
     await changeState(categorias.idCategoria as number);
-    console.log(categorias.idCategoria);
   };
 
   const handleAddCategoria = async (categoria: Categoria) => {

@@ -4,7 +4,7 @@ import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
 import { Form } from "@heroui/form";
-import { addToast, Checkbox, Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Checkbox, image, Input, Select, SelectItem } from "@heroui/react";
 import { ElementoCreate, ElementoCreateSchema } from "@/schemas/Elemento";
 import { useEffect, useState } from "react";
 import Buton from "@/components/molecules/Button";
@@ -65,7 +65,7 @@ export default function FormularioElementos({
           ? data.fkCaracteristica
           : undefined,
       });
-
+      console.log("Esto es lo que manda imagen",data.imagen)
       onClose();
       addToast({
         title: "Registro Exitoso",

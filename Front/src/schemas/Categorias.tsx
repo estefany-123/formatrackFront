@@ -20,12 +20,12 @@ export const CategoriaUpdateSchema = z.object({
   nombre: z
     .string()
     .min(1, { message: "Es necesario un nombre" })
-    .min(2, "Mínimo 2 caracteres"),
+    .min(4, {message:"Mínimo 4 caracteres"}),
 
   codigoUNPSC: z
     .string()
     .min(1, { message: "Es necesario un codigo" })
-    .min(2, "Mínimo 2 caracteres"),
+    .min(4, {message:"Mínimo 4 caracteres"}),
 });
 
 export type CategoriaUpdate = z.infer<typeof CategoriaUpdateSchema>;
