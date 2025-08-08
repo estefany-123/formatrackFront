@@ -53,6 +53,7 @@ console.log("Características recibidas:", caracteristicas);
   // Definir las columnas de la tabla
   const columns: TableColumn<Caracteristica>[] = [
     { key: "nombre", label: "Nombre" },
+    { key: "simbolo", label: "Simbolo" },
     {
       key: "createdAt",
       label: "Fecha Creación",
@@ -109,7 +110,7 @@ console.log("Características recibidas:", caracteristicas);
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Gestionar Caraccteristicas</h1>
+              <h1 className="text-2xl font-bold">Gestionar Caracteristicas</h1>
               <div className="flex gap-2">
                 <Buton text="Elementos" onPress={handleGoToElemento} />
               </div>

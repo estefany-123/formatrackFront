@@ -15,6 +15,11 @@ export function useUnidad() {
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
+
+    select: (data) => data.map(u => ({
+      ...u,
+      idUnidad: Number(u.idUnidad) || 0
+    }))
   });
 
   const addUnidadMutation = useMutation({
