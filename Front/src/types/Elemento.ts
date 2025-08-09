@@ -16,9 +16,9 @@ export type putElementos = {
   nombre: string;
   descripcion: string;
   imagen?: string | File | undefined;
-  fkUnidadMedida?: number;
-  fkCategoria?: number;
-  fkCaracteristica?: number | null;
+  fkUnidadMedida?: number 
+  fkCategoria?: number 
+  fkCaracteristica?: number |  null;
 };
 
 export type Elemento = {
@@ -31,8 +31,8 @@ export type Elemento = {
   fechaVencimiento?: string;
   baja?: boolean;
   imagen?: string;
-  fkUnidadMedida?: number| null;
-  fkCategoria?: number| null;
+  fkUnidadMedida?: number;
+  fkCategoria?: number;
   fkCaracteristica?: number | null;
   createdAt?: string;
   updatedAt?: string;

@@ -24,11 +24,12 @@ imagen: z
     )
   .optional().nullable(),
   
-  fkUnidadMedida: z.number({ required_error: "Unidad es requerida" }),
+  fkUnidadMedida: z.number({ required_error: "Unidad es requerida" }).optional(),
 
-  fkCategoria: z.number({ required_error: "Categoria es requerida" }),
+  fkCategoria: z.number({ required_error: "Categoria es requerida" }).optional(),
 
-  fkCaracteristica: z.number({ required_error: "Caracteristica es requerida" }).nullable()
+  fkCaracteristica: z.number({ required_error: "Caracteristica es requerida" }).optional().nullable()
+
 });
 
 export type ElementoUpdate = z.infer<typeof ElementoUpdateSchema>;

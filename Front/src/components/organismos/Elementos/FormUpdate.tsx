@@ -1,5 +1,5 @@
 import { Input } from "@heroui/input";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "@heroui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast, Select, SelectItem } from "@heroui/react";
@@ -9,7 +9,12 @@ import Buton from "@/components/molecules/Button";
 import { useUnidad } from "@/hooks/UnidadesMedida/useUnidad";
 import { useCategoria } from "@/hooks/Categorias/useCategorias";
 import { useCaracteristica } from "@/hooks/Caracteristicas/useCaracteristicas";
-import { useEffect } from "react";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import Modal from "../modal";
+import FormularioUnidades from "../UnidadesMedida/FormRegister";
+import FormCategorias from "../Categorias/FormCategorias";
+import FormularioCaracteristicas from "../Caracteristicas/FormRegister";
+import { useState } from "react";
 
 type Props = {
   elementos: ElementoUpdate[];
@@ -20,35 +25,83 @@ type Props = {
 
 export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
   const { updateElemento, getElementoById } = useElemento();
-  const { unidades = [] } = useUnidad();
-  const { categorias = [] } = useCategoria();
-  const { caracteristicas = [] } = useCaracteristica();
+  const {
+    unidades,
+    isLoading: loadingUnidad,
+    isError: errorUnidad,
+    addUnidad,
+  } = useUnidad();
+  const {
+    categorias,
+    isLoading: loadingCategoria,
+    isError: errorCategoria,
+    addCategoria,
+  } = useCategoria();
+  const {
+    caracteristicas,
+    isLoading: loadingCaracteristica,
+    isError: errorCaracteristica,
+    addCaracteristica,
+  } = useCaracteristica();
+
+  const [showModal, setShowModal] = useState(false);
+  const [showModalCategoria, setShowModalCategoria] = useState(false);
+  const [showModalCaracteristica, setShowModalCaracteristica] = useState(false);
+
+  const handleClose = () => setShowModal(false);
+  const handleCloseCategoria = () => setShowModalCategoria(false);
+  const handleCloseCaracteristica = () => setShowModalCaracteristica(false);
 
   const foundElemento = getElementoById(
     elementoId,
     elementos
   ) as ElementoUpdate;
-  console.log("unidaeds hdhjdc,mdñ:", unidades);
+
+  const normalizedElemento = {
+    ...foundElemento,
+    fkUnidadMedida:
+      typeof foundElemento.fkUnidadMedida === "object" &&
+      foundElemento.fkUnidadMedida !== null
+        ? (foundElemento.fkUnidadMedida as { idUnidad: number }).idUnidad
+        : foundElemento.fkUnidadMedida,
+
+    fkCategoria:
+      typeof foundElemento.fkCategoria === "object" &&
+      foundElemento.fkCategoria !== null
+        ? (foundElemento.fkCategoria as { idCategoria: number }).idCategoria
+        : foundElemento.fkCategoria,
+
+    fkCaracteristica:
+      typeof foundElemento.fkCaracteristica === "object" &&
+      foundElemento.fkCaracteristica !== null
+        ? (foundElemento.fkCaracteristica as { idCaracteristica: number })
+            .idCaracteristica
+        : foundElemento.fkCaracteristica,
+  };
+
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    control,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<ElementoUpdate>({
     resolver: zodResolver(ElementoUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      nombre: foundElemento.nombre,
-      descripcion: foundElemento.descripcion,
-      imagen: foundElemento.imagen,
-      fkUnidadMedida: foundElemento.fkUnidadMedida,
-      fkCategoria: foundElemento.fkCategoria ?? [],
-      fkCaracteristica: foundElemento.fkCaracteristica,
+      idElemento: normalizedElemento.idElemento,
+      nombre: normalizedElemento.nombre,
+      descripcion: normalizedElemento.descripcion,
+      imagen: normalizedElemento.imagen,
+      fkUnidadMedida: normalizedElemento.fkUnidadMedida,
+      fkCategoria: normalizedElemento.fkCategoria,
+      fkCaracteristica: normalizedElemento.fkCaracteristica,
     },
   });
+
+  const fkUnidadMedida = watch("fkUnidadMedida");
+  const fkCategoria = watch("fkCategoria");
+  const fkCaracteristica = watch("fkCaracteristica");
 
   console.log("yfhbdj fkuni:", foundElemento.fkUnidadMedida);
 
@@ -71,172 +124,204 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
       console.error("Error al actualizar el Elemento", error);
     }
   };
-
-  useEffect(() => {
-    if (foundElemento) {
-      reset({
-        nombre: foundElemento.nombre,
-        descripcion: foundElemento.descripcion,
-        imagen: foundElemento.imagen,
-        fkUnidadMedida: foundElemento.fkUnidadMedida,
-        fkCategoria: foundElemento.fkCategoria ?? [],
-        fkCaracteristica: foundElemento.fkCaracteristica,
-      });
-    }
-  }, [foundElemento, reset]);
-
   console.log("Errores", errors);
   return (
-    <Form
-      id={id}
-      className="w-full space-y-4"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <Input
-        label="Nombre"
-        placeholder="Nombre del elemento"
-        {...register("nombre")}
-        isInvalid={!!errors.nombre}
-        errorMessage={errors.nombre?.message}
-      />
+    <>
+      <Form
+        id={id}
+        className="w-full space-y-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Input
+          label="Nombre"
+          placeholder="Nombre del elemento"
+          {...register("nombre")}
+          isInvalid={!!errors.nombre}
+          errorMessage={errors.nombre?.message}
+        />
 
-      <Input
-        label="Descripción"
-        placeholder="Descripción del elemento"
-        {...register("descripcion")}
-        isInvalid={!!errors.descripcion}
-        errorMessage={errors.descripcion?.message}
-      />
+        <Input
+          label="Descripción"
+          placeholder="Descripción del elemento"
+          {...register("descripcion")}
+          isInvalid={!!errors.descripcion}
+          errorMessage={errors.descripcion?.message}
+        />
 
-      {imagen && typeof imagen === "string" && (
-        <div className="flex justify-center">
-          <img
-            src={`http://localhost:3000/img/img/elementos/${imagen}`}
-            alt="Imagen actual"
-            className="w-40 h-40 object-cover rounded-lg mb-4"
-          />
-        </div>
-      )}
+        {imagen && typeof imagen === "string" && (
+          <div className="flex justify-center">
+            <img
+              src={`http://localhost:3000/img/img/elementos/${imagen}`}
+              alt="Imagen actual"
+              className="w-40 h-40 object-cover rounded-lg mb-4"
+            />
+          </div>
+        )}
 
-      {imagen instanceof File && (
-        <div className="flex justify-center">
-          <img
-            src={URL.createObjectURL(imagen)}
-            alt="Nueva imagen"
-            className="w-40 h-40 object-cover rounded-lg mb-4"
-          />
-        </div>
-      )}
+        {imagen instanceof File && (
+          <div className="flex justify-center">
+            <img
+              src={URL.createObjectURL(imagen)}
+              alt="Nueva imagen"
+              className="w-40 h-40 object-cover rounded-lg mb-4"
+            />
+          </div>
+        )}
 
-      <Input
-        label="Imagen"
-        type="file"
-        accept="image/*"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) setValue("imagen", file);
-        }}
-      />
+        <Input
+          label="Imagen"
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) setValue("imagen", file);
+          }}
+        />
 
-      <Controller
-        control={control}
-        name="fkUnidadMedida"
-        render={({ field }) => {
-          const currentValue = Number(field.value);
-          return (
+        {/* Unidad de medida */}
+        {!loadingUnidad && !errorUnidad && unidades && (
+          <div className="w-full flex">
             <Select
               label="Unidad de medida"
-              placeholder="Selecciona una unidad..."
-              selectedKeys={
-                currentValue ? new Set([currentValue.toString()]) : new Set()
-              }
-              onSelectionChange={(key) => {
-                field.onChange(key ? Number(key) : null);
+              selectedKeys={fkUnidadMedida ? [fkUnidadMedida.toString()] : []}
+              onSelectionChange={(keys) => {
+                const key = [...keys][0];
+                const id = key ? parseInt(key as string) : undefined;
+                setValue("fkUnidadMedida", id);
               }}
-              isInvalid={!!errors.fkUnidadMedida}
-              errorMessage={errors.fkUnidadMedida?.message}
             >
               {unidades.map((unidad) => (
                 <SelectItem
-                  key={String(unidad.idUnidad)}
+                  key={unidad.idUnidad?.toString()}
                   textValue={unidad.nombre}
                 >
                   {unidad.nombre}
                 </SelectItem>
               ))}
             </Select>
-          );
-        }}
-      />
+            <Buton
+              type="button"
+              className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl flex"
+              onPress={() => setShowModal(true)}
+            >
+              <PlusCircleIcon />
+            </Buton>
+          </div>
+        )}
 
-      <Controller
-        control={control}
-        name="fkCategoria"
-        render={({ field }) => {
-          const currentValue = field.value ? String(field.value) : "";
-          return (
+        {!loadingCategoria && !errorCategoria && categorias && (
+          <div className="w-full flex">
             <Select
               label="Categoría"
-              placeholder="Selecciona una categoría..."
-              selectedKeys={currentValue ? new Set([currentValue]) : new Set()}
+              selectedKeys={fkCategoria ? [fkCategoria.toString()] : []}
               onSelectionChange={(keys) => {
-                const selected = Array.from(keys)[0];
-                field.onChange(selected ? Number(selected) : null);
+                const key = [...keys][0];
+                const id = key ? parseInt(key as string) : undefined;
+                setValue("fkCategoria", id);
               }}
-              value={currentValue ? currentValue.toString() : ""}
-              isInvalid={!!errors.fkCategoria}
-              errorMessage={errors.fkCategoria?.message}
             >
-              {categorias?.map((categoria) => (
+              {categorias.map((cat) => (
                 <SelectItem
-                  key={categoria.idCategoria?.toString()}
-                  textValue={categoria.nombre}
+                  key={cat.idCategoria?.toString()}
+                  textValue={cat.nombre}
                 >
-                  {categoria.nombre}
+                  {cat.nombre}
                 </SelectItem>
               ))}
             </Select>
-          );
-        }}
-      />
+            <Buton
+              type="button"
+              className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl flex"
+              onPress={() => setShowModalCategoria(true)}
+            >
+              <PlusCircleIcon />
+            </Buton>
+          </div>
+        )}
 
-      <Controller
-        control={control}
-        name="fkCaracteristica"
-        render={({ field }) => {
-          const currentValue = field.value ? String(field.value) : "";
-          return (
+        {!loadingCaracteristica && !errorCaracteristica && caracteristicas && (
+          <div className="w-full flex">
             <Select
               label="Característica"
-              placeholder="Selecciona una característica..."
-              selectedKeys={currentValue ? new Set([currentValue]) : new Set()}
+              selectedKeys={  
+                fkCaracteristica ? [fkCaracteristica.toString()] : []
+              }
               onSelectionChange={(keys) => {
-                const selected = Array.from(keys)[0];
-                field.onChange(selected ? Number(selected) : null);
+                const key = [...keys][0];
+                const id = key ? parseInt(key as string) : undefined;
+                setValue("fkCaracteristica", id);
               }}
-              value={currentValue ? currentValue.toString() : ""}
-              isInvalid={!!errors.fkCaracteristica}
-              errorMessage={errors.fkCaracteristica?.message}
             >
-              {caracteristicas?.map((caracteristica) => (
+              {caracteristicas.map((carac) => (
                 <SelectItem
-                  key={caracteristica.idCaracteristica?.toString()}
-                  textValue={caracteristica.nombre}
+                  key={carac.idCaracteristica?.toString()}
+                  textValue={carac.nombre}
                 >
-                  {caracteristica.nombre}
+                  {carac.nombre}
                 </SelectItem>
               ))}
+              
             </Select>
-          );
-        }}
-      />
 
-      <Buton
-        text="Guardar"
-        type="submit"
-        isLoading={isSubmitting}
-        className="w-full rounded-xl"
-      />
-    </Form>
+            <Buton
+              type="button"
+              className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl flex"
+              onPress={() => setShowModalCaracteristica(true)}
+            >
+              <PlusCircleIcon />
+            </Buton>
+          </div>
+        )}
+
+        <Buton
+          text="Guardar"
+          type="submit"
+          isLoading={isSubmitting}
+          className="w-full rounded-xl"
+        />
+      </Form>
+      <Modal
+        ModalTitle="Agregar Unidad"
+        isOpen={showModal}
+        onOpenChange={handleClose}
+      >
+        <FormularioUnidades
+          id="unidad"
+          onClose={() => setShowModal(false)}
+          addData={async (data) => {
+            await addUnidad(data);
+          }}
+        />
+        <Buton form="unidad" text="Guardar" type="submit" />
+      </Modal>
+      <Modal
+        ModalTitle="Agregar Categoria"
+        isOpen={showModalCategoria}
+        onOpenChange={handleCloseCategoria}
+      >
+        <FormCategorias
+          id="categoria"
+          onClose={() => setShowModalCategoria(false)}
+          addData={async (data) => {
+            await addCategoria(data);
+          }}
+        />
+        <Buton form="categoria" text="Guardar" type="submit" />
+      </Modal>
+      <Modal
+        ModalTitle="Agregar Caracteristica"
+        isOpen={showModalCaracteristica}
+        onOpenChange={handleCloseCaracteristica}
+      >
+        <FormularioCaracteristicas
+          id="caracteristica"
+          onClose={() => setShowModal(false)}
+          addData={async (data) => {
+            await addCaracteristica(data);
+          }}
+        />
+        <Buton form="caracteristica" text="Guardar" type="submit" />
+      </Modal>
+    </>
   );
 };

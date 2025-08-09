@@ -30,15 +30,12 @@ export function useElemento() {
     },
   });
 
-const getElementoById = (
-  id: number | string,
-  elementos: Elemento[] | undefined = data
-): Elemento | null => {
-  const parsedId = Number(id);
-  if (isNaN(parsedId)) return null;
-  return elementos?.find((elemento) => elemento.idElemento === parsedId) || null;
-};
-
+  const getElementoById = (
+    id: number,
+    elementos: Elemento[] | undefined = data
+  ): Elemento | null => {
+    return elementos?.find((elemento) => elemento.idElemento === id) || null;
+  };
 
   const updateElementoMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: putElementos }) =>

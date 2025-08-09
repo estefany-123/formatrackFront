@@ -43,7 +43,6 @@ const CentrosTable = () => {
 
   const handleState = async (centros: Centro) => {
     await changeState(centros.idCentro as number);
-    console.log(centros.idCentro);
   };
 
   const handleAddCentro = async (centros: Centro) => {
@@ -111,6 +110,7 @@ const CentrosTable = () => {
       key: centros.idCentro ? centros.idCentro.toString() : crypto.randomUUID(),
       idCentro: centros.idCentro as number,
       estado: Boolean(centros.estado),
+      fkMunicipio:centros.fkMunicipio as number
     }));
 
   return (

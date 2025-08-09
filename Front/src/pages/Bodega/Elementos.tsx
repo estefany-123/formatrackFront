@@ -158,9 +158,6 @@ export const ElementosTable = () => {
         : crypto.randomUUID(),
       idElemento: elemento.idElemento || 0,
       estado: Boolean(elemento.estado),
-      fkUnidadMedida:Number(elemento.fkUnidadMedida),
-      fkCategoria:Number(elemento.fkCategoria),
-      fkCaracteristica:Number(elemento.fkCaracteristica)
     }));
 
   return (

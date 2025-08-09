@@ -18,6 +18,7 @@ export default function FormTipos({ addData, onClose, id }: FormularioProps) {
     setValue,
   } = useForm({
     resolver: zodResolver(TipoSitioSchema),
+    mode:"onChange",
     defaultValues: {
       estado: true,
     },
@@ -25,7 +26,6 @@ export default function FormTipos({ addData, onClose, id }: FormularioProps) {
 
   const onSubmit = async (data: TipoSitio) => {
     try {
-      console.log("Enviando formulario con datos:", data);
       await addData(data);
       onClose();
       addToast({

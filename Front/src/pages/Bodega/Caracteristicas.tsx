@@ -38,7 +38,7 @@ export const CaracteristicasTable = () => {
     try {
       await addCaracteristica(caracteristica);
       
-      handleClose(); // Cerrar el modal después de darle agregar usuario
+      handleClose(); 
     } catch (error) {
       console.error("Error al agregar el caracteristica de movimiento:", error);
     }
@@ -48,9 +48,8 @@ export const CaracteristicasTable = () => {
     setSelectedCaracteristicas(caracteristica);
     setIsOpenUpdate(true);
   };
-console.log("Características recibidas:", caracteristicas);
 
-  // Definir las columnas de la tabla
+
   const columns: TableColumn<Caracteristica>[] = [
     { key: "nombre", label: "Nombre" },
     { key: "simbolo", label: "Simbolo" },

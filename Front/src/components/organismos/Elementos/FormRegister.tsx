@@ -66,7 +66,7 @@ export default function FormularioElementos({
           ? data.fkCaracteristica
           : undefined,
       });
-
+      console.log("Esto es lo que manda imagen",data.imagen)
       onClose();
       addToast({
         title: "Registro Exitoso",
@@ -345,7 +345,7 @@ export default function FormularioElementos({
 
                   const filteredCaracteristicas =
                     caracteristicas?.filter((c) =>
-                      c.nombre.toLowerCase().includes(query.toLowerCase())
+                      c.nombre?.toLowerCase().includes(query.toLowerCase())
                     ) || [];
 
                   const selectedCaracteristica = caracteristicas?.find(
@@ -354,7 +354,7 @@ export default function FormularioElementos({
 
                   useEffect(() => {
                     if (selectedCaracteristica) {
-                      setQuery(selectedCaracteristica.nombre);
+                      setQuery(selectedCaracteristica.nombre as string);
                     }
                   }, [selectedCaracteristica?.idCaracteristica]);
 
@@ -391,7 +391,7 @@ export default function FormularioElementos({
                                 onMouseDown={(e) => {
                                   e.preventDefault();
                                   field.onChange(car.idCaracteristica);
-                                  setQuery(car.nombre);
+                                  setQuery(car.nombre as string);
                                   setShowOptions(false);
                                 }}
                               >

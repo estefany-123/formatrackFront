@@ -18,7 +18,7 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
   const { updateCategoria, getCategoriaById } = useCategoria();
 
   const foundCategoria = getCategoriaById(categoriaId) as CategoriaUpdate;
-  console.log(foundCategoria);
+
 
   const {
     register,
@@ -26,6 +26,7 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(CategoriaUpdateSchema),
+    mode:"onChange",
     defaultValues: {
       idCategoria: foundCategoria.idCategoria,
       nombre: foundCategoria.nombre,
@@ -34,11 +35,9 @@ const FormUpCentro = ({ categoriaId, id, onclose }: Props) => {
   });
 
   const onSubmit = async (data: CategoriaUpdate) => {
-    console.log("submiting...");
-    console.log(data);
     try {
       await updateCategoria(data.idCategoria as number, data);
-      console.log("Sended success");
+
       onclose();
       addToast({
         title: "Actualizacion Exitosa",

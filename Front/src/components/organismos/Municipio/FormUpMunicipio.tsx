@@ -18,7 +18,6 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
   const { updateMunicipio, getMunicipioById } = useMunicipio();
 
   const foundMunicipio = getMunicipioById(municipioId) as MunicipioUP;
-  console.log(foundMunicipio);
 
   const {
     register,
@@ -33,11 +32,9 @@ const FormUpMunicipio = ({ municipioId, id, onclose }: Props) => {
   });
 
   const onSubmit = async (data: MunicipioUP) => {
-    console.log("submiting...");
-    console.log(data);
+
     try {
       await updateMunicipio(data.idMunicipio as number, data);
-      console.log("Sended success");
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
