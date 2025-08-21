@@ -8,4 +8,4 @@ export type CodigoInventario = {
     fkInventario?:{
         idInventario?:number
     }
-}
+  }

@@ -60,7 +60,7 @@ export const FormAgregateStock = ({
         addToast({
           title: "Error",
           description:
-            "No se pudo agregar el stock uno de los codigos ya se encuentran registrados",
+            "No se pudo agregar el stock uno de los codigos ya se encuentran registrados o  debe activar el elemento del inventario",
           color: "danger",
         });
         onClose();

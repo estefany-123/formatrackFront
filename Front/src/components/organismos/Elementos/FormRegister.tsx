@@ -452,7 +452,7 @@ export default function FormularioElementos({
       >
         <FormularioCaracteristicas
           id="caracteristica"
-          onClose={() => setShowModal(false)}
+          onClose={() => setShowModalCaracteristica(false)}
           addData={async (data) => {
             await addCaracteristica(data);
           }}

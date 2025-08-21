@@ -1,4 +1,5 @@
 export type CodigoInventario = {
+  fkMovimiento:number
   idCodigoInventario: number;
   codigo: string;
   uso:boolean

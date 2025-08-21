@@ -17,6 +17,8 @@ import FormularioTiposMovimiento from "../TiposMovimiento/FormRegister";
 import FormularioU from "../Usuarios/FormRegister";
 import FormularioInventario from "../Inventarios/FormRegister";
 import FormularioSitio from "../Sitios/FormRegister";
+import { useMovimiento } from "@/hooks/Movimientos/useMovimiento";
+import { getCodigosDisponiblesParaDevolucion } from "@/axios/Movimentos/getCodigodDevolver";
 
 type FormularioProps = {
   addData: (movimiento: MovimientoPostData) => Promise<void>;
@@ -27,13 +29,16 @@ type FormularioProps = {
 type CodigoDisponible = {
   idCodigoInventario: number;
   codigo: string;
+  uso: boolean;
+  fkMovimiento:number
 };
 
-export default function Formulario({ addData, onClose, id }: FormularioProps) {
+export default function Formulario({ onClose, id }: FormularioProps) {
   const {
     control,
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<MovimientoCreate>({
     resolver: zodResolver(MovimientoCreateSchema),
@@ -55,6 +60,9 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
   });
 
   const { users, addUser } = useUsuario();
+  const { addMovimiento } = useMovimiento();
+
+
   const { tipos, addTipoMovimiento } = useTipoMovimiento();
   const { sitios, addSitio } = useSitios();
   const { inventarios, addInventario } = useInventario();
@@ -73,7 +81,6 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
     CodigoDisponible[]
   >([]);
   // console.log("Códigos disponibles que llegan del inventario:", inventarios?.codigos);
-
   //modales
   const [showModal, setShowModal] = useState(false);
   const [showModalTipo, setShowModalTipo] = useState(false);
@@ -91,26 +98,7 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         : undefined,
     };
 
-    console.log("🎯 Inventario seleccionado:", data.fkInventario);
-    console.log("🎯 Códigos seleccionados:", data.codigos);
-
-    // Mostrar todos los valores del formulario con su tipo de dato
-    console.log("📦 Datos del formulario (campos y tipos):");
-    Object.entries(data).forEach(([key, value]) => {
-      let tipo: string;
-      if (Array.isArray(value)) {
-        tipo = "array";
-      } else if (value === null) {
-        tipo = "null";
-      } else {
-        tipo = typeof value;
-      }
-      console.log(`- ${key}:`, value, `(tipo: ${tipo})`);
-    });
-
-    // Mostrar el payload que se enviará al backend
-    console.log("✅ Payload enviado al backend:", payload);
-
+    // Validación de códigos obligatorios en algunos tipos de movimiento
     if (
       tipoMovimientoSeleccionado &&
       ["salida", "baja", "préstamo"].includes(tipoMovimientoSeleccionado) &&
@@ -125,8 +113,12 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
       });
       return;
     }
+
+    console.log("🚀 Enviando payload al backend:", payload);
+
     try {
-      await addData(payload);
+      const res = await addMovimiento(payload);
+      console.log("✅ Respuesta del servidor:", res);
 
       onClose();
       addToast({
@@ -137,19 +129,80 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
         shouldShowTimeoutProgress: true,
       });
     } catch (error: any) {
+      const campo = error?.response?.data?.campo;
       const mensaje = error?.response?.data?.message;
+
+      console.log("🔍 Error completo:", error);
+      console.log("🔍 Error response:", error?.response?.data);
+
+      let descripcion;
+
+      if (Array.isArray(mensaje)) {
+        descripcion = mensaje.join(", ");
+      } else if (typeof mensaje === "string") {
+        descripcion = mensaje;
+      } else {
+        descripcion =
+          "Uno de los códigos ya se encuentra registrado en el inventario";
+      }
+
+      // Si es un error de códigos, marcamos el input con setError
+      if (campo === "codigos") {
+        setError("codigos", {
+          type: "manual",
+          message: descripcion,
+        });
+      }
+
+      const esErrorCodigos =
+        campo === "codigos" ||
+        (typeof descripcion === "string" &&
+          (descripcion.toLowerCase().includes("códigos ya existen") ||
+            descripcion.toLowerCase().includes("no están disponibles")));
+
       addToast({
-        title: "Error al guardar movimiento",
-        description: Array.isArray(mensaje)
-          ? mensaje.join(", ")
-          : (mensaje ?? "Ocurrió un error inesperado."),
-        color: "danger",
-        timeout: 3000,
+        title: esErrorCodigos
+          ? "Códigos duplicados o no disponibles"
+          : "Error al guardar movimiento",
+        description: descripcion,
+        color: esErrorCodigos ? "warning" : "danger",
+        timeout: 4000,
+        shouldShowTimeoutProgress: true,
       });
     }
   };
+
   console.log("Errores", errors);
 
+useEffect(() => {
+  if (!inventarioSeleccionado) return;
+
+  // Si es una devolución, usamos el endpoint para obtener solo los códigos prestados
+  if (tipoMovimientoSeleccionado?.toLowerCase() === 'devolucion') {
+    getCodigosDisponiblesParaDevolucion(inventarioSeleccionado)
+      .then(codigos => {
+        setCodigosDisponibles(codigos);
+        setTieneCaracteristicas(codigos.length > 0);
+      })
+      .catch(err => {
+        console.error("Error obteniendo códigos para devolución:", err);
+        setCodigosDisponibles([]);
+        setTieneCaracteristicas(false);
+      });
+  } else {
+    // Para otros tipos de movimiento, filtramos localmente los códigos que no están en uso
+    const inv = inventarios?.find(i => i.idInventario === inventarioSeleccionado);
+    if (!inv) return;
+
+    const codigosFiltrados = (inv.codigos || []).filter(c => !c.uso && !c.fkMovimiento);
+    setCodigosDisponibles(codigosFiltrados);
+    setTieneCaracteristicas(codigosFiltrados.length > 0);
+  }
+}, [inventarioSeleccionado, tipoMovimientoSeleccionado, inventarios]);
+
+  console.log("Inventario:", inventarioSeleccionado);
+  console.log("Tiene características?", tieneCaracteristicas);
+  console.log("Códigos disponibles:", codigosDisponibles);
   return (
     <>
       <Form
@@ -528,6 +581,8 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
                                 disponibles.map((c) => ({
                                   idCodigoInventario: c.idCodigoInventario,
                                   codigo: c.codigo,
+                                  uso: c.uso,
+                                  fkMovimiento:c.fkMovimiento
                                 }))
                               );
                               setTieneCaracteristicas(disponibles.length > 0);
@@ -553,122 +608,63 @@ export default function Formulario({ addData, onClose, id }: FormularioProps) {
           />
         )}
 
-        {/* {sitioSeleccionado && (
-          <Controller
-            control={control}
-            name="fkInventario"
-            render={({ field }) => (
-              <>
-                <div className="flex w-full">
-                  <Select
-                    label="Elemento del Inventario"
-                    placeholder="Selecciona un elemento"
-                    {...field}
-                    onChange={(e) => {
-                      const id = Number(e.target.value);
-                      field.onChange(id);
-                      setInventarioSeleccionado(id);
-                      const inventario = (inventarios ?? []).find(
-                        (i) => i.idInventario === id
-                      );
-                      if (
-                        inventario?.codigos &&
-                        Array.isArray(inventario.codigos)
-                      ) {
-                        const disponibles = inventario.codigos.filter(
-                          (c) => !c.uso
-                        );
-                        setCodigosDisponibles(
-                          disponibles.map((c) => ({
-                            idCodigoInventario: c.idCodigoInventario,
-                            codigo: c.codigo,
-                          }))
-                        );
-                        setTieneCaracteristicas(disponibles.length > 0);
-                      } else {
-                        setCodigosDisponibles([]);
-                        setTieneCaracteristicas(false);
-                      }
-                    }}
-                    isInvalid={!!errors.fkInventario}
-                    errorMessage={errors.fkInventario?.message}
-                  >
-                    {(inventarios ?? [])
-
-                      .filter((i) => i.fkSitio.idSitio === sitioSeleccionado)
-                      .filter((i) => i.estado === true)
-                      .map((inventario) => {
-                        console.log(
-                          "Inventarios del sitio seleccionado:",
-                          inventarios?.filter(
-                            (i) => i.fkSitio.idSitio === sitioSeleccionado
-                          )
-                        );
-                        return (
-                          <SelectItem
-                            key={inventario.idInventario}
-                            textValue={
-                              inventario.fkElemento?.nombre ||
-                              "Elemento no disponible"
-                            }
-                          >
-                            {inventario.fkElemento?.nombre ||
-                              "Elemento no disponible"}
-                          </SelectItem>
-                        );
-                      })}
-                  </Select>
-                  <Buton
-                    type="button"
-                    className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
-                    onPress={() => setShowModalInventario(true)}
-                  >
-                    <PlusCircleIcon />
-                  </Buton>
-                </div>
-              </>
-            )}
-          />
-        )} */}
-
         {inventarioSeleccionado &&
           tipoMovimientoSeleccionado &&
-          ["salida", "baja", "préstamo"].includes(
-            tipoMovimientoSeleccionado
-          ) && (
+          [
+            "salida",
+            "baja",
+            "préstamo",
+            "prestamo",
+            "devolución",
+            "devolucion",
+          ].includes(tipoMovimientoSeleccionado) && (
             <>
               {tieneCaracteristicas ? (
                 <Controller
                   control={control}
                   name="codigos"
-                  render={({ field }) => (
-                    <div className="space-y-2">
-                      <label className="font-semibold">
-                        Selecciona Códigos
-                      </label>
-                      {codigosDisponibles.map((codigoObj) => (
-                        <div
-                          key={codigoObj.idCodigoInventario}
-                          className="flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            value={codigoObj.codigo}
-                            checked={field.value?.includes(codigoObj.codigo)}
-                            onChange={(e) => {
-                              const updated = e.target.checked
-                                ? [...(field.value ?? []), codigoObj.codigo]
-                                : (field.value ?? []).filter(
-                                    (c) => c !== codigoObj.codigo
-                                  );
-                              field.onChange(updated);
-                            }}
-                          />
-                          <span>{codigoObj.codigo}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  render={({ field }) => {
+                    const codigosFiltrados = codigosDisponibles.filter(
+                      (codigo) => {
+                        if (
+                          tipoMovimientoSeleccionado?.toLowerCase() ===
+                          "devolucion"
+                        )
+                          return codigo.uso === true;
+                        return codigo.uso === false;
+                      }
+                    );
+
+                    console.log("filtrado:", codigosFiltrados);
+                    return (
+                      <div className="space-y-2">
+                        <label className="font-semibold">
+                          Selecciona Códigos
+                        </label>
+                        {codigosFiltrados.map((codigoObj) => (
+                          <div
+                            key={codigoObj.idCodigoInventario}
+                            className="flex items-center gap-2"
+                          >
+                            <input
+                              type="checkbox"
+                              value={codigoObj.codigo}
+                              checked={field.value?.includes(codigoObj.codigo)}
+                              onChange={(e) => {
+                                const updated = e.target.checked
+                                  ? [...(field.value ?? []), codigoObj.codigo]
+                                  : (field.value ?? []).filter(
+                                      (c) => c !== codigoObj.codigo
+                                    );
+                                field.onChange(updated);
+                              }}
+                            />
+                            <span>{codigoObj.codigo}</span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }}
                 />
               ) : (
                 <Input
