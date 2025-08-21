@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schemas/User";
 import Buton from "@/components/molecules/Button";
+import Formatrack  from "../assets/Formatrack.png";
 
 type Props = {}
 
@@ -18,7 +19,7 @@ function Login({ }: Props) {
   return (
     <div className="flex ">
       <div className='w-1/2 bg-blue-400 h-9/10 h-dvh flex justify-content-center'>
-        <img src="src\assets\Formatrack.png" alt="Formatrack" className="w-full h-4/5 mt-16 " />
+        <img src={Formatrack} alt="Formatrack" className="w-full h-4/5 mt-16 " />
       </div>
 
       <div className="w-1/2 flex items-center">

@@ -40,7 +40,7 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
     watch,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UserUpdate>({
     resolver: zodResolver(UserUpdateSchema),
     mode: "onChange",

@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { FormUpdate } from "@/components/organismos/Sedes/Formupdate";
 import usePermissions from "@/hooks/Usuarios/usePermissions";
 import FormularioSede from "@/components/organismos/Sedes/FormRegister";
-import usePermissions from "@/hooks/Usuarios/usePermissions";
 
 const SedeTable = () => {
 
