@@ -29,12 +29,11 @@ export function useUnidad() {
     },
   });
 
-  const getUnidadById = (
-    id: number,
-    unidades: Unidad[] | undefined = data
-  ): Unidad | null => {
-    return unidades?.find((unidad) => unidad.idUnidad === id) || null;
-  };
+const getUnidadById = (id: number, unidadesList: Unidad[]): Unidad | null => {
+  if (!unidadesList) return null;
+  return unidadesList.find((unidad) => unidad.idUnidad === id) || null;
+};
+
 
   const updateUnidadMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Unidad }) => {

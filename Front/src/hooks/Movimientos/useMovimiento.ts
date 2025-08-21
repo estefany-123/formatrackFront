@@ -20,6 +20,7 @@ export function useMovimiento() {
     refetchOnWindowFocus: false,
   });
 
+
   const addMovimientoMutation = useMutation({
     mutationFn: postMovimiento,
     onSuccess: () => {
@@ -61,6 +62,7 @@ export function useMovimiento() {
     mutationFn: (id: number) => acceptMovimiento(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["movimientos"] });
+      queryClient.invalidateQueries({ queryKey: ["notificaciones"] });
     },
     onError: (error) => {
       console.error("Error al aceptar el movimiento", error);
@@ -71,12 +73,13 @@ export function useMovimiento() {
     mutationFn: (id: number) => cancelMovimiento(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["movimientos"] });
+      queryClient.invalidateQueries({ queryKey: ["notificaciones"] });
     },
     onError: (error) => {
       console.error("Error al rechazar el movimiento", error);
     },
   });
-  const addMovimiento = async (movimiento: Movimiento) => {
+  const addMovimiento = async (movimiento: MovimientoPostData) => {
     return addMovimientoMutation.mutateAsync(movimiento);
   };
 

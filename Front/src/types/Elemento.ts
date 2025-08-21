@@ -16,6 +16,9 @@ export type putElementos = {
   nombre: string;
   descripcion: string;
   imagen?: string | File | undefined;
+  fkUnidadMedida?: number 
+  fkCategoria?: number 
+  fkCaracteristica?: number |  null;
 };
 
 export type Elemento = {

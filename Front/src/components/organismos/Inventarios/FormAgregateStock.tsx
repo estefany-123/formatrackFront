@@ -2,15 +2,22 @@ import Buton from "@/components/molecules/Button";
 import { useInventario } from "@/hooks/Inventarios/useInventario";
 import { addToast, Input } from "@heroui/react";
 import { useState } from "react";
+import { AxiosError } from "axios";
 
 type Props = {
   fkInventario?: number;
   fkElemento: number;
   fkSitio: number;
+  estado?: boolean;
   onClose: () => void;
 };
 
-export const FormAgregateStock = ({ fkElemento, fkSitio, onClose }: Props) => {
+export const FormAgregateStock = ({
+  fkElemento,
+  fkSitio,
+  estado,
+  onClose,
+}: Props) => {
   console.log("🚀 Se montó <FormAgregateStock />", { fkElemento, fkSitio });
   const [codigos, setCodigos] = useState<string[]>([]);
   const [nuevoCodigo, setNuevoCodigo] = useState("");
@@ -32,7 +39,32 @@ export const FormAgregateStock = ({ fkElemento, fkSitio, onClose }: Props) => {
       });
       onClose();
     } catch (error) {
-      console.error("Error al guardar códigos", error);
+      const err = error as AxiosError<{ message: string | string[] }>;
+      const backendMessage = err.response?.data?.message;
+
+      if (Array.isArray(backendMessage)) {
+        backendMessage.forEach((msg) =>
+          addToast({
+            title: "Código duplicado",
+            description: msg,
+            color: "danger",
+          })
+        );
+      } else if (typeof backendMessage === "string") {
+        addToast({
+          title: "Código duplicado",
+          description: backendMessage,
+          color: "danger",
+        });
+      } else {
+        addToast({
+          title: "Error",
+          description:
+            "No se pudo agregar el stock uno de los codigos ya se encuentran registrados o  debe activar el elemento del inventario",
+          color: "danger",
+        });
+        onClose();
+      }
     }
   };
 
@@ -56,7 +88,7 @@ export const FormAgregateStock = ({ fkElemento, fkSitio, onClose }: Props) => {
       <Buton
         text="Guardar y actualizar stock"
         onPress={guardar}
-        disabled={codigos.length === 0}
+        disabled={codigos.length === 0 || estado === false}
       />
     </div>
   );

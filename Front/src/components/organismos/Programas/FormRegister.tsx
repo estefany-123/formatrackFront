@@ -5,7 +5,7 @@ import { Input } from "@heroui/input";
 import { addToast, Select, SelectItem } from "@heroui/react";
 import { programaCreate, programaCreateSchema } from "@/schemas/programas";
 import { useAreas } from "@/hooks/areas/useAreas";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Buton from "@/components/molecules/Button";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import Modal from "../modal";
@@ -97,36 +97,76 @@ export default function FormularioPrograma({
         <Controller
           control={control}
           name="fkArea"
-          render={({ field }) => (
-            <div className="w-full flex ">
-              <Select
-                label="Área"
-                placeholder="Selecciona un área"
-                {...field}
-                value={field.value ?? ""}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                isInvalid={!!errors.fkArea}
-                errorMessage={errors.fkArea?.message}
-              >
-                {areas?.length ? (
-                  areas
-                    .filter((p) => p.estado === true)
-                    .map((area) => (
-                      <SelectItem key={area.idArea}>{area.nombre}</SelectItem>
-                    ))
-                ) : (
-                  <SelectItem isDisabled>No hay áreas disponibles</SelectItem>
-                )}
-              </Select>
-              <Buton
-                type="button"
-                className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl "
-                onPress={() => setShowModal(true)}
-              >
-                <PlusCircleIcon />
-              </Buton>
-            </div>
-          )}
+          render={({ field }) => {
+            const [query, setQuery] = useState("");
+            const [showOptions, setShowOptions] = useState(false);
+
+            const filteredAreas =
+              areas?.filter(
+                (a) =>
+                  a.estado &&
+                  a.nombre.toLowerCase().includes(query.toLowerCase())
+              ) || [];
+
+            const selectedArea = areas?.find((a) => a.idArea === field.value);
+
+            useEffect(() => {
+              if (selectedArea) {
+                setQuery(selectedArea.nombre);
+              }
+            }, [selectedArea?.idArea]);
+
+            return (
+              <div className="relative w-full flex items-start gap-2">
+                <div className="w-full">
+                  <Input
+                    label="Área"
+                    placeholder="Selecciona un área..."
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowOptions(true);
+                      field.onChange(null);
+                    }}
+                    onFocus={() => setShowOptions(true)}
+                    onBlur={() => setTimeout(() => setShowOptions(false), 150)}
+                    isInvalid={!!errors.fkArea}
+                    errorMessage={errors.fkArea?.message}
+                  />
+
+                  {showOptions && filteredAreas.length > 0 && (
+                    <div
+                      className="absolute z-20 mt-1 w-80 max-h-52 overflow-auto 
+              rounded-lg border border-gray-200 bg-white/80 
+              shadow-lg transition-all duration-200 backdrop-blur-sm"
+                    >
+                      {filteredAreas.map((area) => (
+                        <div
+                          key={area.idArea}
+                          className="px-4 py-2 text-sm text-black-700 hover:bg-gray-300 cursor-pointer"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            field.onChange(area.idArea);
+                            setQuery(area.nombre);
+                            setShowOptions(false);
+                          }}
+                        >
+                          {area.nombre}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Buton
+                  type="button"
+                  className="m-2 w-10 h-10 !px-0 !min-w-0 rounded-xl"
+                  onPress={() => setShowModal(true)}
+                >
+                  <PlusCircleIcon />
+                </Buton>
+              </div>
+            );
+          }}
         />
       </Form>
       <Modal
