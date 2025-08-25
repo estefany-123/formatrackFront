@@ -6,7 +6,7 @@ import { UserSchema, User } from "@/schemas/User";
 import { Form } from "@heroui/form";
 import { useRol } from "@/hooks/Roles/useRol";
 import Buton from "@/components/molecules/Button";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import FormularioRoles from "../Roles/FormRegister";
 import Modal from "../modal";
