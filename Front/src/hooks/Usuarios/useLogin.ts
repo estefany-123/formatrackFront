@@ -24,6 +24,7 @@ export default function useLogin(){
         try{
             const response  = await postLogin(data);
              console.log(response)
+             
             const token = response.access_token;
             const permissions = response.modules;
             cookies.set("token",token);
