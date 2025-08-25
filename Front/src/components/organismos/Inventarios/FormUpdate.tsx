@@ -54,7 +54,7 @@ export const FormUpdate = ({
       onclose();
       addToast({
         title: "Actualizacion Exitosa",
-        description: "Area actualizada correctamente",
+        description: "Stock actualizado correctamente",
         color: "primary",
         timeout: 3000,
         shouldShowTimeoutProgress: true,

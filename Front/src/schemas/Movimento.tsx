@@ -9,23 +9,21 @@ export const MovimientoUpdateSchema = z.object({
     .min(2, { message: "Debe contener como mimimo 2 caracteres" })
     .optional(),
 
-  cantidad: z
-    .number({
-      required_error: "Cantidad es requerida y debe ser entero",
-    })
-    .optional(),
   horaIngreso: z
     .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/, {
       message: "La hora debe tener el formato HH:mm (24h)",
     })
-    .optional(),
+    .optional()
+    .nullable(),
+
   horaSalida: z
     .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/, {
       message: "La hora debe tener el formato HH:mm (24h)",
     })
-    .optional(),
+    .optional()
+    .nullable(),
 
   fechaDevolucion: z
     .string().date()
