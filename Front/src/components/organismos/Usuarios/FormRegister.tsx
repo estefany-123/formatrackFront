@@ -151,6 +151,7 @@ export default function FormularioU({ addData, onClose, id }: FormularioProps) {
           type="password"
           placeholder="Password"
           {...register("password")}
+          autoComplete="off"
           isInvalid={!!errors.password}
           errorMessage={errors.password?.message}
         />

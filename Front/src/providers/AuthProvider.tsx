@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import  { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { jwtDecode } from 'jwt-decode'
 import { getRefetchPermisos } from "@/axios/Usuarios/getRefetchPermisos";
@@ -13,6 +13,7 @@ type Auth = {
     idUsuario : number | undefined,
     setIdUser : React.Dispatch<React.SetStateAction<number | undefined>>,
     permissions : any[],
+
     setPermissions : React.Dispatch<React.SetStateAction<any[]>>
 }
 

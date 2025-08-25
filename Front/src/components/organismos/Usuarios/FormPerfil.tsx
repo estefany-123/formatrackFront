@@ -58,7 +58,7 @@ function FormPerfil({ inicialData, onclose }: PropsPerfil) {
                     label="Edad"
                     placeholder="Edad"
                     type="text"
-                    {...register("edad")}
+                    {...register("edad",{ valueAsNumber: true })}
                     isInvalid={!!errors.edad}
                     errorMessage={errors.edad?.message}
 
