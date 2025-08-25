@@ -4,8 +4,8 @@ export interface MovimientoPostData {
   idMovimiento?: number;
   descripcion?: string;
   cantidad?: number;
-  horaIngreso?: string;
-  horaSalida?: string;
+  horaIngreso?: string | null;
+  horaSalida?: string | null;
   aceptado?: boolean;
   enProceso?: boolean;
   cancelado?: boolean;
