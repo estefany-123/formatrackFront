@@ -1,4 +1,4 @@
-import Globaltable from "@/components/organismos/table.tsx";
+  import Globaltable from "@/components/organismos/table.tsx";
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
