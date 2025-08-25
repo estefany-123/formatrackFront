@@ -35,12 +35,11 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
   const foundUser = getUserById(userId, Users) as UserUpdate;
 
   const {
-    // control,
     setValue,
     watch,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UserUpdate>({
     resolver: zodResolver(UserUpdateSchema),
     mode: "onChange",
@@ -56,6 +55,7 @@ export const FormUpdate = ({ Users, userId, id, onclose }: FormuProps) => {
     },
   });
 
+  console.log(foundUser.fkRol)
   const onSubmit = async (data: UserUpdate) => {
     console.log(data);
     if (!data.idUsuario) return;

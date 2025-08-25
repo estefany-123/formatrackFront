@@ -2,8 +2,6 @@ import {
   PencilIcon,
   TrashIcon,
   CheckIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 
@@ -272,26 +270,6 @@ if (mostrarFiltroEstado) {
             >
               <div className="inline-flex items-center justify-center gap-1">
                 <span>{column.label}</span>
-                {column.key !== "actions" && (
-                  <div className="flex flex-col ml-1">
-                    <ChevronUpIcon
-                      className={`h-3 w-3 ${
-                        sortConfig.key === column.key &&
-                        sortConfig.direction === "asc"
-                          ? "text-blue-500"
-                          : "text-gray-400"
-                      }`}
-                    />
-                    <ChevronDownIcon
-                      className={`h-3 w-3 ${
-                        sortConfig.key === column.key &&
-                        sortConfig.direction === "desc"
-                          ? "text-blue-500"
-                          : "text-gray-400"
-                      }`}
-                    />
-                  </div>
-                )}
               </div>
             </TableColumn>
           )}

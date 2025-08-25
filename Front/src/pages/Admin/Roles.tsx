@@ -141,7 +141,7 @@ export const RolTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Roles</h1>
               <div className="flex gap-2">
-                <Buton text="Usuarios" onPress={handleGoToUsuario} /> 
+                <Buton text="Usuarios" onPress={handleGoToUsuario} />
               </div>
             </div>
           </CardBody>

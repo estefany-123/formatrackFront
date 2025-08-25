@@ -16,10 +16,10 @@ export type Movimiento = {
   fechaDevolucion?: Date | string | null;
   createdAt?: string;
   updatedAt?: string;
-  fkUsuario?: number;
-  fkTipoMovimiento?: number;
+  fkUsuario?: number | { nombre: string };
+  fkTipoMovimiento?: number | { nombre: string };
+  fkInventario?: number | { fkElemento?: { nombre: string } };
   fkSitio?: number;
-  fkInventario?: number;
   tipo_bien?: string;
   codigos?: string[];
 };

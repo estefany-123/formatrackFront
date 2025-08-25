@@ -17,15 +17,9 @@ export async function postElemento(data: ElementoPostData): Promise<any> {
   const formData = new FormData();
   formData.append("nombre", data.nombre);
   formData.append("descripcion", data.descripcion);
-  if (data.estado !== undefined) {
-    formData.append("estado", data.estado.toString());
-  }
-  if (data.perecedero !== undefined) {
-    formData.append("perecedero", data.perecedero.toString());
-  }
-  if (data.noPerecedero !== undefined) {
-    formData.append("noPerecedero", data.noPerecedero.toString());
-  }
+  formData.append("estado", data.estado ? "true" : "false");
+  formData.append("perecedero", data.perecedero ? "true" : "false");
+  formData.append("noPerecedero", data.noPerecedero ? "true" : "false");
   if (data.fechaVencimiento) {
     formData.append("fechaVencimiento", data.fechaVencimiento.toString());
   }

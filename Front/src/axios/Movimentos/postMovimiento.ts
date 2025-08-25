@@ -14,11 +14,11 @@ export interface MovimientoPostData {
   createdAt?: string;
   lugarDestino?: string;
   updatedAt?: string;
-  fkUsuario?: number;
-  fkTipoMovimiento?: number;
+  fkUsuario?: number | { nombre: string };
+  fkTipoMovimiento?: number | { nombre: string };
+  fkInventario?: number | { fkElemento?: { nombre: string } };
   fkSitio?: number;
   fechaDevolucion?: Date | string | null;
-  fkInventario?: number;
   codigos?: string[];
 }
 
