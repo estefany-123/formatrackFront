@@ -3,9 +3,8 @@ import { axiosAPI } from "../axiosAPI";
 export interface MovimientoPutData {
   idMovimiento?: number;
   descripcion?: string;
-  cantidad?: number;
-  horaIngreso?: string;
-  horaSalida?: string;
+  horaIngreso?: string | null;
+  horaSalida?: string | null;
 }
 
 export async function putMovimiento(idMovimiento:number, data:MovimientoPutData):Promise<any> {

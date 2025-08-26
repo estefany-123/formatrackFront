@@ -12,7 +12,6 @@ import usePermissions from "@/hooks/Usuarios/usePermissions";
 import FormularioPrograma from "@/components/organismos/Programas/FormRegister";
 
 const ProgramasTable = () => {
-
   const { userHasPermission } = usePermissions();
 
   const { programas, isLoading, isError, error, addPrograma, changeState } =
@@ -66,10 +65,10 @@ const ProgramasTable = () => {
         <span>
           {programa.createdAt
             ? new Date(programa.createdAt).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
             : "N/A"}
         </span>
       ),
@@ -81,10 +80,10 @@ const ProgramasTable = () => {
         <span>
           {programa.updatedAt
             ? new Date(programa.updatedAt).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
             : "N/A"}
         </span>
       ),
@@ -122,11 +121,11 @@ const ProgramasTable = () => {
         <Card className="w-full">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Gestionar Fichas</h1>
+              <h1 className="text-2xl font-bold">Gestionar Programas</h1>
               <div className="flex gap-2">
-                {userHasPermission(7) &&
+                {userHasPermission(7) && (
                   <Buton text="Fichas" onPress={handleGoToFicha} />
-                }
+                )}
               </div>
             </div>
           </CardBody>
@@ -170,12 +169,16 @@ const ProgramasTable = () => {
           data={usersWithKey}
           columns={columns}
           onEdit={userHasPermission(41) ? handleEdit : undefined}
-          onDelete={userHasPermission(42) ? (programa) => handleState(programa.idPrograma) : undefined}
+          onDelete={
+            userHasPermission(42)
+              ? (programa) => handleState(programa.idPrograma)
+              : undefined
+          }
           extraHeaderContent={
             <div>
-              {userHasPermission(39) &&
+              {userHasPermission(39) && (
                 <Buton text="Añadir Programa" onPress={() => setIsOpen(true)} />
-              }
+              )}
             </div>
           }
         />

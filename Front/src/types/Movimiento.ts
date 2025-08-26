@@ -4,8 +4,8 @@ export type Movimiento = {
   idMovimiento?: number;
   descripcion?: string;
   cantidad?: number;
-  horaIngreso?: string;
-  horaSalida?: string;
+  horaIngreso?: string | null;
+  horaSalida?: string | null;
   estado?: boolean;
   aceptado?: boolean;
   enProceso?: boolean;

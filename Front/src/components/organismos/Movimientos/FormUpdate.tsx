@@ -34,24 +34,48 @@ export const FormUpdate = ({
   } = useForm<MovimientoUpdate>({
     resolver: zodResolver(MovimientoUpdateSchema),
     mode: "onChange",
-    defaultValues: foundMovimiento,
+    defaultValues: {
+      ...foundMovimiento,
+      horaIngreso: foundMovimiento?.horaIngreso
+        ? foundMovimiento.horaIngreso.slice(0, 5)
+        : "",
+      horaSalida: foundMovimiento?.horaSalida
+        ? foundMovimiento.horaSalida.slice(0, 5)
+        : "",
+    },
   });
 
   const onSubmit = async (data: MovimientoUpdate) => {
-    console.log(data);
-    if (!data.idMovimiento) return;
+    const payload = {
+      ...data,
+      horaIngreso: data.horaIngreso
+        ? data.horaIngreso.length === 5
+          ? `${data.horaIngreso}:00`
+          : data.horaIngreso
+        : null,
+      horaSalida: data.horaSalida
+        ? data.horaSalida.length === 5
+          ? `${data.horaSalida}:00`
+          : data.horaSalida
+        : null,
+    };
+
+    console.log("🚀 Payload enviado:", payload);
+
+    if (!payload.idMovimiento) return;
+
     try {
-      await updateMovimiento(data.idMovimiento, data);
+      await updateMovimiento(payload.idMovimiento, payload);
       onclose();
       addToast({
-        title: "Actualizacion Exitosa",
+        title: "Actualización Exitosa",
         description: "Movimiento actualizado correctamente",
         color: "primary",
         timeout: 3000,
         shouldShowTimeoutProgress: true,
       });
     } catch (error) {
-      console.log("Error al actualizar el rol : ", error);
+      console.error("❌ Error al actualizar el movimiento:", error);
     }
   };
 
@@ -63,13 +87,6 @@ export const FormUpdate = ({
       className="w-full space-y-4"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Input
-        label="Cantidad"
-        placeholder="Ingreses la Cantidad ..."
-        {...register("cantidad", { valueAsNumber: true })}
-        isInvalid={!!errors.cantidad}
-        errorMessage={errors.cantidad?.message}
-      />
       <Input
         label="Descripcion"
         placeholder="Ingresa la descripcion ..."
@@ -93,14 +110,12 @@ export const FormUpdate = ({
         isInvalid={!!errors.horaSalida}
         errorMessage={errors.horaSalida?.message}
       />
-      <div className="justify-center pl-10">
-        <Buton
-          text="Guardar"
-          type="submit"
-          isLoading={isSubmitting}
-          className="w-full bg-blue-700 text-white p-2 rounded-xl"
-        />
-      </div>
+      <Buton
+        text="Guardar"
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full bg-blue-700 text-white p-2 rounded-xl"
+      />
     </Form>
   );
 };

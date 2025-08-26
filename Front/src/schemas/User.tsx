@@ -61,7 +61,8 @@ export const UserSchema = z.object({
         .boolean({ required_error: "Estado es requerido" }),
     cargo: z
         .string()
-        .min(6, { message: "Cargo es requerido" }),
+        .min(1, { message: "Cargo es requerido" })
+        .min(5, { message: "Cargo es requerido" }),
     password: z
         .string({ message: "Contraseña es obligatoria" })
         .min(8, { message: "Contraseña es requerida" }),
@@ -79,14 +80,14 @@ export const PerfilSchema = z.object({
         .min(5, { message: "Longitud minima de 5" }),
 
     apellido: z
-        .string({ required_error: "Apellido es requerido" })
+        .string()
         .min(5, { message: "Longitud minima de 5" }),
     edad: z
-        .number({ message: "Edad es requerido" })
-        .min(1, { message: "Longitud minima de 1" }),
+        .number()
+        .min(1, { message: "Edad es requerido" }),
 
     telefono: z
-        .string({ required_error: "Telefono es requerido" })
+        .string()
         .min(10, { message: "Longitud minima de 10" }),
 
     correo: z

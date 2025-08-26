@@ -51,7 +51,10 @@ export default function FormularioRolPermiso({ rol }: { rol: number }) {
           {openModulos.includes(modulo.idModulo) && (
             <div className="pl-4 space-y-3">
               {modulo.rutas.map((ruta: any) => (
-                <div key={ruta.idRuta} className="border-l-2 border-gray-300 pl-4">
+                <div
+                  key={ruta.idRuta}
+                  className="border-l-2 border-gray-300 pl-4"
+                >
                   <Button
                     variant="ghost"
                     className="w-auto text-left text-sm px-2 py-1"
@@ -68,7 +71,9 @@ export default function FormularioRolPermiso({ rol }: { rol: number }) {
                           className="flex items-center gap-2"
                         >
                           <Checkbox
-                            defaultSelected={assignedPermisos.includes(permiso.idPermiso)}
+                            defaultSelected={assignedPermisos.includes(
+                              permiso.idPermiso
+                            )}
                             onChange={() => handleChange(permiso.idPermiso)}
                           />
                           {permiso.permiso}

@@ -125,7 +125,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-4 space-y-6">
-      {/* 📊 Tarjetas resumen */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card className="bg-blue-100 dark:bg-zinc-800 dark:text-white p-3">
           <p className="text-sm text-blue-700">Total de Elementos</p>
@@ -151,7 +151,7 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      {/* 📊 Gráficas en dos columnas */}
+   
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Gráfico de Barras por Estado */}
         <div className="bg-white p-4 rounded-xl shadow dark:bg-zinc-800 dark:text-white h-[300px]">
@@ -168,7 +168,6 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Gráfico Circular de Stock */}
         <div className="bg-white p-4 rounded-xl shadow dark:bg-zinc-800 dark:text-white h-[300px]">
           <h2 className="text-base font-semibold mb-4">
             Distribución de Stock
@@ -181,7 +180,7 @@ const Dashboard = () => {
                 maintainAspectRatio: false,
                 plugins: {
                   legend: {
-                    position: "bottom", // también puedes usar "top", "left", etc.
+                    position: "bottom", 
                   },
                 },
               }}
@@ -190,7 +189,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 📅 Gráfico de Movimientos por Mes */}
       <div className="bg-white p-4 rounded-xl shadow dark:bg-zinc-800 dark:text-white h-[300px]">
         <h2 className="text-base font-semibold mb-4">Movimientos por Mes</h2>
         <Bar
@@ -203,7 +201,7 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* 📋 Tabla de últimos movimientos */}
+  
       <div className="bg-white p-4 rounded-xl shadow dark:bg-zinc-800 dark:text-white">
         <h2 className="text-lg font-semibold mb-4">Últimos Movimientos</h2>
         <div className="overflow-x-auto">
