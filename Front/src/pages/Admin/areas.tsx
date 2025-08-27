@@ -1,4 +1,4 @@
-import Globaltable from "@/components/organismos/table.tsx"; 
+import Globaltable from "@/components/organismos/table.tsx";
 import { TableColumn } from "@/components/organismos/table.tsx";
 import Buton from "@/components/molecules/Button";
 import Modall from "@/components/organismos/modal";
@@ -12,7 +12,6 @@ import usePermissions from "@/hooks/Usuarios/usePermissions";
 import FormularioArea from "@/components/organismos/areas/FormRegister";
 
 const AreaTable = () => {
-
   const { userHasPermission } = usePermissions();
 
   const { areas, isLoading, isError, error, addArea, changeState } = useAreas();
@@ -67,10 +66,10 @@ const AreaTable = () => {
         <span>
           {Area.createdAt
             ? new Date(Area.createdAt).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
             : "N/A"}
         </span>
       ),
@@ -82,10 +81,10 @@ const AreaTable = () => {
         <span>
           {Area.updatedAt
             ? new Date(Area.updatedAt).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
             : "N/A"}
         </span>
       ),
@@ -120,12 +119,15 @@ const AreaTable = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Gestionar Areas</h1>
               <div className="flex gap-2">
-                {userHasPermission(44) &&
+                {userHasPermission(44) && (
                   <Buton text="Gestionar Sedes" onPress={handleGoToSede} />
-                }
-                {userHasPermission(3) &&
-                  <Buton text="Gestionar Usuarios" onPress={handleGoToUsuario} />
-                }
+                )}
+                {userHasPermission(3) && (
+                  <Buton
+                    text="Gestionar Usuarios"
+                    onPress={handleGoToUsuario}
+                  />
+                )}
               </div>
             </div>
           </CardBody>
@@ -171,14 +173,17 @@ const AreaTable = () => {
           data={areasWithKey}
           columns={columns}
           onEdit={userHasPermission(12) ? handleEdit : undefined}
-          onDelete={userHasPermission(13) ? (area) => handleState(area.idArea) : undefined}
+          onDelete={
+            userHasPermission(13)
+              ? (area) => handleState(area.idArea)
+              : undefined
+          }
           extraHeaderContent={
             <div>
-              {userHasPermission(10) &&
-              <Buton text="Añadir Area" onPress={() => setIsOpen(true)} />
-              }
+              {userHasPermission(10) && (
+                <Buton text="Añadir Area" onPress={() => setIsOpen(true)} />
+              )}
             </div>
-
           }
         />
       )}
