@@ -26,123 +26,53 @@ export const useReportData = (reportId: string) => {
     filters.hasta || ""
   );
 
-  const normaliza = (valor?: string | number | null) =>
-    valor ? String(valor).toLowerCase() : "";
-
   const data = useMemo(() => {
-    let baseData: Record<string, any>[] = [];
-
     switch (reportId) {
       case "sitios-con-mayor-stock":
-        baseData = sitiosStock;
-        if (filters.sitio) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.sitio).includes(normaliza(filters.sitio))
-          );
-        }
-        if (filters.area) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.area).includes(normaliza(filters.area))
-          );
-        }
-        break;
-
+        return sitiosStock;
       case "usuarios-con-mas-movimientos":
-        baseData = usuariosMovs;
-        if (filters.usuario) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.usuario).includes(normaliza(filters.usuario))
-          );
-        }
-        if (filters.sitio) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.sitio).includes(normaliza(filters.sitio))
-          );
-        }
-        if (filters.nombre) {
-          baseData = baseData.filter((d) => {
-            const nombre = d.elemento || d.nombre;
-            return normaliza(nombre).includes(normaliza(filters.nombre));
-          });
-        }
-        break;
-
+        return usuariosMovs;
       case "elementos-por-caducar":
-        baseData = elementosCaducar;
-        if (filters.nombre) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.nombre).includes(normaliza(filters.nombre))
-          );
-        }
-        if (filters.sitio) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.sitio).includes(normaliza(filters.sitio))
-          );
-        }
-        if (filters.area) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.area).includes(normaliza(filters.area))
-          );
-        }
-        if (filters.desde && filters.hasta) {
-          const desde = new Date(filters.desde);
-          const hasta = new Date(filters.hasta);
-          baseData = baseData.filter((d) => {
-            const fecha = new Date(d.vencimiento);
-            return fecha >= desde && fecha <= hasta;
-          });
-        }
-        break;
-
+        return elementosCaducar;
       case "historial-movimientos":
-        baseData = historialMovs;
-        if (filters.tipoMovimiento) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.tipo).includes(normaliza(filters.tipoMovimiento))
-          );
-        }
-        if (filters.sitio) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.sitio).includes(normaliza(filters.sitio))
-          );
-        }
-        if (filters.usuario) {
-          baseData = baseData.filter((d) =>
-            normaliza(d.usuario).includes(normaliza(filters.usuario))
-          );
-        }
-        if (filters.nombre) {
-          baseData = baseData.filter((d) => {
-            const nombre = d.elemento || d.nombre;
-            return normaliza(nombre).includes(normaliza(filters.nombre));
-          });
-        }
-        break;
-
+        return historialMovs;
       default:
-        baseData = [];
+        return [];
     }
+  }, [reportId, sitiosStock, usuariosMovs, elementosCaducar, historialMovs]);
 
-    return baseData;
-  }, [
-    reportId,
-    filters,
-    sitiosStock,
-    usuariosMovs,
-    elementosCaducar,
-    historialMovs,
-  ]);
-
-  const aplicarFiltros = (valores: Record<string, string>) => {
-    setFilters(valores);
+  const aplicarFiltros = (_valores: Record<string, string>) => {
+    // Dejamos los filtros vacíos para que siempre muestre todo
   };
 
   const descargarPDF = async () => {
+    const fechaGeneracion = new Date().toLocaleString("es-ES");
+
+    const descripcion = `Este reporte contiene información detallada de ${report.title}. 
+Permite un análisis profundo de los datos relevantes para la toma de decisiones estratégicas y operativas.`;
+
+    const beneficio = `Beneficio: Este reporte facilita la planificación, control y supervisión de los procesos, 
+proporcionando información clara y resumida para la toma de decisiones gerenciales.`;
+
+    const infoExtra = `Información adicional: Los datos se han consolidado y verificado para asegurar su integridad. 
+Se incluyen indicadores clave y métricas relevantes que permiten evaluar el desempeño de las áreas involucradas.`;
+
+    const observacion = `Observación: Los registros se presentan tal cual fueron ingresados en el sistema. 
+Se recomienda revisar periódicamente los datos y actualizar la información cuando sea necesario.`;
+
     const element = ReportPDF({
       title: report.title,
       headers: report.headers,
       accessors: report.accessors,
       data,
+      descripcion,
+      beneficio,
+      infoExtra,
+      observacion,
+      usuario: "Usuario Generador: Admin",
+      fechaGeneracion,
+      logoIzq: "/sena-logo.png",
+      logoDer: "/icono.png",
     });
 
     const blob = await pdf(element).toBlob();

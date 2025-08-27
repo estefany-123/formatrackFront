@@ -12,12 +12,14 @@ const Reportes = () => {
 
   const { data, descargarPDF } = useReportData(selectedReportId);
 
-  const cleanedData = data?.map(({ acciones, ...rest }) => ({ ...rest })) || [];
+  // Eliminamos la desestructuración 'acciones' porque no existe en tus tipos
+  const cleanedData = data || [];
 
   const columns: TableColumn<any>[] = cleanedData?.[0]
     ? Object.keys(cleanedData[0]).map((key) => ({ key, label: key }))
     : [];
 
+  // Agregamos columna de acciones solo en el frontend
   columns.push({
     key: "acciones",
     label: "Acciones",
