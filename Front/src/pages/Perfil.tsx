@@ -77,7 +77,7 @@ function Perfil() {
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Correo:</span>
-              <span>{perfilInfo.correo}</span>
+               <span>{perfilInfo.correo || 'No especificado'}</span>
             </div>
           </div>
         </div>

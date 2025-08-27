@@ -35,7 +35,7 @@ export const UserSchema = z.object({
 
     documento: z
         .number({ message: "Documento es requerido y debe ser un numero" })
-        .min(10, { message: "Longitud minima de 10" }),
+        .min(6, { message: "Longitud minima de 6" }),
 
     nombre: z
         .string()
@@ -128,7 +128,7 @@ export const tokenSchema = z.object({
         .optional(),
     documento: z
         .string({ required_error: "Documento es requerido" })
-        .min(10, { message: "Debe tener exactamente 10 dígitos" })
+        .min(6, { message: "Debe tener minimo 6 dígitos" })
         .regex(/^\d+$/, { message: "Debe contener solo números" }),
     password: z
         .string({ required_error: "Contraseña es requerido" }),
