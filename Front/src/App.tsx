@@ -27,6 +27,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Perfil from "./pages/Perfil";
 import Reportes from "./pages/Reportes/Reportes";
 import MovimientoDetalle from "./pages/Bodega/MovimientosDetalles";
+import { ZapatoTable } from "./pages/Zappato/Zapato";
 
 function App() {
   return (
@@ -68,7 +69,8 @@ function App() {
             path="bodega/inventario/areas/:id/sitios/:sitioId"
             element={<InventarioSitio />}
           />
-          <Route path="reportes" element={<Reportes />}></Route>
+          <Route path="/reportes" element={<Reportes />}></Route>
+          <Route path="/zapatos" element={<ZapatoTable />}></Route>
         </Route>
       </Route>
 
