@@ -65,7 +65,7 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   >("activos");
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  
+
   const mostrarFiltroEstado = useMemo(() => {
     return data.some((item) => "estado" in item);
   }, [data]);
@@ -73,14 +73,13 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
   const filteredData = useMemo(() => {
     let result = data;
 
-
-if (mostrarFiltroEstado) {
-  if (estadoFiltro === "activos") {
-    result = result.filter((item) => item.estado === true);
-  } else if (estadoFiltro === "inactivos") {
-    result = result.filter((item) => item.estado === false);
-  }
-}
+    if (mostrarFiltroEstado) {
+      if (estadoFiltro === "activos") {
+        result = result.filter((item) => item.estado === true);
+      } else if (estadoFiltro === "inactivos") {
+        result = result.filter((item) => item.estado === false);
+      }
+    }
 
     if (searchTerm.trim()) {
       const lowerSearch = searchTerm.toLowerCase();
@@ -170,36 +169,36 @@ if (mostrarFiltroEstado) {
         <div className="flex items-center gap-4">
           {extraHeaderContent}
           {mostrarFiltroEstado && (
-          <Select
-            label="Estado"
-            size="sm"
-            className="w-48"
-            aria-label="Filtro por estado"
-            variant="flat"
-            color="primary"
-            radius="md"
-            classNames={{
-              trigger: "dark:bg-zinc-900 text-black dark:text-white",
-            }}
-            selectedKeys={[estadoFiltro]}
-            onSelectionChange={(keys) => {
-              const selected = Array.from(keys)[0] as
-                | "todos"
-                | "activos"
-                | "inactivos";
-              setEstadoFiltro(selected);
-            }}
-          >
-            <SelectItem key="activos" textValue="activos">
-              Activos
-            </SelectItem>
-            <SelectItem key="inactivos" textValue="inactivos">
-              Inactivos
-            </SelectItem>
-            <SelectItem key="todos" textValue="todos">
-              Todos
-            </SelectItem>
-          </Select>
+            <Select
+              label="Estado"
+              size="sm"
+              className="w-48"
+              aria-label="Filtro por estado"
+              variant="flat"
+              color="primary"
+              radius="md"
+              classNames={{
+                trigger: "dark:bg-zinc-900 text-black dark:text-white",
+              }}
+              selectedKeys={[estadoFiltro]}
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys)[0] as
+                  | "todos"
+                  | "activos"
+                  | "inactivos";
+                setEstadoFiltro(selected);
+              }}
+            >
+              <SelectItem key="activos" textValue="activos">
+                Activos
+              </SelectItem>
+              <SelectItem key="inactivos" textValue="inactivos">
+                Inactivos
+              </SelectItem>
+              <SelectItem key="todos" textValue="todos">
+                Todos
+              </SelectItem>
+            </Select>
           )}
         </div>
         <div className="flex">
