@@ -255,7 +255,11 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
       </div>
       <Table aria-label="Example table with dynamic content">
         <TableHeader
-          columns={[...columns, { key: "actions", label: "Acciones" }]}
+          columns={
+            showActions
+              ? [...columns, { key: "actions", label: "Acciones" }]
+              : columns
+          }
         >
           {(column) => (
             <TableColumn
@@ -280,40 +284,65 @@ const Globaltable = <T extends { key: string; estado?: boolean }>({
                 // Encuentra la configuración de la columna
                 return (
                   <TableCell className="text-center">
-                    {columns.find((c) => c.key === columnKey)?.render
-                      ? columns.find((c) => c.key === columnKey)!.render!(item)
-                      : getKeyValue(item, columnKey)}
+                    {(() => {
+                      // Si la columna es "estado", mostramos solo el Chip y salimos
+                      if (columnKey === "estado" && showEstado) {
+                        return (
+                          <Chip
+                            className={`px-2 py-1 rounded ${
+                              item.estado ? "text-green-500" : "text-red-500"
+                            }`}
+                            color={item.estado ? "success" : "danger"}
+                            variant="flat"
+                          >
+                            {item.estado ? "Activo" : "Inactivo"}
+                          </Chip>
+                        );
+                      }
 
-                    {showEstado && columnKey === "estado" && (
-                      <Chip
-                        className={`px-2 py-1 rounded ${
-                          item.estado ? "text-green-500" : "text-red-500"
-                        }`}
-                        color={item.estado ? "success" : "danger"}
-                        variant="flat"
-                      >
-                        {item.estado ? "Activo" : "Inactivo"}
-                      </Chip>
-                    )}
-
-                    {showActions && columnKey === "actions" && (
-                      <div className="flex gap-2 justify-center">
-                        {onEdit && (
-                          <button onClick={() => onEdit(item)}>
-                            <PencilIcon className="h-5 w-5 text-blue-500" />
-                          </button>
-                        )}
-                        {onDelete && (
-                          <button onClick={() => onDelete?.(item)}>
-                            {item.estado ? (
-                              <TrashIcon className="h-5 w-5 text-red-500" />
-                            ) : (
-                              <CheckIcon className="h-5 w-5 text-green-500" />
+                      // Si la columna es "actions", no mostramos ningún valor por defecto
+                      if (columnKey === "actions" && showActions) {
+                        return (
+                          <div className="flex gap-2 justify-center">
+                            {onEdit && (
+                              <button onClick={() => onEdit(item)}>
+                                <PencilIcon className="h-5 w-5 text-blue-500" />
+                              </button>
                             )}
-                          </button>
-                        )}
-                      </div>
-                    )}
+                            {onDelete && (
+                              <button onClick={() => onDelete?.(item)}>
+                                {item.estado ? (
+                                  <TrashIcon className="h-5 w-5 text-red-500" />
+                                ) : (
+                                  <CheckIcon className="h-5 w-5 text-green-500" />
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        );
+                      }
+
+                      // Si hay un render personalizado, lo usamos
+                      const column = columns.find((c) => c.key === columnKey);
+                      if (column?.render) return column.render(item);
+
+                      // Si no hay render, procesamos el valor normalmente
+                      const value = getKeyValue(item, columnKey);
+
+                      // Si el valor es objeto, intentamos mostrarlo bonito
+                      if (typeof value === "object" && value !== null) {
+                        if ("codigo" in value && "fecha_creacion" in value) {
+                          return `${value.codigo} (${value.fecha_creacion})`;
+                        }
+                        return JSON.stringify(value);
+                      }
+
+                      // Si es nulo o indefinido, mostramos guion
+                      if (value === null || value === undefined) return "—";
+
+                      // Si es primitivo, lo mostramos directamente
+                      return value.toString();
+                    })()}
                   </TableCell>
                 );
               }}

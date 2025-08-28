@@ -1,10 +1,10 @@
 export type SitioStock = {
-  sitio: string;
-  encargado: string;
-  area: string;
-  elemento: string;
-  cantidad: number;
-  caracteristicas: {
+  Sitio: string;
+  Encargado: string;
+  Area: string;
+  Elemento: string;
+  Cantidad: number;
+  Caracteristicas: {
     codigo: string;
     fecha_creacion: string;
   }[];

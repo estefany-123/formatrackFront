@@ -1,52 +1,47 @@
 export const reports = [
   {
     id: "usuarios-con-mas-movimientos",
-    title: "Movimientos Realizados por los Usarios",
+    title: "Movimientos Realizados por los Usuarios",
     description:
-      "Muestra los usuarios que han realizado movimientos y a que elementos.",
-    accessors: ["usuario", "sitio", "total_movimientos", "cantidad", "codigos"],
+      "Muestra los usuarios que han realizado movimientos y a qué elementos.",
     headers: [
       "Usuario",
+      "Rol",
       "Sitio",
-      "Total de Movimientos",
-      "Cantidad",
-      "Códigos",
-    ],
-  },
-  {
-    id: "historial-movimientos",
-    title: "Histotial de Movimientos",
-    description:
-      "Da un historial acerca de los moviemitos que se han realizado.",
-    headers: [
-      "Tipo",
+      "Encargado",
       "Elemento",
-      "Usuario",
-      "Sitio",
-      "Área",
-      "Lugar destino",
-      "Fecha",
+      "Tipo Movimiento",
+      "Última Fecha",
+      "Total Movimientos",
       "Cantidad",
       "Códigos",
     ],
     accessors: [
-      "tipo",
-      "elemento",
       "usuario",
+      "rol",
       "sitio",
-      "area",
-      "lugar_destino",
-      "fecha",
+      "encargado",
+      "elemento",
+      "tipo_movimiento",
+      "ultima_fecha",
+      "total_movimientos",
       "cantidad",
       "codigos",
     ],
   },
   {
     id: "sitios-con-mayor-stock",
-    title: "Stock del inventraio por Sitios",
+    title: "Stock del inventario por Sitios",
     description: "Elementos disponibles por sitio.",
-    headers: ["Sitio", "Área", "Encargado", "Elemento", "Cantidad"],
-    accessors: ["sitio", "area", "encargado", "elemento", "cantidad"],
+    headers: ["Sitio", "Área", "Encargado", "Elemento", "Cantidad", "Códigos"],
+    accessors: [
+      "Sitio",
+      "Area",
+      "Encargado",
+      "Elemento",
+      "Cantidad",
+      "Caracteristicas",
+    ],
   },
   {
     id: "elementos-por-caducar",
@@ -75,18 +70,10 @@ export const reports = [
 
 export const filtrosPorReporte: Record<
   string,
-  Array<
-    | "fecha"
-    | "tipoMovimiento"
-    | "sitio"
-    | "estado"
-    | "nombre"
-    | "usuario"
-    | "area"
-  >
+  Array<"fecha" | "tipoMovimiento" | "sitio" | "estado" | "nombre" | "usuario" | "area">
 > = {
-  "usuarios-con-mas-movimientos": ["fecha", "sitio", "usuario"],
-  "historial-movimientos": ["fecha", "tipoMovimiento", "sitio", "usuario"],
-  "sitios-con-mayor-stock": ["sitio"],
-  "elementos-por-caducar": ["fecha", "sitio", "nombre"],
+  "usuarios-con-mas-movimientos": ["fecha", "sitio", "usuario", "tipoMovimiento"],
+  "sitios-con-mayor-stock": ["sitio", "area", "nombre"],
+  "elementos-por-caducar": ["fecha", "sitio", "nombre", "area"],
 };
+

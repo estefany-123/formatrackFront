@@ -19,14 +19,14 @@ const Reportes = () => {
     ? Object.keys(cleanedData[0]).map((key) => ({ key, label: key }))
     : [];
 
-  // Agregamos columna de acciones solo en el frontend
+  // ✅ Columna personalizada para descargar PDF
   columns.push({
-    key: "acciones",
-    label: "Acciones",
+    key: "descargar",
+    label: "Descargar PDF",
     render: () => (
       <button
         className="text-blue-500 hover:text-blue-700"
-        onClick={() => descargarPDF?.()}
+        onClick={() => descargarPDF?.()} // Si tu hook no necesita datos por fila, deja descargarPDF?.()
       >
         <Download size={20} />
       </button>
@@ -44,6 +44,7 @@ const Reportes = () => {
       <Globaltable
         data={cleanedData.map((row, i) => ({ ...row, key: i.toString() }))}
         columns={columns}
+        showActions={false}
         extraHeaderContent={
           <div className="flex items-center gap-2">
             <Select

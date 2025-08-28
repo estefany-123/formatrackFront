@@ -13,7 +13,7 @@ import {
 } from "@/hooks/Reportes/useReportes";
 
 export const useReportData = (reportId: string) => {
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [filters,] = useState<Record<string, string>>({});
 
   const report = reports.find((r) => r.id === reportId);
   if (!report) return { data: [], aplicarFiltros: () => {}, descargarPDF: () => {} };
