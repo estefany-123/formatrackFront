@@ -1,7 +1,6 @@
 import { ReportSelectorPanel } from "@/components/organismos/ReportSelectorPanel";
 import { ReportFilterForm } from "@/components/molecules/ReportFilterForm";
 import { ReportTableSection } from "@/components/organismos/ReportTableSection";
-import { ReportPreviewPanel } from "@/components/organismos/ReportPreviewPanel";
 
 type ReportItem = {
   id: string;
@@ -59,12 +58,6 @@ export const ReportGenerator = ({
         onDownload={onDownloadPDF}
       />
 
-      <ReportPreviewPanel
-        title={report.title}
-        headers={report.headers}
-        accessors={report.accessors}
-        data={data}
-      />
     </div>
   );
 };
