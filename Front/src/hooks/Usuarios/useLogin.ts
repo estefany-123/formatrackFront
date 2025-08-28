@@ -45,7 +45,8 @@ export default function useLogin(){
             navigate("/");
         }
         catch(error:any){
-            const errorMessage = error.response.data.response.message;
+            const errorMessage = error.message;
+            console.log(errorMessage)
             setIsError(true);
             setError(errorMessage);
         }
