@@ -3,6 +3,10 @@ import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
+  server: {
+    host: true,
+    allowedHosts: 'all',
+  },
   plugins: [react(), tsconfigPaths()],
   build: {
     rollupOptions: {
