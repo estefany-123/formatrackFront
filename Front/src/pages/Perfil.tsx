@@ -53,7 +53,7 @@ function Perfil() {
           </h1>
           <div className='relative w-32 h-32 rounded-full mb-4 border-4 border-blue-200 group'>
             <Avatar
-              src={`http://localhost:3000/img/perfiles/${perfilInfo.perfil || 'defaultPerfil.png'}`}
+              src={`${import.meta.env.VITE_API_CLIENT}img/perfiles/${perfilInfo.perfil || 'defaultPerfil.png'}`}
               className="w-full h-full group-hover:opacity-70 transition duration-200"
             />
             <PencilIcon color='#fff' className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-full p-6 opacity-0 group-hover:opacity-100 transition duration-200' />
