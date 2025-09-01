@@ -151,7 +151,7 @@ export const FormUpdate = ({ elementos, elementoId, id, onclose }: Props) => {
         {imagen && typeof imagen === "string" && (
           <div className="flex justify-center">
             <img
-              src={`http://localhost:3000/img/img/elementos/${imagen}`}
+              src={`${import.meta.env.VITE_API_CLIENT}/img/img/elementos/${imagen}`}
               alt="Imagen actual"
               className="w-40 h-40 object-cover rounded-lg mb-4"
             />

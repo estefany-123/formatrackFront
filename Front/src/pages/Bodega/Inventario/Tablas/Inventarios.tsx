@@ -67,7 +67,6 @@ export const InventariosTable = ({
     setIsOpenUpdate(true);
   };
 
-
   const columns: TableColumn<Inventario>[] = [
     {
       key: "fkElemento",
@@ -92,7 +91,7 @@ export const InventariosTable = ({
 
         if (!imagen) return <span>No encontrado</span>;
 
-        const src = `${import.meta.env.VITE_API_CLIENT}/img/img/elementos/${imagen}`;
+        const src = `${import.meta.env.VITE_API_CLIENT}img/img/elementos/${imagen}`;
 
         return (
           <img
@@ -128,6 +127,17 @@ export const InventariosTable = ({
             {cantidad} <span className="ml-1 text-sm">({estado})</span>
           </span>
         );
+      },
+    },
+    {
+      key: "unidad",
+      label: "Unidad",
+      render: (inventario: Inventario) => {
+        const fkElemento = (inventario as any).fkElemento
+        // Traemos el nombre de la unidad de medida
+        console.log(fkElemento)
+        const unidad = fkElemento?.fkUnidadMedida?.nombre ?? "No definido";
+        return <span>{unidad}</span>;
       },
     },
     {

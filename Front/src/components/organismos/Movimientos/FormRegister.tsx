@@ -30,7 +30,7 @@ type CodigoDisponible = {
   idCodigoInventario: number;
   codigo: string;
   uso: boolean;
-  fkMovimiento:number
+  fkMovimiento: number;
 };
 
 export default function Formulario({ onClose, id }: FormularioProps) {
@@ -61,7 +61,6 @@ export default function Formulario({ onClose, id }: FormularioProps) {
 
   const { users, addUser } = useUsuario();
   const { addMovimiento } = useMovimiento();
-
 
   const { tipos, addTipoMovimiento } = useTipoMovimiento();
   const { sitios, addSitio } = useSitios();
@@ -174,31 +173,35 @@ export default function Formulario({ onClose, id }: FormularioProps) {
 
   console.log("Errores", errors);
 
-useEffect(() => {
-  if (!inventarioSeleccionado) return;
+  useEffect(() => {
+    if (!inventarioSeleccionado) return;
 
-  // Si es una devolución, usamos el endpoint para obtener solo los códigos prestados
-  if (tipoMovimientoSeleccionado?.toLowerCase() === 'devolucion') {
-    getCodigosDisponiblesParaDevolucion(inventarioSeleccionado)
-      .then(codigos => {
-        setCodigosDisponibles(codigos);
-        setTieneCaracteristicas(codigos.length > 0);
-      })
-      .catch(err => {
-        console.error("Error obteniendo códigos para devolución:", err);
-        setCodigosDisponibles([]);
-        setTieneCaracteristicas(false);
-      });
-  } else {
-    // Para otros tipos de movimiento, filtramos localmente los códigos que no están en uso
-    const inv = inventarios?.find(i => i.idInventario === inventarioSeleccionado);
-    if (!inv) return;
+    // Si es una devolución, usamos el endpoint para obtener solo los códigos prestados
+    if (tipoMovimientoSeleccionado?.toLowerCase() === "devolucion") {
+      getCodigosDisponiblesParaDevolucion(inventarioSeleccionado)
+        .then((codigos) => {
+          setCodigosDisponibles(codigos);
+          setTieneCaracteristicas(codigos.length > 0);
+        })
+        .catch((err) => {
+          console.error("Error obteniendo códigos para devolución:", err);
+          setCodigosDisponibles([]);
+          setTieneCaracteristicas(false);
+        });
+    } else {
+      // Para otros tipos de movimiento, filtramos localmente los códigos que no están en uso
+      const inv = inventarios?.find(
+        (i) => i.idInventario === inventarioSeleccionado
+      );
+      if (!inv) return;
 
-    const codigosFiltrados = (inv.codigos || []).filter(c => !c.uso && !c.fkMovimiento);
-    setCodigosDisponibles(codigosFiltrados);
-    setTieneCaracteristicas(codigosFiltrados.length > 0);
-  }
-}, [inventarioSeleccionado, tipoMovimientoSeleccionado, inventarios]);
+      const codigosFiltrados = (inv.codigos || []).filter(
+        (c) => !c.uso && !c.fkMovimiento
+      );
+      setCodigosDisponibles(codigosFiltrados);
+      setTieneCaracteristicas(codigosFiltrados.length > 0);
+    }
+  }, [inventarioSeleccionado, tipoMovimientoSeleccionado, inventarios]);
 
   console.log("Inventario:", inventarioSeleccionado);
   console.log("Tiene características?", tieneCaracteristicas);
@@ -582,7 +585,7 @@ useEffect(() => {
                                   idCodigoInventario: c.idCodigoInventario,
                                   codigo: c.codigo,
                                   uso: c.uso,
-                                  fkMovimiento:c.fkMovimiento
+                                  fkMovimiento: c.fkMovimiento,
                                 }))
                               );
                               setTieneCaracteristicas(disponibles.length > 0);
@@ -624,23 +627,39 @@ useEffect(() => {
                   control={control}
                   name="codigos"
                   render={({ field }) => {
-                    const codigosFiltrados = codigosDisponibles.filter(
-                      (codigo) => {
+                    const [search, setSearch] = useState(""); // Estado para el buscador
+
+                    // Filtramos según tipo de movimiento y búsqueda
+                    const codigosFiltrados = codigosDisponibles
+                      .filter((codigo) => {
                         if (
                           tipoMovimientoSeleccionado?.toLowerCase() ===
                           "devolucion"
                         )
                           return codigo.uso === true;
                         return codigo.uso === false;
-                      }
-                    );
+                      })
+                      .filter((codigo) =>
+                        codigo.codigo
+                          .toLowerCase()
+                          .includes(search.toLowerCase())
+                      );
 
-                    console.log("filtrado:", codigosFiltrados);
                     return (
                       <div className="space-y-2">
                         <label className="font-semibold">
                           Selecciona Códigos
                         </label>
+
+                        {/* Input de búsqueda */}
+                        <input
+                          type="text"
+                          placeholder="Buscar código..."
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                          className="border rounded px-2 py-1 w-full"
+                        />
+
                         {codigosFiltrados.map((codigoObj) => (
                           <div
                             key={codigoObj.idCodigoInventario}
@@ -662,6 +681,12 @@ useEffect(() => {
                             <span>{codigoObj.codigo}</span>
                           </div>
                         ))}
+
+                        {codigosFiltrados.length === 0 && (
+                          <p className="text-sm text-gray-500">
+                            No se encontraron códigos
+                          </p>
+                        )}
                       </div>
                     );
                   }}

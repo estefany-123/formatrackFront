@@ -14,6 +14,7 @@ export type Inventario = {
   updatedAt?: string;
   fkSitio?: number;
   fkElemento?: number;
+  unidad?:number
   imagenElemento?: string;
   acciones?: string;
   codigos?: CodigoInventario[];
@@ -37,6 +38,7 @@ export type InventarioConSitio = Inventario & {
     idElemento: number;
     nombre: string;
     imagenElemento?: string;
+    fkUnidadMedida?:number
     fkCaracteristica?: number
   };
 };
@@ -50,6 +52,10 @@ export type InventarioConElemento = Inventario & {
     idElemento: number;
     nombre: string;
     imagenElemento?: string;
+    fkUnidadMedida?:{
+      idUnidad:number
+      nombre:string
+    }
     fkCaracteristica: boolean;
   };
 };
