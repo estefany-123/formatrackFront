@@ -83,7 +83,7 @@ export const ElementosTable = () => {
   
         return imagen ? (
           <img
-            src={`http://localhost:3000/img/img/elementos/${imagen}`}
+            src={`${import.meta.env.VITE_API_CLIENT}/img/img/elementos/${imagen}`}
             alt="Imagen"
             width={200}
             height={50}

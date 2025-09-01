@@ -92,7 +92,7 @@ export const InventariosTable = ({
 
         if (!imagen) return <span>No encontrado</span>;
 
-        const src = `http://localhost:3000/img/img/elementos/${imagen}`;
+        const src = `${import.meta.env.VITE_API_CLIENT}/img/img/elementos/${imagen}`;
 
         return (
           <img
