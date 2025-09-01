@@ -82,7 +82,7 @@ export function Nav({
         <User
           name={nombre}
           avatarProps={{
-            src: `http://localhost:3000/img/perfiles/${perfil ?? "defaultPerfil.png"}`,
+            src: `${import.meta.env.VITE_API_CLIENT}img/perfiles/${perfil ?? "defaultPerfil.png"}`,
             onClick: () => navigate("/perfil"),
             isBordered: true,
           }}
