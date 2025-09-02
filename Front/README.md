@@ -9,7 +9,7 @@ luego de clonarlo le aparecera una carpeta "formatrackFront" y dentro de ella en
 
 Cree las variables de entorno en la carpeta raiztomando de guia el .env.example para crear su propio .env
 
-## Instalacion de dependencias
+## Instalación de dependencias
 Luego de esto pasamos a ejecutar este comando dentro de la carpeta raiz para que se descarguen todas las dependencias necesarias 
 
 ```bash
